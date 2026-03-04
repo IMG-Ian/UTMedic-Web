@@ -170,7 +170,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                             </div>
                             <div class="ms-2">
                                 <h6 class="mb-0 fs-6 user-name-display text-dark opacity-100"><?= $_SESSION['user_name'] ?? 'Usuario' ?></h6>
-                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">Usuario Regular</p>
+                                <p class="mb-0 text-muted" style="font-size: 0.75rem;"><?= htmlspecialchars($rolUsuario) ?></p>
                             </div>
                         </a>
                         <a href="../backend/logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center" style="border-radius: 50px; padding: 5px 15px; font-weight: 600;" title="Cerrar Sesión">
@@ -196,11 +196,11 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                             <button 
                                                 onclick="document.getElementById('avatarInput').click()" 
                                                 class="btn btn-primary position-absolute rounded-circle shadow-sm" 
-                                                style="display: none; background-color: #1a9b8e; border-color: #1a9b8e; width: 38px; height: 38px; bottom: 0; right: 8px; padding: 0; align-items: center; justify-content: center; line-height: 0;"
+                                                style="background-color: #1a9b8e; border-color: #1a9b8e; width: 38px; height: 38px; bottom: 0; right: 8px; padding: 0; align-items: center; justify-content: center; line-height: 0;"
                                                 title="Cambiar foto de perfil">
                                                 <i class="bi bi-camera-fill" style="font-size: 1.1rem; margin: 0; padding: 0; transform: translateY(-1px);"></i>
                                             </button>
-                                            <input type="file" id="avatarInput" accept="image/png, image/jpeg, image/jpg" style="display: none;" disabled>
+                                            <input type="file" id="avatarInput" accept="image/png, image/jpeg, image/jpg" style="display: none;">
                                         </div>
                                     </div>
                                     <div class="text-center mb-5">

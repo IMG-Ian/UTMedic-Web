@@ -68,7 +68,7 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isse
     
     // Hacemos LEFT JOIN con paciente únicamente para permitir el logueo usando la matrícula de paciente
     $sql = "
-        SELECT u.id_usuario as id, u.nombre, u.apellido_pat, u.password, u.rol, u.estado 
+        SELECT u.id_usuario as id, u.nombre, u.apellido_pat, u.password, u.rol, u.estado, u.foto_perfil
         FROM usuario u
         LEFT JOIN paciente p ON u.id_usuario = p.id_usuario
         WHERE u.correo = ? OR p.matricula = ?
@@ -93,8 +93,8 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isse
             $_SESSION['user_name'] = $user['nombre'] . ' ' . $user['apellido_pat'];
             $_SESSION['role'] = $user['rol'];
             
-            // Asignamos un avatar genérico por defecto ya que el campo 'foto' fue eliminado del modelo
-            $_SESSION['user_avatar'] = 'assets/compiled/jpg/1.jpg';
+            // Asignamos la foto encontrada en la base de datos o le damos una por defecto si está vacío
+            $_SESSION['user_avatar'] = !empty($user['foto_perfil']) ? $user['foto_perfil'] : 'assets/compiled/jpg/1.jpg';
             
             // Redirección basada en el rol del usuario
             $redirectUrl = '../frontend/index.php'; // Por defecto (Paciente/Estudiante)

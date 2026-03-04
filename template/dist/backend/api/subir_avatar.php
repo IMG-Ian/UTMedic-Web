@@ -52,12 +52,8 @@ if (move_uploaded_file($fileTmpName, $fileDestination)) {
     // La ruta relativa que usa el frontend para pintar la imagen a partir de index.php / user-perfil.php
     $dbPath = 'assets/compiled/jpg/avatars/' . $newFileName;
     
-    // Primero, debemos confirmar si el usuario ya tiene un registro en 'perfil'.
-    // Si la tabla perfil y usuario están vinculadas 1:1 y ya se crearon registros de prueba, usamos UPDATE.
-    // Si no, lo correcto sería un INSERT INTO, pero asumimos que el perfil existe o usaremos ON DUPLICATE KEY si aplicara.
-    // Para UTMedic, haremos UPDATE asumiendo que el ID de Usuario ya tiene un perfil precreado.
-    
-    $stmt = $conn->prepare("UPDATE perfil SET foto = ? WHERE idUsuario = ?");
+    // El nuevo modelo reestructurado guarda la fotografía del perfil ahora en tabla `usuario` en el campo `foto_perfil`
+    $stmt = $conn->prepare("UPDATE usuario SET foto_perfil = ? WHERE id_usuario = ?");
     $stmt->bind_param("si", $dbPath, $userId);
     
     if ($stmt->execute()) {
