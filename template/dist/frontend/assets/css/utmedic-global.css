@@ -1,0 +1,23 @@
+/* UTMedic Global Styles */
+
+:root {
+    --utm-green: #1a9b8e;
+    --utm-input-bg: #6b6664;
+    --bs-body-font-family: 'Inter', sans-serif;
+    --bs-body-bg: #f2f7ff;
+}
+
+body {
+    background-color: var(--bs-body-bg);
+}
+
+/* Links */
+a {
+    color: var(--utm-green);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+a:hover {
+    text-decoration: underline;
+}

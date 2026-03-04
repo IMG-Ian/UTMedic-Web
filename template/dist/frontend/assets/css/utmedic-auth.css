@@ -1,0 +1,124 @@
+/* UTMedic Auth Styles */
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    /* Para evitar scroll en páginas de login */
+}
+
+/* Lado Izquierdo (Formulario) */
+#auth-left {
+    padding: 3rem;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: white;
+}
+
+.auth-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--utm-green);
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+    font-size: 1.1rem;
+    color: #a8a8a8;
+    margin-bottom: 3rem;
+}
+
+/* Inputs Estilo Capsule */
+.form-control-xl {
+    padding: 0.8rem 1.5rem 0.8rem 3rem;
+    /* Espacio para el icono */
+    font-size: 1.1rem;
+    border-radius: 50px;
+    background-color: var(--utm-input-bg);
+    border: 1px solid transparent;
+    color: white !important;
+}
+
+.form-control-xl::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.form-control-xl:focus {
+    background-color: #55514f;
+    box-shadow: 0 0 0 4px rgba(26, 155, 142, 0.2);
+    border-color: var(--utm-green);
+}
+
+/* Iconos dentro de los inputs */
+.form-group {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.form-control-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 1.2rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.2rem;
+}
+
+/* Botones Auth */
+.btn-primary {
+    background-color: var(--utm-green);
+    border-color: var(--utm-green);
+    border-radius: 50px;
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    width: 100%;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #147a70;
+    border-color: #147a70;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(26, 155, 142, 0.4);
+}
+
+.btn-google {
+    background-color: white;
+    border: 1px solid #dcdcdc;
+    color: #555;
+    border-radius: 50px;
+    padding: 0.8rem 2rem;
+    font-weight: 600;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s;
+}
+
+.btn-google:hover {
+    background-color: #f8f9fa;
+    border-color: #c0c0c0;
+}
+
+/* Lado Derecho (Cover) */
+#auth-right {
+    height: 100vh;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Universidad_Tecnolgica_de_Morelia.jpg/1200px-Universidad_Tecnolgica_de_Morelia.jpg') center center no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+/* Capa verde encima de la imagen */
+#auth-right::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(135deg, rgba(26, 155, 142, 0.85), rgba(10, 80, 70, 0.9));
+}
