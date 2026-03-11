@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 // Iniciar sesión para recuperar datos del usuario
 session_start();
 
@@ -34,8 +35,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css">
-    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css">
+        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
 <body>
@@ -47,7 +48,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
                             <a href="index.php" class="text-decoration-none">
-                                <h3 class="mb-0 fw-bold" style="color: var(--utm-green); letter-spacing: 1px;">UTMedic</h3>
+                                <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
                         <div class="theme-toggle d-flex gap-2 align-items-center mb-0">
@@ -89,31 +90,72 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                     <ul class="menu">
                         <li class="sidebar-title">Menú Principal</li>
 
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">
-                            <a href="index.php" class="sidebar-link">
-                                <i class="bi bi-house-door-fill"></i>
-                                <span>Inicio</span>
-                            </a>
-                        </li>
+                        <?php if (isset($_SESSION['role']) && strtolower($_SESSION['role']) === 'profesional'): ?>
+                            <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-medico.php' ? 'active' : '' ?>">
+                                <a href="dashboard-medico.php" class="sidebar-link">
+                                    <i class="bi bi-house-door-fill"></i>
+                                    <span>Inicio</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-agenda.php' ? 'active' : '' ?>">
+                                <a href="medico-agenda.php" class="sidebar-link">
+                                    <i class="bi bi-calendar-check-fill"></i>
+                                    <span>Agenda de Citas</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-historial.php' ? 'active' : '' ?>">
+                                <a href="medico-historial.php" class="sidebar-link">
+                                    <i class="bi bi-clock-history"></i>
+                                    <span>Historial Citas</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-emergencia.php' ? 'active' : '' ?>">
+                                <a href="medico-emergencia.php" class="sidebar-link">
+                                    <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                                    <span>Emergencia</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
+                                <a href="user-perfil.php" class="sidebar-link">
+                                    <i class="bi bi-person-circle"></i>
+                                    <span>Perfil</span>
+                                </a>
+                            </li>
+                        <?php else: ?>
+                            <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">
+                                <a href="index.php" class="sidebar-link">
+                                    <i class="bi bi-house-door-fill"></i>
+                                    <span>Inicio</span>
+                                </a>
+                            </li>
+    
+                            <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-agendar-cita.php' ? 'active' : '' ?>">
+                                <a href="user-agendar-cita.php" class="sidebar-link">
+                                    <i class="bi bi-calendar-plus-fill"></i>
+                                    <span>Nueva Cita</span>
+                                </a>
+                            </li>
+    
+                            <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-historial.php' ? 'active' : '' ?>">
+                                <a href="user-historial.php" class="sidebar-link">
+                                    <i class="bi bi-clock-history"></i>
+                                    <span>Historial Citas</span>
+                                </a>
+                            </li>
+    
+                            <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
+                                <a href="user-perfil.php" class="sidebar-link">
+                                    <i class="bi bi-person-fill"></i>
+                                    <span>Perfil</span>
+                                </a>
+                            </li>
+                        <?php endif; ?>
 
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-agendar-cita.php' ? 'active' : '' ?>">
-                            <a href="user-agendar-cita.php" class="sidebar-link">
-                                <i class="bi bi-calendar-plus-fill"></i>
-                                <span>Nueva Cita</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-historial.php' ? 'active' : '' ?>">
-                            <a href="user-historial.php" class="sidebar-link">
-                                <i class="bi bi-clock-history"></i>
-                                <span>Historial Citas</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
-                            <a href="user-perfil.php" class="sidebar-link">
-                                <i class="bi bi-person-fill"></i>
-                                <span>Perfil</span>
+                        <!-- Cierre de sesión -->
+                        <li class="sidebar-item mt-5 pt-3 border-top">
+                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                                <i class="bi bi-box-arrow-left text-danger"></i>
+                                <span>Cerrar Sesión</span>
                             </a>
                         </li>
 
@@ -142,8 +184,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
-                                        <div class="bg-success text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <i class="bi bi-check-circle"></i>
+                                        <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                                         </div>
                                         <div>
                                             <h6 class="mb-0 text-sm font-bold text-dark">Cita Aceptada</h6>
@@ -153,8 +195,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 </li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded mt-1" href="#" style="white-space: normal;">
-                                        <div class="bg-warning text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <i class="bi bi-calendar-x"></i>
+                                        <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><line x1="10" y1="14" x2="14" y2="18"></line><line x1="14" y1="14" x2="10" y2="18"></line></svg>
                                         </div>
                                         <div>
                                             <h6 class="mb-0 text-sm font-bold text-dark">Cita Reagendada</h6>
@@ -173,9 +215,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <p class="mb-0 text-muted" style="font-size: 0.75rem;"><?= htmlspecialchars($rolUsuario) ?></p>
                             </div>
                         </a>
-                        <a href="../backend/logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center" style="border-radius: 50px; padding: 5px 15px; font-weight: 600;" title="Cerrar Sesión">
-                            <i class="bi bi-box-arrow-right me-1"></i> Salir
-                        </a>
+                        <!-- Logout retirado de aquí -->
                     </div>
                 </div>
             </div>
@@ -190,13 +230,13 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                     <!-- Avatar Upload Section -->
                                     <div class="d-flex justify-content-center mb-3">
                                         <div class="position-relative" style="width: 130px; height: 130px;">
-                                            <div class="rounded-circle overflow-hidden shadow-sm d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; border: 4px solid #fff; background-color: #e0f2f1;">
+                                            <div class="rounded-circle overflow-hidden shadow-sm d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; border: 4px solid #fff; background-color: var(--bs-body-bg);">
                                                 <img src="<?= htmlspecialchars($avatarUsuario) ?>" id="main-profile-avatar" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; color: transparent; text-indent: -9999px;">
                                             </div>
                                             <button 
                                                 onclick="document.getElementById('avatarInput').click()" 
                                                 class="btn btn-primary position-absolute rounded-circle shadow-sm" 
-                                                style="background-color: #1a9b8e; border-color: #1a9b8e; width: 38px; height: 38px; bottom: 0; right: 8px; padding: 0; align-items: center; justify-content: center; line-height: 0;"
+                                                style="background-color: #018790; border-color: #018790; width: 38px; height: 38px; bottom: 0; right: 8px; padding: 0; align-items: center; justify-content: center; line-height: 0;"
                                                 title="Cambiar foto de perfil">
                                                 <i class="bi bi-camera-fill" style="font-size: 1.1rem; margin: 0; padding: 0; transform: translateY(-1px);"></i>
                                             </button>
@@ -204,7 +244,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                         </div>
                                     </div>
                                     <div class="text-center mb-5">
-                                        <h3 class="font-bold mb-1 text-primary" style="color: #1a9b8e !important;"><?= htmlspecialchars($nombreEstudiante) ?></h3>
+                                        <h3 class="font-bold mb-1 text-primary" style="color: #018790 !important;"><?= htmlspecialchars($nombreEstudiante) ?></h3>
                                         <p class="text-muted">Mi Perfil</p>
                                     </div>
 
@@ -274,7 +314,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                             <button type="button" class="btn btn-light px-4"
                                                 style="border-radius: 50px;">Cancelar</button>
                                             <button type="submit" class="btn btn-primary px-5"
-                                                style="border-radius: 50px; background-color: #1a9b8e; border-color: #1a9b8e;">Guardar
+                                                style="border-radius: 50px; background-color: #018790; border-color: #018790;">Guardar
                                                 Cambios</button>
                                         </div>
                                     </form>
@@ -347,3 +387,5 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 </body>
 
 </html>
+
+

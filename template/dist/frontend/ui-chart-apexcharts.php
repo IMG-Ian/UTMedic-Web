@@ -11,8 +11,8 @@
     
   <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
   <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css">
-    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css">
+        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
 <body>
@@ -846,3 +846,4 @@
     </body>
 
 </html>
+

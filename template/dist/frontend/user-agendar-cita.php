@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth-login.php");
@@ -28,8 +29,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-    <link rel="stylesheet" href="assets/css/utmedic-global.css">
-    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css">
+    <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -42,7 +43,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
                             <a href="index.php" class="text-decoration-none">
-                                <h3 class="mb-0 fw-bold" style="color: var(--utm-green); letter-spacing: 1px;">UTMedic</h3>
+                                <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
                         <div class="theme-toggle d-flex gap-2 align-items-center mb-0">
@@ -112,6 +113,14 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                             </a>
                         </li>
 
+                        <!-- Cierre de sesión -->
+                        <li class="sidebar-item mt-5 pt-3 border-top">
+                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                                <i class="bi bi-box-arrow-left text-danger"></i>
+                                <span>Cerrar Sesión</span>
+                            </a>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -137,7 +146,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
-                                        <div class="bg-success text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
+                                        <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
                                             <i class="bi bi-check-circle"></i>
                                         </div>
                                         <div>
@@ -148,7 +157,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 </li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded mt-1" href="#" style="white-space: normal;">
-                                        <div class="bg-warning text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
+                                        <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
                                             <i class="bi bi-calendar-x"></i>
                                         </div>
                                         <div>
@@ -168,9 +177,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <p class="mb-0 text-muted" style="font-size: 0.75rem;"><?= htmlspecialchars($rolUsuario) ?></p>
                             </div>
                         </a>
-                        <a href="../backend/logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center" style="border-radius: 50px; padding: 5px 15px; font-weight: 600;" title="Cerrar Sesión">
-                            <i class="bi bi-box-arrow-right me-1"></i> Salir
-                        </a>
+                        <!-- Logout retirado de aquí -->
                     </div>
                 </div>
             </div>
@@ -190,7 +197,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                     <div class="col-md-6">
                                         <label for="specialtySelect" class="form-label fw-bold">Especialidad</label>
                                         <select class="form-select" id="specialtySelect"
-                                            style="border-radius: 50px; padding: 0.6rem 1.2rem;">
+                                            style="border-radius: 50px; padding: 0.6rem 1.2rem; background-color: var(--bs-body-bg);">
                                             <option selected>Selecciona una opción...</option>
                                             <option value="1">Medicina General</option>
                                             <option value="2">Nutrición</option>
@@ -200,7 +207,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                     <div class="col-md-6">
                                         <label for="doctorSelect" class="form-label fw-bold">Profesional</label>
                                         <select class="form-select" id="doctorSelect"
-                                            style="border-radius: 50px; padding: 0.6rem 1.2rem;">
+                                            style="border-radius: 50px; padding: 0.6rem 1.2rem; background-color: var(--bs-body-bg);">
                                             <option selected>Cualquier Profesional Disponible</option>
                                             <option value="1">Dr. Juan Pérez</option>
                                             <option value="2">Dra. María González</option>
@@ -212,7 +219,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                             (Opcional)</label>
                                         <textarea class="form-control" id="reasonInput" rows="3"
                                             placeholder="Describe brevemente el motivo de tu visita..."
-                                            style="border-radius: 1rem; padding: 1rem;"></textarea>
+                                            style="border-radius: 1rem; padding: 1rem; background-color: var(--bs-body-bg);"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -229,23 +236,23 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                     <div class="col-md-6">
                                         <label for="dateSelect" class="form-label fw-bold">Selecciona el Día</label>
                                         <input type="date" class="form-control" id="dateSelect"
-                                            style="border-radius: 50px; padding: 0.6rem 1.2rem;">
+                                            style="border-radius: 50px; padding: 0.6rem 1.2rem; background-color: var(--bs-body-bg);">
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Horarios Disponibles</label>
                                         <style>
                                             .btn-outline-utm-green {
-                                                color: #1a9b8e !important;
-                                                border-color: #1a9b8e !important;
+                                                color: var(--utm-secondary) !important;
+                                                border-color: var(--utm-secondary) !important;
                                                 background-color: transparent !important;
                                                 transition: all 0.2s ease-in-out;
                                             }
                                             .btn-outline-utm-green:hover, 
                                             .btn-outline-utm-green.active {
-                                                background-color: rgba(26, 155, 142, 0.15) !important;
-                                                color: #1a9b8e !important;
-                                                border-color: #1a9b8e !important;
-                                                box-shadow: 0 0 0 0.25rem rgba(26, 155, 142, 0.25) !important;
+                                                background-color: var(--utm-accent) !important;
+                                                color: var(--utm-primary) !important;
+                                                border-color: var(--utm-accent) !important;
+                                                box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--utm-accent) 25%, transparent) !important;
                                             }
                                         </style>
                                         <div class="d-flex flex-wrap gap-2" id="timeSlotsContainer">
@@ -299,7 +306,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                     </div>
                                 </div>
                                 <button id="btnConfirmarCita" class="btn w-100 fw-bold py-3 text-white"
-                                    style="background-color: #1a9b8e; border-radius: 50px; font-size: 1.1rem;">
+                                    style="background-color: var(--utm-secondary); border-radius: 50px; font-size: 1.1rem;">
                                     Confirmar Cita
                                 </button>
                                 <div class="text-center mt-3">
@@ -457,9 +464,9 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                     if (data.status === 'success') {
                         Swal.fire({
                             icon: 'success',
-                            title: '¡Cita Agendada!',
+                            title: 'íƒâ€ší‚¡Cita Agendada!',
                             text: 'Tu cita se ha guardado exitosamente en el sistema.',
-                            confirmButtonColor: '#1a9b8e'
+                            confirmButtonColor: '#018790'
                         }).then(() => {
                             window.location.href = 'index.php'; // Redirigirlo a inicio
                         });
@@ -487,3 +494,5 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 </body>
 
 </html>
+
+

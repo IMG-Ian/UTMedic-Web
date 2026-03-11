@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
 
 // Otorgar permisos de CORS por si el frontend y backend se corren en puertos u orígenes diferentes temporalmente
 header("Access-Control-Allow-Origin: *");

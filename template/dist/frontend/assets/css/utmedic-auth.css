@@ -19,7 +19,7 @@ body {
 .auth-title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--utm-green);
+    color: var(--utm-primary);
     margin-bottom: 0.5rem;
 }
 
@@ -46,8 +46,8 @@ body {
 
 .form-control-xl:focus {
     background-color: #55514f;
-    box-shadow: 0 0 0 4px rgba(26, 155, 142, 0.2);
-    border-color: var(--utm-green);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--utm-primary) 20%, transparent);
+    border-color: var(--utm-primary);
 }
 
 /* Iconos dentro de los inputs */
@@ -67,8 +67,8 @@ body {
 
 /* Botones Auth */
 .btn-primary {
-    background-color: var(--utm-green);
-    border-color: var(--utm-green);
+    background-color: var(--utm-primary);
+    border-color: var(--utm-primary);
     border-radius: 50px;
     padding: 0.8rem 2rem;
     font-size: 1.1rem;
@@ -78,10 +78,10 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #147a70;
-    border-color: #147a70;
+    background-color: var(--utm-secondary);
+    border-color: var(--utm-secondary);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(26, 155, 142, 0.4);
+    box-shadow: 0 4px 15px color-mix(in srgb, var(--utm-primary) 40%, transparent);
 }
 
 .btn-google {
@@ -120,5 +120,5 @@ body {
     right: 0;
     bottom: 0;
     left: 0;
-    background: linear-gradient(135deg, rgba(26, 155, 142, 0.85), rgba(10, 80, 70, 0.9));
+    background: linear-gradient(135deg, rgba(0, 84, 97, 0.85), rgba(1, 135, 144, 0.9));
 }

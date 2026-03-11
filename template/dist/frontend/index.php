@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -9,6 +10,8 @@ if (!isset($_SESSION['user_id'])) {
 $nombreEstudiante = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Usuario';
 $rolUsuario = isset($_SESSION['role']) ? ucfirst(strtolower($_SESSION['role'])) : 'Usuario Regular';
 $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'assets/compiled/jpg/1.jpg';
+
+require_once '../backend/controlador_inicio_paciente.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -29,8 +32,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css">
-    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css">
+        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
 <body>
@@ -42,7 +45,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
                             <a href="index.php" class="text-decoration-none">
-                                <h3 class="mb-0 fw-bold" style="color: var(--utm-green); letter-spacing: 1px;">UTMedic</h3>
+                                <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
                         <div class="theme-toggle d-flex gap-2 align-items-center mb-0">
@@ -112,6 +115,14 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                             </a>
                         </li>
 
+                        <!-- Cierre de sesión -->
+                        <li class="sidebar-item mt-5 pt-3 border-top">
+                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                                <i class="bi bi-box-arrow-left text-danger"></i>
+                                <span>Cerrar Sesión</span>
+                            </a>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -137,8 +148,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
-                                        <div class="bg-success text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <i class="bi bi-check-circle"></i>
+                                        <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                                         </div>
                                         <div>
                                             <h6 class="mb-0 text-sm font-bold text-dark">Cita Aceptada</h6>
@@ -148,8 +159,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 </li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded mt-1" href="#" style="white-space: normal;">
-                                        <div class="bg-warning text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <i class="bi bi-calendar-x"></i>
+                                        <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><line x1="10" y1="14" x2="14" y2="18"></line><line x1="14" y1="14" x2="10" y2="18"></line></svg>
                                         </div>
                                         <div>
                                             <h6 class="mb-0 text-sm font-bold text-dark">Cita Reagendada</h6>
@@ -168,9 +179,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <p class="mb-0 text-muted" style="font-size: 0.75rem;"><?= htmlspecialchars($rolUsuario) ?></p>
                             </div>
                         </a>
-                        <a href="../backend/logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center" style="border-radius: 50px; padding: 5px 15px; font-weight: 600;" title="Cerrar Sesión">
-                            <i class="bi bi-box-arrow-right me-1"></i> Salir
-                        </a>
+                        <!-- Logout movido a Sidebar -->
                     </div>
                 </div>
             </div>
@@ -182,13 +191,14 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
                         <!-- Welcome Banner -->
                         <div class="card shadow-sm border-0 mb-4"
-                            style="background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%); border-radius: 1rem;">
+                            style="background: linear-gradient(135deg, #005461 0%, #018790 100%); border-radius: 1rem;">
                             <div class="card-body p-4 p-md-5">
-                                <h2 class="font-bold text-dark mb-2">¡Buen día, <span class="text-primary"
-                                        style="color: #1a9b8e !important;"><?= htmlspecialchars($nombreEstudiante) ?></span>!</h2>
-                                <p class="text-dark opacity-100 fs-5 mb-4 fw-medium" style="color: #4b5563 !important;">Ten un excelente día usando UTMedic para tus citas médicas.</p>
-                                <a href="user-agendar-cita.php" class="btn btn-primary px-4 py-2"
-                                    style="border-radius: 50px; background-color: #1a9b8e; border-color: #1a9b8e;">
+                                <h2 class="font-bold mb-2" style="color: white !important;">¡Buen día, <span style="color: var(--utm-accent) !important;"><?= htmlspecialchars($nombreEstudiante) ?></span>!</h2>
+                                <p class="fs-5 mb-4 fw-medium" style="color: rgba(255,255,255,0.85);">Ten un excelente día usando UTMedic para tus citas médicas.</p>
+                                <a href="user-agendar-cita.php" class="btn px-4 py-2 fw-bold"
+                                    style="border-radius: 50px; background-color: transparent; border: 1px solid var(--utm-accent); color: var(--utm-accent) !important; transition: all 0.3s;"
+                                    onmouseover="this.style.backgroundColor='var(--utm-accent)'; this.style.color='#005461';"
+                                    onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--utm-accent)';">
                                     Agendar una Cita <i class="bi bi-arrow-right ms-2"></i>
                                 </a>
                             </div>
@@ -203,16 +213,75 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                             <div class="card-body p-4">
                                 <div id="appointmentsCarousel" class="carousel slide" data-bs-ride="carousel">
                                     <div class="carousel-inner" id="appointmentsCarouselInner">
-                                        <!-- Las citas se cargarán aquí dinámicamente vía fetch -->
-                                        <div class="text-center py-4 text-muted">
-                                            <div class="spinner-border text-primary" role="status">
-                                                <span class="visually-hidden">Cargando citas...</span>
+                                        <?php if (empty($citasFront)): ?>
+                                            <div class="text-center py-5">
+                                                <i class="bi bi-calendar-x fs-1 text-muted"></i>
+                                                <h5 class="mt-3 text-muted">No tienes citas próximas</h5>
+                                                <p class="text-secondary small">Puedes agendar una nueva cita desde el menú.</p>
                                             </div>
-                                            <p class="mt-2">Cargando tus citas médicas...</p>
-                                        </div>
+                                        <?php else: ?>
+                                            <?php 
+                                            $slideIndex = 0;
+                                            for ($i = 0; $i < count($citasFront); $i += 2): 
+                                                $isFirst = ($i === 0) ? 'active' : '';
+                                            ?>
+                                                <div class="carousel-item <?= $isFirst ?>">
+                                                    <div class="row g-3 justify-content-center">
+                                                        
+                                                        <!-- Cita 1 del Slide -->
+                                                        <div class="col-md-5">
+                                                            <div class="card border-0 mb-0 shadow-sm" style="background: var(--utm-accent); color: white; border-radius: 0.8rem;">
+                                                                <div class="card-body p-4">
+                                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                        <h5 class="text-white font-bold mb-0">Cita Médica</h5>
+                                                                    </div>
+                                                                    <div class="d-flex align-items-center mb-2">
+                                                                        <i class="bi bi-clock me-2"></i>
+                                                                        <span><?= htmlspecialchars($citasFront[$i]['fecha']) ?> | <?= htmlspecialchars($citasFront[$i]['horario']) ?></span>
+                                                                    </div>
+                                                                    <div class="d-flex align-items-center mb-4">
+                                                                        <i class="bi bi-person me-2"></i>
+                                                                        <span><?= htmlspecialchars($citasFront[$i]['profesional']) ?> (<?= htmlspecialchars($citasFront[$i]['especialidad']) ?>)</span>
+                                                                    </div>
+                                                                    <button class="btn btn-primary bg-opacity-10 text-primary btn-sm w-100 fw-bold" style="border-radius: 50px;">Ver Detalles</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Cita 2 del Slide (si existe) -->
+                                                        <?php if ($i + 1 < count($citasFront)): ?>
+                                                        <div class="col-md-5">
+                                                            <div class="card border-0 mb-0 shadow-sm" style="background: var(--utm-accent); color: white; border-radius: 0.8rem;">
+                                                                <div class="card-body p-4">
+                                                                     <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                        <h5 class="text-white font-bold mb-0">Cita Médica</h5>
+                                                                    </div>
+                                                                    <div class="d-flex align-items-center mb-2">
+                                                                        <i class="bi bi-clock me-2"></i>
+                                                                        <span><?= htmlspecialchars($citasFront[$i+1]['fecha']) ?> | <?= htmlspecialchars($citasFront[$i+1]['horario']) ?></span>
+                                                                    </div>
+                                                                    <div class="d-flex align-items-center mb-4">
+                                                                        <i class="bi bi-person me-2"></i>
+                                                                        <span><?= htmlspecialchars($citasFront[$i+1]['profesional']) ?> (<?= htmlspecialchars($citasFront[$i+1]['especialidad']) ?>)</span>
+                                                                    </div>
+                                                                    <button class="btn btn-light btn-sm w-100 fw-bold" style="border-radius: 50px;">Ver Detalles</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <?php endif; ?>
+
+                                                    </div>
+                                                </div>
+                                            <?php 
+                                            $slideIndex++;
+                                            endfor; 
+                                            ?>
+                                        <?php endif; ?>
                                     </div>
-                                    <!-- Controles de carrusel dinámicos -->
-                                    <div class="d-flex justify-content-center mt-3 gap-2" id="appointmentsControls" style="display: none !important;">
+                                    
+                                    <!-- Controles de carrusel (Ocultar si no hay suficientes tarjetas para slidetear) -->
+                                    <?php if (!empty($citasFront) && count($citasFront) > 2): ?>
+                                    <div class="d-flex justify-content-center mt-3 gap-2" id="appointmentsControls">
                                         <button class="btn btn-sm btn-outline-secondary" type="button"
                                             data-bs-target="#appointmentsCarousel" data-bs-slide="prev"
                                             style="border-radius: 50px;">
@@ -224,6 +293,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                             <i class="bi bi-chevron-right"></i>
                                         </button>
                                     </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -284,12 +354,12 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                                 <i class="bi bi-qr-code fs-1 text-dark"></i>
                                             </div>
                                             <p class="small text-muted mb-0">Campaña de vacunación contra la Influenza
-                                                este 15 de Noviembre en el edificio D. ¡Escanea para registrarte!</p>
+                                                este 15 de Noviembre en el edificio D. í‚¡Escanea para registrarte!</p>
                                         </div>
                                         <!-- Announcement 2 -->
                                         <div class="carousel-item">
                                             <div class="bg-light p-3 rounded-3 mb-3">
-                                                <i class="bi bi-megaphone-fill fs-1 text-warning"></i>
+                                                <i class="bi bi-megaphone-fill fs-1 text-info"></i>
                                             </div>
                                             <p class="small text-muted mb-0">Semana de la Salud Mental: Asiste a las
                                                 pláticas gratuitas en el auditorio a partir del lunes.</p>
@@ -299,7 +369,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                             <div class="bg-light p-3 rounded-3 mb-3">
                                                 <i class="bi bi-heart-pulse-fill fs-1 text-danger"></i>
                                             </div>
-                                            <p class="small text-muted mb-0">Donación de sangre: Únete a la campaña
+                                            <p class="small text-muted mb-0">Donación de sangre: íƒÅ¡nete a la campaña
                                                 altruista y salva vidas este próximo viernes.</p>
                                         </div>
                                     </div>
@@ -336,98 +406,14 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <script src="assets/compiled/js/app.js"></script>
 
     <script>
-        let patientAppointmentsDates = []; // Las extraeremos del servidor y nutrirán al calendario
+        // Pasar el string JSON PHP a nuestro Vector Nativo de JS para marcar las pastillas de calendario
+        let patientAppointmentsDates = <?= json_encode($fechasJS) ?>; 
         
         document.addEventListener('DOMContentLoaded', () => {
-            fetchAppointments();
+            renderCalendar();
         });
 
-        function fetchAppointments() {
-            fetch('../backend/api/obtener_citas_paciente.php')
-                .then(response => response.json())
-                .then(data => {
-                    const carouselInner = document.getElementById('appointmentsCarouselInner');
-                    const carouselControls = document.getElementById('appointmentsControls');
-
-                    if (data.status === 'success') {
-                        const citas = data.data;
-                        
-                        // Capturamos el listado de fechas con citas para el calendario
-                        patientAppointmentsDates = citas.map(cita => cita.fecha);
-                        renderCalendar(); // Pintar el calendario de nuevo ahora con los "eventos" (puntos)
-
-                        if (citas.length === 0) {
-                            carouselInner.innerHTML = `
-                                <div class="text-center py-5">
-                                    <i class="bi bi-calendar-x fs-1 text-muted"></i>
-                                    <h5 class="mt-3 text-muted">No tienes citas próximas</h5>
-                                    <p class="text-secondary small">Puedes agendar una nueva cita desde el menú.</p>
-                                </div>
-                            `;
-                            return;
-                        }
-
-                        // Construir slides de 2 en 2
-                        let html = '';
-                        let slideIndex = 0;
-                        
-                        for (let i = 0; i < citas.length; i += 2) {
-                            const isFirst = (i === 0) ? 'active' : '';
-                            html += `<div class="carousel-item ${isFirst}"><div class="row g-3 justify-content-center">`;
-                            
-                            // Cita 1 del slide
-                            html += buildCitaCard(citas[i]);
-
-                            // Cita 2 del slide (si existe)
-                            if (i + 1 < citas.length) {
-                                html += buildCitaCard(citas[i+1]);
-                            }
-
-                            html += `</div></div>`;
-                            slideIndex++;
-                        }
-
-                        carouselInner.innerHTML = html;
-
-                        // Mostrar controles solo si hay más de 1 slide (más de 2 citas)
-                        if (slideIndex > 1) {
-                            carouselControls.style.setProperty('display', 'flex', 'important');
-                        }
-
-                    } else {
-                        carouselInner.innerHTML = `<div class="alert alert-danger mx-3 my-4">Error al cargar las citas: ${data.message}</div>`;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching appointments:', error);
-                    document.getElementById('appointmentsCarouselInner').innerHTML = 
-                        `<div class="alert alert-warning mx-3 my-4">No se pudo conectar al servidor para obtener las citas.</div>`;
-                });
-        }
-
-        function buildCitaCard(cita) {
-            return `
-                <div class="col-md-5">
-                    <div class="card border-0 mb-0 shadow-sm" style="background: #e67e22; color: white; border-radius: 0.8rem;">
-                        <div class="card-body p-4">
-                            <h5 class="text-white font-bold mb-3">Cita Médica</h5>
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="bi bi-clock me-2"></i>
-                                <span>${cita.fecha} | ${cita.horario}</span>
-                            </div>
-                            <div class="d-flex align-items-center mb-4">
-                                <i class="bi bi-person me-2"></i>
-                                <span>${cita.profesional} (${cita.especialidad})</span>
-                            </div>
-                            <!-- Falta la vista de detalle real, se deja simulado por ahora -->
-                            <button class="btn btn-light btn-sm w-100 fw-bold" style="border-radius: 50px;">Ver Detalles</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // --- LÓGICA DEL CALENDARIO DINÁMICO ---
+        // --- Líƒâ€œGICA DEL CALENDARIO DINíMICO ---
         let currentDate = new Date();
         
         function renderCalendar() {
@@ -468,10 +454,10 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
                         if (isCurrentMonth && dayCount === today.getDate()) {
                             // Marcar el día de hoy
-                            html += `<div class="col text-white fw-bold rounded-circle" style="background-color: #1a9b8e;" title="Hoy">${dayCount}</div>`;
+                            html += `<div class="col text-white fw-bold rounded-circle" style="background-color: var(--utm-secondary);" title="Hoy">${dayCount}</div>`;
                         } else if (isAppointmentDay) {
                             // Marcar si hay una cita agendada en tu calendario!
-                            html += `<div class="col text-white fw-bold rounded-circle shadow-sm" style="background-color: #e67e22; cursor: pointer;" title="¡Tienes cita médica asignada este día!">${dayCount}</div>`;
+                            html += `<div class="col text-dark fw-bold rounded-circle shadow-sm" style="background-color: var(--utm-accent); cursor: pointer;" title="¡Tienes cita médica asignada este día!">${dayCount}</div>`;
                         } else {
                             html += `<div class="col cursor-pointer hover-bg-light rounded-circle" style="cursor: pointer;">${dayCount}</div>`;
                         }
@@ -501,3 +487,5 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 </body>
 
 </html>
+
+

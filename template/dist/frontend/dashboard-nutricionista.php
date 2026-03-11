@@ -17,8 +17,8 @@
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css">
-    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css">
+        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
 <body>
@@ -1006,7 +1006,7 @@
                 },
                 fill: {
                     opacity: 1,
-                    colors: ['#1a9b8e']
+                    colors: ['var(--utm-secondary)']
                 },
             }
 
@@ -1051,3 +1051,4 @@
     </body>
 
 </html>
+

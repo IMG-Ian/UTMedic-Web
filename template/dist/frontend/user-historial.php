@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth-login.php");
@@ -27,8 +28,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css">
-    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css">
+        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
 <body>
@@ -40,7 +41,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
                             <a href="index.php" class="text-decoration-none">
-                                <h3 class="mb-0 fw-bold" style="color: var(--utm-green); letter-spacing: 1px;">UTMedic</h3>
+                                <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
                         <div class="theme-toggle d-flex gap-2 align-items-center mb-0">
@@ -110,6 +111,14 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                             </a>
                         </li>
 
+                        <!-- Cierre de sesión -->
+                        <li class="sidebar-item mt-5 pt-3 border-top">
+                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                                <i class="bi bi-box-arrow-left text-danger"></i>
+                                <span>Cerrar Sesión</span>
+                            </a>
+                        </li>
+
                     </ul>
                 </div>
             </div>
@@ -135,7 +144,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
-                                        <div class="bg-success text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
+                                        <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
                                             <i class="bi bi-check-circle"></i>
                                         </div>
                                         <div>
@@ -146,7 +155,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 </li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded mt-1" href="#" style="white-space: normal;">
-                                        <div class="bg-warning text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
+                                        <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
                                             <i class="bi bi-calendar-x"></i>
                                         </div>
                                         <div>
@@ -166,9 +175,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <p class="mb-0 text-muted" style="font-size: 0.75rem;"><?= htmlspecialchars($rolUsuario) ?></p>
                             </div>
                         </a>
-                        <a href="../backend/logout.php" class="btn btn-outline-danger btn-sm d-flex align-items-center" style="border-radius: 50px; padding: 5px 15px; font-weight: 600;" title="Cerrar Sesión">
-                            <i class="bi bi-box-arrow-right me-1"></i> Salir
-                        </a>
+                        <!-- Logout retirado de aquí -->
                     </div>
                 </div>
             </div>
@@ -186,7 +193,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                         <div class="card-body p-4">
                             <div class="table-responsive">
                                 <table class="table table-hover mb-0" id="historialTable">
-                                    <thead class="text-muted" style="background-color: rgba(26, 155, 142, 0.05);">
+                                    <thead class="text-muted" style="background-color: rgba(1, 135, 144, 0.05);">
                                         <tr>
                                             <th>Fecha</th>
                                             <th>Hora</th>
@@ -220,7 +227,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content shadow" style="border-radius: 1rem; border: none;">
                     <div class="modal-header border-0 pb-0 pt-4 px-4">
-                        <h5 class="modal-title font-bold" id="citaDetallesModalLabel" style="color: #1a9b8e;">Detalle de la Cita</h5>
+                        <h5 class="modal-title font-bold" id="citaDetallesModalLabel" style="color: #018790;">Detalle de la Cita</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body p-4">
@@ -244,7 +251,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                         </div>
                         <div>
                             <span class="text-muted d-block mb-2 font-bold"><i class="bi bi-file-medical me-2"></i>Notas Médicas (Doctor):</span>
-                            <div class="p-3 rounded text-dark" id="modal-notas" style="min-height: 80px; font-size: 0.95rem; background-color: rgba(26, 155, 142, 0.05); border-left: 3px solid #1a9b8e;">
+                            <div class="p-3 rounded text-dark" id="modal-notas" style="min-height: 80px; font-size: 0.95rem; background-color: rgba(1, 135, 144, 0.05); border-left: 3px solid #018790;">
                                 --
                             </div>
                         </div>
@@ -292,7 +299,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 // Color del Status
                                 let badgeClass = 'bg-primary'; 
                                 if(cita.estado === 'Cancelada'){ badgeClass = 'bg-danger'; }
-                                else if(cita.estado === 'Completada'){ badgeClass = 'bg-success'; }
+                                else if(cita.estado === 'Completada'){ badgeClass = 'bg-primary'; }
                                 
                                 let docName = cita.doctor_nombre ? `${cita.doctor_nombre} (${cita.doctor_especialidad})` : 'Sin asignar';
                                 // Sanitizar observaciones para pasarlo seguro al atributo data
@@ -312,9 +319,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                             data-doctor="${docName}"
                                             data-estado="${cita.estado}"
                                             data-obs="${obs}"
-                                            data-notas="${notasMed}"
-                                            title="Ver Detalles Completos">
-                                            <i class="bi bi-eye text-secondary"></i>
+                                            data-notas="${notasMed}">
+                                            <svg class="text-secondary" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                         </button>
                                     </td>
                                 `;
@@ -354,8 +360,15 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                     document.getElementById('modal-doctor').innerText = btn.getAttribute('data-doctor');
                     document.getElementById('modal-estado').innerText = btn.getAttribute('data-estado');
                     
-                    document.getElementById('modal-motivo').innerText = btn.getAttribute('data-obs');
-                    document.getElementById('modal-notas').innerText = btn.getAttribute('data-notas');
+                    let motivoCrudo = btn.getAttribute('data-obs') || '';
+                    if (motivoCrudo.includes('--- Diagnóstico Médico Final ---')) {
+                        let partes = motivoCrudo.split('--- Diagnóstico Médico Final ---');
+                        document.getElementById('modal-motivo').innerText = partes[0].trim() || 'No especificado';
+                        document.getElementById('modal-notas').innerText = partes[1].trim();
+                    } else {
+                        document.getElementById('modal-motivo').innerText = motivoCrudo || 'Ningún motivo registrado.';
+                        document.getElementById('modal-notas').innerText = btn.getAttribute('data-notas') || 'El especialista aún no ha añadido notas a esta consulta.';
+                    }
                     
                     let estadoModal = document.getElementById('modal-estado');
                     estadoModal.style.color = btn.getAttribute('data-estado') === 'Cancelada' ? '#dc3545' : 
@@ -372,3 +385,5 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     </body>
 
 </html>
+
+

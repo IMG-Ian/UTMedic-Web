@@ -1,10 +1,26 @@
 /* UTMedic Global Styles */
 
 :root {
-    --utm-green: #1a9b8e;
+    --utm-primary: #005461;
+    /* Deep Teal - Tipografía, Headers, Iconos, Sidebar bg */
+    --utm-secondary: #018790;
+    /* Vibrant Teal - Botones Principales, Tab Activo */
+    --utm-accent: #00B7B5;
+    /* Cyan Mint - Hovers y Acentos */
     --utm-input-bg: #6b6664;
     --bs-body-font-family: 'Inter', sans-serif;
-    --bs-body-bg: #f2f7ff;
+    --bs-body-bg: #f4f4f4;
+
+    /* Override Bootstrap/Mazer Primary */
+    --bs-primary: #005461;
+    --bs-primary-rgb: 0, 84, 97;
+    --bs-secondary: #018790;
+    --bs-secondary-rgb: 1, 135, 144;
+    --bs-info: #00B7B5;
+    --bs-info-rgb: 0, 183, 181;
+    --bs-link-color: #005461;
+    --bs-link-hover-color: #018790;
+    --bs-heading-color: #005461;
 }
 
 body {
@@ -13,11 +29,57 @@ body {
 
 /* Links */
 a {
-    color: var(--utm-green);
+    color: var(--utm-primary);
     text-decoration: none;
     font-weight: 700;
 }
 
 a:hover {
+    color: var(--utm-secondary);
     text-decoration: underline;
+}
+
+/* Forzar sobreescrituras profundas de Bootstrap Buttons y Headers */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    color: var(--utm-primary) !important;
+}
+
+.text-primary {
+    color: var(--utm-primary) !important;
+}
+
+.bg-primary {
+    background-color: var(--utm-primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--utm-secondary) !important;
+    border-color: var(--utm-secondary) !important;
+    color: #ffffff !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--utm-primary) !important;
+    border-color: var(--utm-primary) !important;
+}
+
+.btn-outline-primary {
+    color: var(--utm-secondary) !important;
+    border-color: var(--utm-secondary) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--utm-secondary) !important;
+    color: #ffffff !important;
 }

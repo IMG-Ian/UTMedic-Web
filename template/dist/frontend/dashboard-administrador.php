@@ -20,8 +20,8 @@
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
     <link rel="stylesheet" href="./assets/css/utmedic-custom.css">
-    <link rel="stylesheet" href="assets/css/utmedic-global.css">
-    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css">
+    <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
 <body>
@@ -157,7 +157,7 @@
                                         <div
                                             class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
                                             <div class="stats-icon purple mb-2"
-                                                style="background-color: #e0f2f1; color: #1a9b8e;">
+                                                style="background-color: #e0f2f1; color: var(--utm-secondary);">
                                                 <i class="iconly-boldShow"></i>
                                             </div>
                                         </div>
@@ -176,7 +176,7 @@
                                         <div
                                             class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
                                             <div class="stats-icon blue mb-2"
-                                                style="background-color: #e0f2f1; color: #1a9b8e;">
+                                                style="background-color: #e0f2f1; color: var(--utm-secondary);">
                                                 <i class="iconly-boldProfile"></i>
                                             </div>
                                         </div>
@@ -195,7 +195,7 @@
                                         <div
                                             class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
                                             <div class="stats-icon green mb-2"
-                                                style="background-color: #e0f2f1; color: #1a9b8e;">
+                                                style="background-color: #e0f2f1; color: var(--utm-secondary);">
                                                 <i class="iconly-boldAdd-User"></i>
                                             </div>
                                         </div>
@@ -214,7 +214,7 @@
                                         <div
                                             class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
                                             <div class="stats-icon red mb-2"
-                                                style="background-color: #e0f2f1; color: #1a9b8e;">
+                                                style="background-color: #e0f2f1; color: var(--utm-secondary);">
                                                 <i class="iconly-boldBookmark"></i>
                                             </div>
                                         </div>
@@ -319,7 +319,7 @@
                     name: 'Visitas',
                     data: [9, 20, 14, 28, 17, 30, 24, 40, 32, 50, 42, 60]
                 }],
-                colors: ['#1a9b8e'],
+                colors: ['var(--utm-secondary)'],
                 xaxis: {
                     categories: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
                     labels: {
@@ -407,3 +407,4 @@
     </body>
 
 </html>
+

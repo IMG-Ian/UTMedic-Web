@@ -1,3 +1,8 @@
+<?php
+header('Content-Type: text/html; charset=utf-8');
+// Importar el escudo protector de rutas validando que sea Médico (Profesional en BD)
+require_once __DIR__ . '/../backend/auth_medico.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,8 +22,8 @@
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css">
-    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css">
+        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
 <body>
@@ -30,7 +35,7 @@
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
                             <a href="index.php" class="text-decoration-none">
-                                <h3 class="mb-0 fw-bold" style="color: var(--utm-green); letter-spacing: 1px;">UTMedic</h3>
+                                <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
                         <div class="theme-toggle d-flex gap-2 align-items-center mb-0">
@@ -70,649 +75,49 @@
                 </div>
                 <div class="sidebar-menu">
                     <ul class="menu">
-                        <li class="sidebar-title">Menu</li>
+                        <li class="sidebar-title">Menú Principal</li>
 
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">
-                            <a href="index.php" class="sidebar-link">
-                                <i class="bi bi-grid-fill"></i>
-                                <span>Dashboard</span>
+                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-medico.php' ? 'active' : '' ?>">
+                            <a href="dashboard-medico.php" class="sidebar-link">
+                                <i class="bi bi-house-door-fill"></i>
+                                <span>Inicio</span>
                             </a>
-
-
                         </li>
 
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-stack"></i>
-                                <span>Components</span>
+                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-agenda.php' ? 'active' : '' ?>">
+                            <a href="medico-agenda.php" class="sidebar-link">
+                                <i class="bi bi-calendar-check-fill"></i>
+                                <span>Agenda de Citas</span>
                             </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="component-accordion.php" class="submenu-link">Accordion</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-alert.php" class="submenu-link">Alert</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-badge.php" class="submenu-link">Badge</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-breadcrumb.php" class="submenu-link">Breadcrumb</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-button.php" class="submenu-link">Button</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-card.php" class="submenu-link">Card</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-carousel.php" class="submenu-link">Carousel</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-collapse.php" class="submenu-link">Collapse</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-dropdown.php" class="submenu-link">Dropdown</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-list-group.php" class="submenu-link">List Group</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-modal.php" class="submenu-link">Modal</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-navs.php" class="submenu-link">Navs</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-pagination.php" class="submenu-link">Pagination</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-placeholder.php" class="submenu-link">Placeholder</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-progress.php" class="submenu-link">Progress</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-spinner.php" class="submenu-link">Spinner</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-toasts.php" class="submenu-link">Toasts</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="component-tooltip.php" class="submenu-link">Tooltip</a>
-
-                                </li>
-
-                            </ul>
-
-
                         </li>
 
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-collection-fill"></i>
-                                <span>Extra Components</span>
+                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-historial.php' ? 'active' : '' ?>">
+                            <a href="medico-historial.php" class="sidebar-link">
+                                <i class="bi bi-clock-history"></i>
+                                <span>Historial Citas</span>
                             </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-avatar.php" class="submenu-link">Avatar</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-comment.php" class="submenu-link">Comment</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-divider.php" class="submenu-link">Divider</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-date-picker.php" class="submenu-link">Date Picker</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-flag.php" class="submenu-link">Flag</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-sweetalert.php" class="submenu-link">Sweet Alert</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-toastify.php" class="submenu-link">Toastify</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="extra-component-rating.php" class="submenu-link">Rating</a>
-
-                                </li>
-
-                            </ul>
-
-
                         </li>
 
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-grid-1x2-fill"></i>
-                                <span>Layouts</span>
+                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-emergencia.php' ? 'active' : '' ?>">
+                            <a href="medico-emergencia.php" class="sidebar-link">
+                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                                <span>Emergencia</span>
                             </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="layout-default.php" class="submenu-link">Default Layout</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="layout-vertical-1-column.php" class="submenu-link">1 Column</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="layout-vertical-navbar.php" class="submenu-link">Vertical Navbar</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="layout-rtl.php" class="submenu-link">RTL Layout</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="layout-horizontal.php" class="submenu-link">Horizontal Menu</a>
-
-                                </li>
-
-                            </ul>
-
-
                         </li>
 
-                        <li class="sidebar-title">Forms &amp; Tables</li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-hexagon-fill"></i>
-                                <span>Form Elements</span>
-                            </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="form-element-input.php" class="submenu-link">Input</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-element-input-group.php" class="submenu-link">Input Group</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-element-select.php" class="submenu-link">Select</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-element-radio.php" class="submenu-link">Radio</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-element-checkbox.php" class="submenu-link">Checkbox</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-element-textarea.php" class="submenu-link">Textarea</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'form-layout.php' ? 'active' : '' ?>">
-                            <a href="form-layout.php" class="sidebar-link">
-                                <i class="bi bi-file-earmark-medical-fill"></i>
-                                <span>Form Layout</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-journal-check"></i>
-                                <span>Form Validation</span>
-                            </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="form-validation-parsley.php" class="submenu-link">Parsley</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-pen-fill"></i>
-                                <span>Form Editor</span>
-                            </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="form-editor-quill.php" class="submenu-link">Quill</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-editor-ckeditor.php" class="submenu-link">CKEditor</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-editor-summernote.php" class="submenu-link">Summernote</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="form-editor-tinymce.php" class="submenu-link">TinyMCE</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'table.php' ? 'active' : '' ?>">
-                            <a href="table.php" class="sidebar-link">
-                                <i class="bi bi-grid-1x2-fill"></i>
-                                <span>Table</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-file-earmark-spreadsheet-fill"></i>
-                                <span>Datatables</span>
-                            </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="table-datatable.php" class="submenu-link">Datatable</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="table-datatable-jquery.php" class="submenu-link">Datatable (jQuery)</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-title">Extra UI</li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-pentagon-fill"></i>
-                                <span>Widgets</span>
-                            </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-widgets-chatbox.php" class="submenu-link">Chatbox</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-widgets-pricing.php" class="submenu-link">Pricing</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-widgets-todolist.php" class="submenu-link">To-do List</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-egg-fill"></i>
-                                <span>Icons</span>
-                            </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-icons-bootstrap-icons.php" class="submenu-link">Bootstrap Icons </a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-icons-fontawesome.php" class="submenu-link">Fontawesome</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-icons-dripicons.php" class="submenu-link">Dripicons</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-bar-chart-fill"></i>
-                                <span>Charts</span>
-                            </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-chart-chartjs.php" class="submenu-link">ChartJS</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-chart-apexcharts.php" class="submenu-link">Apexcharts</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'ui-file-uploader.php' ? 'active' : '' ?>">
-                            <a href="ui-file-uploader.php" class="sidebar-link">
-                                <i class="bi bi-cloud-arrow-up-fill"></i>
-                                <span>File Uploader</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-map-fill"></i>
-                                <span>Maps</span>
-                            </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-map-google-map.php" class="submenu-link">Google Map</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="ui-map-jsvectormap.php" class="submenu-link">JS Vector Map</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-three-dots"></i>
-                                <span>Multi-level Menu</span>
-                            </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  has-sub">
-                                    <a href="#" class="submenu-link">First Level</a>
-
-                                    <ul class="submenu submenu-level-2 ">
-
-
-                                        <li class="submenu-item ">
-                                            <a href="ui-multi-level-menu.php" class="submenu-link">Second Level</a>
-                                        </li>
-
-
-                                    </ul>
-
-                                </li>
-
-                                <li class="submenu-item  has-sub">
-                                    <a href="#" class="submenu-link">Another Menu</a>
-
-                                    <ul class="submenu submenu-level-2 ">
-
-
-                                        <li class="submenu-item ">
-                                            <a href="ui-multi-level-menu.php" class="submenu-link">Second Level
-                                                Menu</a>
-                                        </li>
-
-
-                                    </ul>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-title">Pages</li>
-
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'application-email.php' ? 'active' : '' ?>">
-                            <a href="application-email.php" class="sidebar-link">
-                                <i class="bi bi-envelope-fill"></i>
-                                <span>Email Application</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'application-chat.php' ? 'active' : '' ?>">
-                            <a href="application-chat.php" class="sidebar-link">
-                                <i class="bi bi-chat-dots-fill"></i>
-                                <span>Chat Application</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'application-gallery.php' ? 'active' : '' ?>">
-                            <a href="application-gallery.php" class="sidebar-link">
-                                <i class="bi bi-image-fill"></i>
-                                <span>Photo Gallery</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'application-checkout.php' ? 'active' : '' ?>">
-                            <a href="application-checkout.php" class="sidebar-link">
-                                <i class="bi bi-basket-fill"></i>
-                                <span>Checkout Page</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
+                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
+                            <a href="user-perfil.php" class="sidebar-link">
                                 <i class="bi bi-person-circle"></i>
-                                <span>Account</span>
+                                <span>Perfil</span>
                             </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="account-profile.php" class="submenu-link">Profile</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="account-security.php" class="submenu-link">Security</a>
-
-                                </li>
-
-                            </ul>
-
-
                         </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-person-badge-fill"></i>
-                                <span>Authentication</span>
+                        
+                        <!-- Cierre de sesión -->
+                        <li class="sidebar-item mt-5 pt-3 border-top">
+                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                                <i class="bi bi-box-arrow-left text-danger"></i>
+                                <span>Cerrar Sesión</span>
                             </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="auth-login.php" class="submenu-link">Login</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="auth-register.php" class="submenu-link">Register</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="auth-forgot-password.php" class="submenu-link">Forgot Password</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-item  has-sub">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-x-octagon-fill"></i>
-                                <span>Errors</span>
-                            </a>
-
-                            <ul class="submenu ">
-
-                                <li class="submenu-item  ">
-                                    <a href="error-403.php" class="submenu-link">403</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="error-404.php" class="submenu-link">404</a>
-
-                                </li>
-
-                                <li class="submenu-item  ">
-                                    <a href="error-500.php" class="submenu-link">500</a>
-
-                                </li>
-
-                            </ul>
-
-
-                        </li>
-
-                        <li class="sidebar-title">Raise Support</li>
-
-                        <li class="sidebar-item  ">
-                            <a href="https://zuramai.github.io/mazer/docs" class='sidebar-link'>
-                                <i class="bi bi-life-preserver"></i>
-                                <span>Documentation</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="https://github.com/zuramai/mazer/blob/main/CONTRIBUTING.md" class='sidebar-link'>
-                                <i class="bi bi-puzzle"></i>
-                                <span>Contribute</span>
-                            </a>
-
-
-                        </li>
-
-                        <li class="sidebar-item  ">
-                            <a href="https://github.com/zuramai/mazer#donation" class='sidebar-link'>
-                                <i class="bi bi-cash"></i>
-                                <span>Donate</span>
-                            </a>
-
-
                         </li>
 
                     </ul>
@@ -727,228 +132,141 @@
             </header>
 
             <div class="page-heading">
-                <h3>Panel del Médico</h3>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3>Panel del Médico</h3>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="dropdown">
+                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-bell-fill fs-4 text-muted"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">1</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
+                                <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
+                                        <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 text-sm font-bold text-dark">Llamado de Emergencia</h6>
+                                            <p class="mb-0 text-xs text-muted" style="font-size: 0.8rem;">Paciente registrado hace 5 mins.</p>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
+                            <div class="avatar avatar-sm border border-2 border-primary d-flex align-items-center justify-content-center overflow-hidden" style="background: white; border-radius: 50%; min-width: 32px; min-height: 32px;">
+                                <img src="<?= htmlspecialchars($_SESSION['user_avatar'] ?? 'assets/compiled/jpg/1.jpg') ?>" id="top-nav-avatar" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover;">
+                            </div>
+                            <div class="ms-2">
+                                <h6 class="mb-0 fs-6 user-name-display text-dark opacity-100"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Médico') ?></h6>
+                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">Profesional</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="page-content">
                 <section class="row">
-                    <div class="col-12 col-lg-9">
-                        <div class="row">
-                            <div class="col-6 col-lg-3 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-4 py-4-5">
-                                        <div class="row">
-                                            <div
-                                                class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                                <div class="stats-icon purple mb-2">
-                                                    <i class="iconly-boldShow"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Citas para Hoy</h6>
-                                                <h6 class="font-extrabold mb-0">12</h6>
-                                            </div>
-                                        </div>
+                    <!-- Left Column: Bienvenida y Citas del Día -->
+                    <div class="col-12 col-lg-8">
+                        
+                        <!-- Tarjeta de Bienvenida -->
+                        <div class="card mb-4 shadow-sm border-0" style="background: linear-gradient(135deg, #005461 0%, #018790 100%); border-radius: 1rem;">
+                            <div class="card-body py-4 px-5">
+                                <h2 class="fw-bold mb-3" style="color: white !important;">¡Buen día, <span style="color: var(--utm-accent) !important;"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Médico') ?></span>!</h2>
+                                <p class="mb-4 fs-5" style="color: rgba(255,255,255,0.85);">Ten un excelente día usando<br>utmedic para tus citas médicas.</p>
+                                <a href="medico-agenda.php" class="btn rounded-pill px-4 py-2 shadow-sm fw-bold text-dark" style="background-color: var(--utm-accent); border: 1px solid var(--utm-accent); transition: all 0.3s ease;">Atender las Citas</a>
+                            </div>
+                        </div>
+
+                        <!-- Tarjeta Citas del Día -->
+                        <div class="card shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-center mb-4">
+                                    <span class="badge rounded-pill bg-light text-dark px-4 py-2 fs-6 shadow-sm border" style="font-weight: 600;">Citas del día</span>
+                                </div>
+                                
+                                <div class="row px-2" id="citas-dia-container">
+                                    <div class="col-12 text-center text-muted py-4">
+                                        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                                        <span class="ms-2">Cargando citas...</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-6 col-lg-3 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-4 py-4-5">
-                                        <div class="row">
-                                            <div
-                                                class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                                <div class="stats-icon blue mb-2">
-                                                    <i class="iconly-boldProfile"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Pacientes Atendidos</h6>
-                                                <h6 class="font-extrabold mb-0">83</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-3 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-4 py-4-5">
-                                        <div class="row">
-                                            <div
-                                                class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                                <div class="stats-icon green mb-2">
-                                                    <i class="iconly-boldAdd-User"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Nuevos Pacientes</h6>
-                                                <h6 class="font-extrabold mb-0">8</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-3 col-md-6">
-                                <div class="card">
-                                    <div class="card-body px-4 py-4-5">
-                                        <div class="row">
-                                            <div
-                                                class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                                <div class="stats-icon red mb-2">
-                                                    <i class="iconly-boldBookmark"></i>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Mensajes Sin Leer</h6>
-                                                <h6 class="font-extrabold mb-0">3</h6>
-                                            </div>
-                                        </div>
-                                    </div>
+                        </div>
+                        
+                        <!-- Tarjeta Citas Atendidas (Gráfico movido) -->
+                        <div class="card shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
+                            <div class="card-body p-4 text-center">
+                                <h4 class="fw-bold text-dark mb-3">Citas Atendidas</h4>
+                                <div class="bg-white rounded p-2 shadow-sm border" style="border-radius: 12px !important;">
+                                    <div id="chart-citas-pendientes"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- CHATS INICIO -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4>Evolución de Pacientes (Semanal)</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="chart-profile-visit"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12 col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4>Consultas por Especialidad</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="bar"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4>Satisfacción del Paciente</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="radialGradient"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- CHATS FIN -->
-
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4>Últimas Consultas</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-hover table-lg">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Paciente</th>
-                                                        <th>Síntomas / Motivo</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td class="col-3">
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="avatar avatar-md">
-                                                                    <img src="./assets/compiled/jpg/5.jpg">
-                                                                </div>
-                                                                <p class="font-bold ms-3 mb-0">María López</p>
-                                                            </div>
-                                                        </td>
-                                                        <td class="col-auto">
-                                                            <p class=" mb-0">Dolor de cabeza crónico y fatiga constante.
-                                                            </p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="col-3">
-                                                            <div class="d-flex align-items-center">
-                                                                <div class="avatar avatar-md">
-                                                                    <img src="./assets/compiled/jpg/2.jpg">
-                                                                </div>
-                                                                <p class="font-bold ms-3 mb-0">Carlos Ruiz</p>
-                                                            </div>
-                                                        </td>
-                                                        <td class="col-auto">
-                                                            <p class=" mb-0">Revisión general y exámenes de laboratorio.
-                                                            </p>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    <div class="col-12 col-lg-3">
-                        <div class="card">
-                            <div class="card-body py-4 px-4">
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-xl">
-                                        <img src="./assets/compiled/jpg/1.jpg" alt="Face 1">
+
+                    <!-- Right Column: Emergencia y Estadísticas -->
+                    <div class="col-12 col-lg-4">
+                        
+                        <!-- Mini Calendar -->
+                        <div class="card shadow-sm border-0 mb-4" style="border-radius: 1rem;">
+                            <div class="card-header bg-transparent border-0 pt-4 pb-2 text-center">
+                                <h5 class="font-bold mb-0">Calendario</h5>
+                            </div>
+                            <div class="card-body p-3">
+                                <!-- Calendar Container para JS -->
+                                <div class="calendar-wrapper border rounded-3 p-3" style="background: var(--bs-body-bg);">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="fw-bold fs-6 text-body" id="calendar-title">Cargando...</span>
+                                        <div class="gap-1 d-flex">
+                                            <button class="btn btn-sm btn-light py-0 px-2" id="prev-month-btn">
+                                                <i class="bi bi-chevron-left small"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-light py-0 px-2" id="next-month-btn">
+                                                <i class="bi bi-chevron-right small"></i>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="ms-3 name">
-                                        <h5 class="font-bold">Dr. Juan Pérez</h5>
-                                        <h6 class="text-muted mb-0">Medicina General</h6>
+                                    <div class="calendar-grid text-center" style="font-size: 0.85rem;">
+                                        <div class="row gx-1 fw-bold text-muted mb-2">
+                                            <div class="col">Lun</div>
+                                            <div class="col">Mar</div>
+                                            <div class="col">Mié</div>
+                                            <div class="col">Jue</div>
+                                            <div class="col">Vie</div>
+                                            <div class="col">Sáb</div>
+                                            <div class="col">Dom</div>
+                                        </div>
+                                        <!-- Los días se inyectarán aquí -->
+                                        <div id="calendar-days"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Próximos Pacientes</h4>
+                        
+                        <!-- Tarjeta EMERGENCIA -->
+                        <div class="card mb-4 shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
+                            <div class="card-body py-5 px-4 text-center">
+                                <p class="text-secondary fw-bold mb-4" style="letter-spacing: 2px;">EMERGENCIA</p>
+                                <a href="medico-emergencia.php" class="btn btn-danger w-100 py-3 rounded-pill fw-bold" style="background-color: #bd1a1a; border-color: #bd1a1a; font-size: 1.1rem; box-shadow: 0 6px 15px rgba(189,26,26,0.4); text-transform: uppercase;">Emergencia</a>
                             </div>
-                            <div class="card-content pb-4">
-                                <div class="recent-message d-flex px-4 py-3">
-                                    <div class="avatar avatar-lg">
-                                        <img src="./assets/compiled/jpg/4.jpg">
-                                    </div>
-                                    <div class="name ms-4">
-                                        <h5 class="mb-1">Mario Gutiérrez</h5>
-                                        <h6 class="text-muted mb-0">10:00 AM</h6>
-                                    </div>
-                                </div>
-                                <div class="recent-message d-flex px-4 py-3">
-                                    <div class="avatar avatar-lg">
-                                        <img src="./assets/compiled/jpg/5.jpg">
-                                    </div>
-                                    <div class="name ms-4">
-                                        <h5 class="mb-1">Sofía Contreras</h5>
-                                        <h6 class="text-muted mb-0">11:30 AM</h6>
-                                    </div>
-                                </div>
-                                <div class="px-4">
-                                    <button class='btn btn-block btn-xl btn-primary font-bold mt-3'>Ver Agenda
-                                        Completa</button>
+                        </div>
+                        
+                        <!-- Tarjeta Citas Pendientes -->
+                        <div class="card mb-4 shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
+                            <div class="card-body py-4 text-center">
+                                <h4 class="fw-bold text-dark mb-4 lh-base">Citas<br>Pendientes</h4>
+                                <div id="citas-atendidas-count" class="d-inline-flex align-items-center justify-content-center bg-dark text-white rounded-circle shadow-lg" style="width: 85px; height: 85px; font-size: 2.5rem; font-weight: 800; border: 4px solid #fff;">
+                                    0
                                 </div>
                             </div>
                         </div>
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Rendimiento del Mes</h4>
-                            </div>
-                            <div class="card-body">
-                                <div id="chart-visitors-profile"></div>
-                            </div>
-                        </div>
-                    </div>
+
+                        <!-- Div movido a izquierda -->
                 </section>
             </div>
 
@@ -974,107 +292,163 @@
 
     <!-- Custom ApexCharts Initialization for Doctor Dashboard -->
     <script>
+        // --- Líƒâ€œGICA DEL CALENDARIO DINíMICO ---
+        let patientAppointmentsDates = []; // Aquí se inyectarán después desde la base de datos
+        let currentDate = new Date();
+
         document.addEventListener('DOMContentLoaded', function () {
-            var barOptions = {
-                series: [
-                    {
-                        name: "Pacientes",
-                        data: [44, 55, 57, 56, 61],
-                    },
-                ],
-                chart: {
-                    type: "bar",
-                    height: 350,
-                },
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        columnWidth: "55%",
-                        endingShape: "rounded",
-                    },
-                },
-                dataLabels: {
-                    enabled: false,
-                },
-                stroke: {
-                    show: true,
-                    width: 2,
-                    colors: ["transparent"],
-                },
-                xaxis: {
-                    categories: ["General", "Cardiología", "Pediatría", "Dermatología", "Neurología"],
-                },
-                fill: {
-                    opacity: 1,
-                    colors: ['#1a9b8e']
-                },
-            }
+            
+            // Cargar datos dinámicos desde API
+            fetch('../backend/api/obtener_dashboard_medico.php?t=' + new Date().getTime(), { cache: 'no-store' })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status === 'success') {
+                        const data = result.data;
 
-            var radialGradientOptions = {
-                series: [85],
-                chart: {
-                    height: 350,
-                    type: "radialBar",
-                },
-                plotOptions: {
-                    radialBar: {
-                        startAngle: -135,
-                        endAngle: 225,
-                        hollow: {
-                            margin: 0,
-                            size: "70%",
-                            background: "#fff",
-                        },
-                        track: {
-                            background: "#fff",
-                            strokeWidth: "67%",
-                        },
-                        dataLabels: {
-                            show: true,
-                            name: {
-                                offsetY: -10,
-                                color: "#888",
-                                fontSize: "17px",
+                        // 1. Llenar Citas Pendientes (numérico)
+                        document.getElementById('citas-atendidas-count').innerText = data.totalPendientes;
+
+                        // 2. Pintar Citas del Día
+                        const citasContainer = document.getElementById('citas-dia-container');
+                        if (data.citasDia.length > 0) {
+                            let html = '';
+                            data.citasDia.forEach(cita => {
+                                html += `
+                                    <div class="col-md-8 mx-auto mb-3">
+                                        <div class="card border-0 mb-0 shadow-sm" style="background: var(--utm-accent); color: white; border-radius: 0.8rem;">
+                                            <div class="card-body p-4">
+                                                <h5 class="text-white font-bold mb-3">Cita Médica</h5>
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <i class="bi bi-clock me-2"></i>
+                                                    <span>${cita.horario}</span>
+                                                </div>
+                                                <div class="d-flex align-items-center mb-4">
+                                                    <i class="bi bi-person me-2"></i>
+                                                    <span>${cita.paciente}</span>
+                                                </div>
+                                                <a href="medico-agenda.php" class="btn btn-light btn-sm w-100 fw-bold text-dark" style="border-radius: 50px;">Ver Detalles</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            citasContainer.innerHTML = html;
+                        } else {
+                            citasContainer.innerHTML = `
+                                <div class="col-12 py-4 text-center text-muted">
+                                    <h6 class="mt-2 text-dark">Día Libre</h6>
+                                    <p class="small mb-0">No hay citas programadas para hoy.</p>
+                                </div>
+                            `;
+                        }
+
+                        // 3. Renderizar ApexCharts Gráfico de Barras Citas Pendientes
+                        var pendienteOptions = {
+                            series: [{
+                                name: "Citas",
+                                data: data.chart.series
+                            }],
+                            chart: {
+                                type: "bar",
+                                height: 260,
+                                toolbar: { show: false },
+                                dropShadow: { enabled: true, top: 2, left: 0, blur: 4, opacity: 0.1 }
                             },
-                            value: {
-                                formatter: function (val) {
-                                    return parseInt(val) + "%"
-                                },
-                                color: "#111",
-                                fontSize: "36px",
-                                show: true,
+                            colors: ["var(--utm-primary)"],
+                            plotOptions: { bar: { horizontal: false, columnWidth: "40%", borderRadius: 5 } },
+                            dataLabels: { enabled: false },
+                            stroke: { show: true, width: 2, colors: ["transparent"] },
+                            xaxis: { categories: data.chart.labels, axisBorder: { show: false }, axisTicks: { show: false } },
+                            yaxis: {
+                                title: { text: "Ní‚Â° Citas", style: { color: "#6c757d", fontWeight: 600 } },
+                                labels: { style: { colors: "#6c757d" } },
+                                tickAmount: Math.max(...data.chart.series) > 5 ? 5 : Math.max(...data.chart.series)
                             },
-                        },
-                    },
-                },
-                fill: {
-                    type: "gradient",
-                    gradient: {
-                        shade: "dark",
-                        type: "horizontal",
-                        shadeIntensity: 0.5,
-                        gradientToColors: ["#1a9b8e"],
-                        inverseColors: true,
-                        opacityFrom: 1,
-                        opacityTo: 1,
-                        stops: [0, 100],
-                    },
-                },
-                stroke: {
-                    lineCap: "round",
-                },
-                labels: ["Satisfechos"],
-            }
+                            fill: { opacity: 1 },
+                            tooltip: { theme: "light", y: { formatter: function (val) { return val + " citas" } } }
+                        };
+                        var chart = new ApexCharts(document.querySelector("#chart-citas-pendientes"), pendienteOptions);
+                        chart.render();
 
-            var bar = new ApexCharts(document.querySelector("#bar"), barOptions)
-            var radialGradient = new ApexCharts(document.querySelector("#radialGradient"), radialGradientOptions)
+                        // 4. Inyectar fechas del calendario y renderizar
+                        patientAppointmentsDates = data.calendarioFechas;
+                        renderCalendar();
 
-            bar.render()
-            radialGradient.render()
+                    } else {
+                        document.getElementById('citas-dia-container').innerHTML = `<div class="alert alert-danger mx-2 mt-2 w-100">Error: ${result.message}</div>`;
+                    }
+                })
+                .catch(err => {
+                    console.error('Error al obtener dashboard médico:', err);
+                    document.getElementById('citas-dia-container').innerHTML = `<div class="alert alert-warning mx-2 mt-2 w-100">Error de conexión base de datos.</div>`;
+                });
         });
+        
+        function renderCalendar() {
+            const monthYearString = currentDate.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
+            document.getElementById('calendar-title').innerText = monthYearString.charAt(0).toUpperCase() + monthYearString.slice(1);
+            
+            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+            
+            let startingDay = firstDay.getDay() - 1; 
+            if (startingDay === -1) startingDay = 6; 
+            
+            const totalDays = lastDay.getDate();
+            const prevMonthLastDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+            
+            let html = '';
+            let dayCount = 1;
+            let nextMonthDayCount = 1;
+            
+            const today = new Date();
+            const isCurrentMonth = today.getMonth() === currentDate.getMonth() && today.getFullYear() === currentDate.getFullYear();
+            
+            for (let row = 0; row < 6; row++) {
+                html += '<div class="row gx-1 mb-1">';
+                for (let col = 0; col < 7; col++) {
+                    if (row === 0 && col < startingDay) {
+                        const prevDay = prevMonthLastDay - startingDay + col + 1;
+                        html += `<div class="col text-muted opacity-50">${prevDay}</div>`;
+                    } else if (dayCount > totalDays) {
+                        html += `<div class="col text-muted opacity-50">${nextMonthDayCount++}</div>`;
+                    } else {
+                        const loopDateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(dayCount).padStart(2, '0')}`;
+                        const isAppointmentDay = patientAppointmentsDates.includes(loopDateStr);
+
+                        if (isCurrentMonth && dayCount === today.getDate()) {
+                            html += `<div class="col text-white fw-bold rounded-circle" style="background-color: var(--utm-secondary);" title="Hoy">${dayCount}</div>`;
+                        } else if (isAppointmentDay) {
+                            html += `<div class="col text-dark fw-bold rounded-circle shadow-sm" style="background-color: var(--utm-accent); cursor: pointer;" title="Tienes evento médico este día">${dayCount}</div>`;
+                        } else {
+                            html += `<div class="col cursor-pointer hover-bg-light rounded-circle" style="cursor: pointer;">${dayCount}</div>`;
+                        }
+                        dayCount++;
+                    }
+                }
+                html += '</div>';
+                if (dayCount > totalDays && row > 3) break;
+            }
+            
+            document.getElementById('calendar-days').innerHTML = html;
+        }
+
+        document.getElementById('prev-month-btn').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        document.getElementById('next-month-btn').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        renderCalendar();
     </script>
 
 
     </body>
 
 </html>
+
+
