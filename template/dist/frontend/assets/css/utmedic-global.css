@@ -83,3 +83,42 @@ h6,
     background-color: var(--utm-secondary) !important;
     color: #ffffff !important;
 }
+
+/* ========================================================================= */
+/* --- DARK MODE CORRECTIONS --- */
+/* Estas reglas solo aplican cuando se activa el modo oscuro.
+   Asegurando que el modo claro quede 100% intacto. */
+/* ========================================================================= */
+
+[data-bs-theme="dark"] {
+    /* Revertir fuente a Inter en vez del Nunito que fuerza app-dark.css */
+    --bs-body-font-family: 'Inter', sans-serif !important;
+
+    /* Aclarar el color primario para que los títulos (h1, h2, etc.) que usan var(--utm-primary) 
+       sean legibles. Usamos el cyan mint (--utm-accent) con un brillo adecuado. */
+    --utm-primary: #00B7B5 !important;
+    --bs-heading-color: #00B7B5 !important;
+}
+
+/* Forzar que el `.text-dark` del HTML se vuelva claro (legible) en los paneles.
+   Pero mantenerlo oscuro si está explícitamente dentro de contenedores claros (.bg-light, .bg-white) */
+[data-bs-theme="dark"] .text-dark:not(.bg-light, .bg-white, .bg-light *, .bg-white *) {
+    color: #f8f9fa !important;
+}
+
+/* Asegurar que el texto dentro de contenedores claros (.bg-light, .bg-white) 
+   permanezca oscuro en modo oscuro, ya que el fondo sigue siendo claro. */
+[data-bs-theme="dark"] .bg-light,
+[data-bs-theme="dark"] .bg-white {
+    color: #212529 !important;
+}
+
+[data-bs-theme="dark"] .bg-light .text-muted,
+[data-bs-theme="dark"] .bg-white .text-muted {
+    color: #6c757d !important;
+}
+
+[data-bs-theme="dark"] .bg-light .text-primary,
+[data-bs-theme="dark"] .bg-white .text-primary {
+    color: #005461 !important; /* Original dark primary color for light backgrounds */
+}

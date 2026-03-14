@@ -268,12 +268,17 @@ foreach($citasDelMedico as $cita):
                                             <div class="col-12 col-md-3 d-flex flex-column align-items-md-end justify-content-center">
                                                 <?php
 if($isAtendidaOCancelada): ?>
-                                                    
                                                     <?php
-                                                        $badgeColor = ($estado === 'cancelada') ? 'bg-danger border-danger text-danger' : 'bg-primary border-success text-primary';
+                                                        if (strtolower($estado) === 'cancelada') {
+                                                            $badgeClasses = 'bg-danger bg-opacity-10 border border-danger text-danger';
+                                                        } elseif (strtolower($estado) === 'completada' || strtolower($estado) === 'atendida') {
+                                                            $badgeClasses = 'bg-secondary text-white border-0';
+                                                        } else {
+                                                            $badgeClasses = 'bg-info bg-opacity-10 border border-info text-dark';
+                                                        }
                                                         $label = ucfirst($estado);
                                                     ?>
-                                                    <span class="badge rounded-pill mb-2 px-3 py-1 bg-opacity-10 border <?= $badgeColor ?>"><?= $label ?></span>
+                                                    <span class="badge rounded-pill mb-2 px-3 py-1 <?= $badgeClasses ?>"><?= $label ?></span>
                                                     <div class="d-flex gap-3 align-items-center">
                                                         <button onclick="verDetalles(this)" 
                                                                 data-id="<?= $cita['id_cita'] ?>"
@@ -541,8 +546,8 @@ endif; ?>
             badgeEstado.textContent = estado;
             badgeEstado.className = 'badge rounded-pill px-3 py-2';
             if(estado.toLowerCase() === 'pendiente' || estado.toLowerCase() === 'agendada') badgeEstado.classList.add('bg-info', 'text-dark');
-            else if(estado.toLowerCase() === 'cancelada') badgeEstado.classList.add('bg-danger');
-            else badgeEstado.classList.add('bg-primary');
+            else if(estado.toLowerCase() === 'cancelada') badgeEstado.classList.add('bg-danger', 'text-white');
+            else badgeEstado.classList.add('bg-secondary', 'text-white');
 
             // Separar notas "Diagnóstico Médico Final" si la cita ya fue atendida
             const observacionBox = document.getElementById('detalleModal_motivo');
