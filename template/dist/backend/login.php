@@ -106,9 +106,13 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isse
                 case 'medico':
                 case 'doctor':
                 case 'profesional':
-                    // Temporalmente enviamos a medico, pero deberemos crear un dashboard único o router 
-                    // si un profesional puede ser psicologo o nutriologo basado en la tabla profesional.
-                    $redirectUrl = FRONTEND_URL . '/medico/dashboard-medico.php';
+                    $redirectUrl = '../dashboard-medico.php';
+                    break;
+                case 'nutricionista':
+                    $redirectUrl = '../nutricionista/dashboard-nutricionista.php';
+                    break;
+                case 'psicólogo':
+                    $redirectUrl = '../psicologo/dashboard-psicologo.php';
                     break;
             }
             
