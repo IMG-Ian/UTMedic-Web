@@ -1,13 +1,14 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 // Importar el escudo protector de rutas validando que sea Médico (Profesional en BD)
-require_once __DIR__ . '/../backend/auth_medico.php';
-require_once __DIR__ . '/../backend/config/paths.php';
+require_once __DIR__ . '/../../backend/auth_medico.php';
+require_once __DIR__ . '/../../backend/config/paths.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <base href="../">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Medico</title>
@@ -35,7 +36,7 @@ require_once __DIR__ . '/../backend/config/paths.php';
                 <div class="sidebar-header position-relative px-4 py-3">
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
-                            <a href="index.php" class="text-decoration-none">
+                            <a href="medico/dashboard-medico.php" class="text-decoration-none">
                                 <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
@@ -79,35 +80,35 @@ require_once __DIR__ . '/../backend/config/paths.php';
                         <li class="sidebar-title">Menú Principal</li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-medico.php' ? 'active' : '' ?>">
-                            <a href="dashboard-medico.php" class="sidebar-link">
+                            <a href="medico/dashboard-medico.php" class="sidebar-link">
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Inicio</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-agenda.php' ? 'active' : '' ?>">
-                            <a href="medico-agenda.php" class="sidebar-link">
+                            <a href="medico/medico-agenda.php" class="sidebar-link">
                                 <i class="bi bi-calendar-check-fill"></i>
                                 <span>Agenda de Citas</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-historial.php' ? 'active' : '' ?>">
-                            <a href="medico-historial.php" class="sidebar-link">
+                            <a href="medico/medico-historial.php" class="sidebar-link">
                                 <i class="bi bi-clock-history"></i>
                                 <span>Historial Citas</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-emergencia.php' ? 'active' : '' ?>">
-                            <a href="medico-emergencia.php" class="sidebar-link">
+                            <a href="medico/medico-emergencia.php" class="sidebar-link">
                                 <i class="bi bi-exclamation-triangle-fill text-danger"></i>
                                 <span>Emergencia</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
-                            <a href="user-perfil.php" class="sidebar-link">
+                            <a href="shared/user-perfil.php" class="sidebar-link">
                                 <i class="bi bi-person-circle"></i>
                                 <span>Perfil</span>
                             </a>
@@ -156,7 +157,7 @@ require_once __DIR__ . '/../backend/config/paths.php';
                                 </li>
                             </ul>
                         </div>
-                        <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
+                        <a href="shared/user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
                             <div class="avatar avatar-sm border border-2 border-primary d-flex align-items-center justify-content-center overflow-hidden" style="background: white; border-radius: 50%; min-width: 32px; min-height: 32px;">
                                 <img src="<?= htmlspecialchars($_SESSION['user_avatar'] ?? 'assets/compiled/jpg/1.jpg') ?>" id="top-nav-avatar" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover;">
                             </div>
@@ -178,7 +179,7 @@ require_once __DIR__ . '/../backend/config/paths.php';
                             <div class="card-body py-4 px-5">
                                 <h2 class="fw-bold mb-3" style="color: white !important;">¡Buen día, <span style="color: var(--utm-accent) !important;"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Médico') ?></span>!</h2>
                                 <p class="mb-4 fs-5" style="color: rgba(255,255,255,0.85);">Ten un excelente día usando<br>utmedic para tus citas médicas.</p>
-                                <a href="medico-agenda.php" class="btn rounded-pill px-4 py-2 shadow-sm fw-bold text-dark" style="background-color: var(--utm-accent); border: 1px solid var(--utm-accent); transition: all 0.3s ease;">Atender las Citas</a>
+                                <a href="medico/medico-agenda.php" class="btn rounded-pill px-4 py-2 shadow-sm fw-bold text-dark" style="background-color: var(--utm-accent); border: 1px solid var(--utm-accent); transition: all 0.3s ease;">Atender las Citas</a>
                             </div>
                         </div>
 
@@ -329,7 +330,7 @@ require_once __DIR__ . '/../backend/config/paths.php';
                                                     <i class="bi bi-person me-2"></i>
                                                     <span>${cita.paciente}</span>
                                                 </div>
-                                                <a href="medico-agenda.php" class="btn btn-light btn-sm w-100 fw-bold text-dark" style="border-radius: 50px;">Ver Detalles</a>
+                                                <a href="medico/medico-agenda.php" class="btn btn-light btn-sm w-100 fw-bold text-dark" style="border-radius: 50px;">Ver Detalles</a>
                                             </div>
                                         </div>
                                     </div>

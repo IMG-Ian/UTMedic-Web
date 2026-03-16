@@ -1,18 +1,19 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 // Importar el escudo protector de rutas validando que sea Médico (Profesional en BD)
-require_once __DIR__ . '/../backend/auth_medico.php';
-require_once __DIR__ . '/../backend/config/paths.php';
+require_once __DIR__ . '/../../backend/auth_medico.php';
+require_once __DIR__ . '/../../backend/config/paths.php';
 
 $active_page = 'agenda';
 
 // [BACKEND EXTERNO] Obtener Citas del Profesional logueado
-require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
+require_once __DIR__ . '/../../backend/controlador_agenda_medico.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <base href="../">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Mazer Admin Dashboard</title>
@@ -84,35 +85,35 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
                         <li class="sidebar-title">Menú Principal</li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-medico.php' ? 'active' : '' ?>">
-                            <a href="dashboard-medico.php" class="sidebar-link">
+                            <a href="medico/dashboard-medico.php" class="sidebar-link">
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Inicio</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-agenda.php' ? 'active' : '' ?>">
-                            <a href="medico-agenda.php" class="sidebar-link">
+                            <a href="medico/medico-agenda.php" class="sidebar-link">
                                 <i class="bi bi-calendar-check-fill"></i>
                                 <span>Agenda de Citas</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-historial.php' ? 'active' : '' ?>">
-                            <a href="medico-historial.php" class="sidebar-link">
+                            <a href="medico/medico-historial.php" class="sidebar-link">
                                 <i class="bi bi-clock-history"></i>
                                 <span>Historial Citas</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-emergencia.php' ? 'active' : '' ?>">
-                            <a href="medico-emergencia.php" class="sidebar-link">
+                            <a href="medico/medico-emergencia.php" class="sidebar-link">
                                 <i class="bi bi-exclamation-triangle-fill text-danger"></i>
                                 <span>Emergencia</span>
                             </a>
                         </li>
 
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
-                            <a href="user-perfil.php" class="sidebar-link">
+                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'shared/user-perfil.php' ? 'active' : '' ?>">
+                            <a href="shared/user-perfil.php" class="sidebar-link">
                                 <i class="bi bi-person-circle"></i>
                                 <span>Perfil</span>
                             </a>
@@ -161,7 +162,7 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
                                 </li>
                             </ul>
                         </div>
-                        <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
+                        <a href="shared/user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
                             <div class="avatar avatar-sm border border-2 border-primary d-flex align-items-center justify-content-center overflow-hidden" style="background: white; border-radius: 50%; min-width: 32px; min-height: 32px;">
                                 <img src="<?= htmlspecialchars($_SESSION['user_avatar'] ?? 'assets/compiled/jpg/1.jpg') ?>" id="top-nav-avatar" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover;">
                             </div>

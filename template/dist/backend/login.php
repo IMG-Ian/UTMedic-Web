@@ -97,7 +97,7 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isse
             $_SESSION['user_avatar'] = !empty($user['foto_perfil']) ? $user['foto_perfil'] : 'assets/compiled/jpg/1.jpg';
             
             // Redirección basada en el rol del usuario
-            $redirectUrl = '../index.php'; // Por defecto (Paciente / Estudiante / rol no reconocido)
+            $redirectUrl = '../user/index.php'; // Por defecto (Paciente / Estudiante / rol no reconocido)
             switch (strtolower($user['rol'])) {
                 case 'administrador':
                 case 'admin':
@@ -106,7 +106,7 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isse
                 case 'medico':
                 case 'doctor':
                 case 'profesional':
-                    $redirectUrl = '../dashboard-medico.php';
+                    $redirectUrl = '../medico/dashboard-medico.php';
                     break;
                 case 'nutricionista':
                     $redirectUrl = '../nutricionista/dashboard-nutricionista.php';
