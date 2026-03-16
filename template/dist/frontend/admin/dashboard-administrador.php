@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<?php require_once '../backend/config/paths.php'; ?>
+<?php require_once '../../backend/config/paths.php'; ?>
 <html lang="en">
 
 <head>
+    <base href="../">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Mazer Admin Dashboard</title>

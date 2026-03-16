@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <base href="../">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Mazer Admin Dashboard</title>
@@ -727,7 +728,7 @@
             </header>
 
             <div class="page-heading">
-                <h3>Panel del Psicólogo</h3>
+                <h3>Panel del Nutriólogo</h3>
             </div>
             <div class="page-content">
                 <section class="row">
@@ -744,8 +745,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Sesiones de Hoy</h6>
-                                                <h6 class="font-extrabold mb-0">6</h6>
+                                                <h6 class="text-muted font-semibold">Citas para Hoy</h6>
+                                                <h6 class="font-extrabold mb-0">9</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -762,8 +763,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Pacientes Activos</h6>
-                                                <h6 class="font-extrabold mb-0">45</h6>
+                                                <h6 class="text-muted font-semibold">Planes Activos</h6>
+                                                <h6 class="font-extrabold mb-0">142</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -781,7 +782,7 @@
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
                                                 <h6 class="text-muted font-semibold">Nuevos Pacientes</h6>
-                                                <h6 class="font-extrabold mb-0">3</h6>
+                                                <h6 class="font-extrabold mb-0">5</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -798,8 +799,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                                <h6 class="text-muted font-semibold">Altas del Mes</h6>
-                                                <h6 class="font-extrabold mb-0">4</h6>
+                                                <h6 class="text-muted font-semibold">Metas Cumplidas</h6>
+                                                <h6 class="font-extrabold mb-0">34</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -812,7 +813,7 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>Evolución del Bienestar (Nivel Promedio Semanal)</h4>
+                                        <h4>Progreso de Peso Promedio (Pacientes)</h4>
                                     </div>
                                     <div class="card-body">
                                         <div id="chart-profile-visit"></div>
@@ -825,7 +826,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>Frecuencia de Diagnósticos</h4>
+                                        <h4>Adherencia a Planes Alimenticios</h4>
                                     </div>
                                     <div class="card-body">
                                         <div id="bar"></div>
@@ -835,7 +836,7 @@
                             <div class="col-12 col-md-6">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>Adherencia a Terapia</h4>
+                                        <h4>Distribución de Macronutrientes</h4>
                                     </div>
                                     <div class="card-body">
                                         <div id="radialGradient"></div>
@@ -849,7 +850,7 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4>Notas de Sesión Recientes</h4>
+                                        <h4>Diarios de Comidas Recientes</h4>
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
@@ -857,7 +858,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Paciente</th>
-                                                        <th>Resumen Breve</th>
+                                                        <th>Resumen del Día</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -867,12 +868,12 @@
                                                                 <div class="avatar avatar-md">
                                                                     <img src="./assets/compiled/jpg/5.jpg">
                                                                 </div>
-                                                                <p class="font-bold ms-3 mb-0">María Fernández</p>
+                                                                <p class="font-bold ms-3 mb-0">Ana Ramírez</p>
                                                             </div>
                                                         </td>
                                                         <td class="col-auto">
-                                                            <p class=" mb-0">Identificación de desencadenantes de
-                                                                ansiedad en área laboral.</p>
+                                                            <p class=" mb-0">Cumplió objetivo de calorías, le faltó
+                                                                hidratación.</p>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -881,12 +882,12 @@
                                                                 <div class="avatar avatar-md">
                                                                     <img src="./assets/compiled/jpg/2.jpg">
                                                                 </div>
-                                                                <p class="font-bold ms-3 mb-0">Carlos Ruiz</p>
+                                                                <p class="font-bold ms-3 mb-0">Luis Gómez</p>
                                                             </div>
                                                         </td>
                                                         <td class="col-auto">
-                                                            <p class=" mb-0">Progreso positivo en técnicas de regulación
-                                                                emocional.</p>
+                                                            <p class=" mb-0">Excelente adherencia al plan keto. Excesos
+                                                                el fin de semana.</p>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -905,15 +906,15 @@
                                         <img src="./assets/compiled/jpg/1.jpg" alt="Face 1">
                                     </div>
                                     <div class="ms-3 name">
-                                        <h5 class="font-bold">Lic. Martín Gómez</h5>
-                                        <h6 class="text-muted mb-0">Psicología Clínica</h6>
+                                        <h5 class="font-bold">Lic. Karla Mendoza</h5>
+                                        <h6 class="text-muted mb-0">Nutrición Clínica</h6>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card">
                             <div class="card-header">
-                                <h4>Próximas Sesiones</h4>
+                                <h4>Próximas Consultas</h4>
                             </div>
                             <div class="card-content pb-4">
                                 <div class="recent-message d-flex px-4 py-3">
@@ -921,8 +922,8 @@
                                         <img src="./assets/compiled/jpg/4.jpg">
                                     </div>
                                     <div class="name ms-4">
-                                        <h5 class="mb-1">Sofía López</h5>
-                                        <h6 class="text-muted mb-0">04:00 PM (Online)</h6>
+                                        <h5 class="mb-1">Roberto Vargas</h5>
+                                        <h6 class="text-muted mb-0">09:00 AM (Primera Vez)</h6>
                                     </div>
                                 </div>
                                 <div class="recent-message d-flex px-4 py-3">
@@ -930,8 +931,8 @@
                                         <img src="./assets/compiled/jpg/5.jpg">
                                     </div>
                                     <div class="name ms-4">
-                                        <h5 class="mb-1">Javier Torres</h5>
-                                        <h6 class="text-muted mb-0">05:30 PM (Presencial)</h6>
+                                        <h5 class="mb-1">Clara Jiménez</h5>
+                                        <h6 class="text-muted mb-0">10:45 AM (Seguimiento)</h6>
                                     </div>
                                 </div>
                                 <div class="px-4">
@@ -942,7 +943,7 @@
                         </div>
                         <div class="card">
                             <div class="card-header">
-                                <h4>Actividad Semanal</h4>
+                                <h4>Rendimiento del Mes</h4>
                             </div>
                             <div class="card-body">
                                 <div id="chart-visitors-profile"></div>
@@ -972,14 +973,14 @@
     <script src="assets/extensions/apexcharts/apexcharts.min.js"></script>
     <script src="assets/static/js/pages/dashboard.js"></script>
 
-    <!-- Custom ApexCharts Initialization for Psychologist Dashboard -->
+    <!-- Custom ApexCharts Initialization for Nutritionist Dashboard -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var barOptions = {
                 series: [
                     {
-                        name: "Pacientes",
-                        data: [15, 12, 8, 5, 5],
+                        name: "Adherencia %",
+                        data: [80, 85, 90, 88, 92],
                     },
                 ],
                 chart: {
@@ -988,7 +989,7 @@
                 },
                 plotOptions: {
                     bar: {
-                        horizontal: true,
+                        horizontal: false,
                         columnWidth: "55%",
                         endingShape: "rounded",
                     },
@@ -1002,47 +1003,41 @@
                     colors: ["transparent"],
                 },
                 xaxis: {
-                    categories: ["Ansiedad", "Depresión", "TCC", "Terapia Pareja", "Estrés"],
+                    categories: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
                 },
                 fill: {
                     opacity: 1,
-                    colors: ['#55c6e8']
+                    colors: ['var(--utm-secondary)']
                 },
             }
 
             var radialGradientOptions = {
-                series: [85],
+                series: [40, 30, 30],
                 chart: {
                     height: 350,
                     type: "radialBar",
                 },
                 plotOptions: {
                     radialBar: {
-                        hollow: {
-                            margin: 15,
-                            size: "70%"
-                        },
                         dataLabels: {
-                            showOn: "always",
                             name: {
-                                offsetY: -10,
-                                show: true,
-                                color: "#888",
-                                fontSize: "13px"
+                                fontSize: '22px',
                             },
                             value: {
-                                color: "#111",
-                                fontSize: "30px",
-                                show: true
+                                fontSize: '16px',
+                            },
+                            total: {
+                                show: true,
+                                label: 'Objetivo',
+                                formatter: function (w) {
+                                    return "100%"
+                                }
                             }
                         }
                     }
                 },
-                stroke: {
-                    lineCap: "round",
-                },
-                labels: ["Promedio de Asistencia"],
-                colors: ['#435ebe']
+                labels: ['Carbohidratos', 'Proteínas', 'Grasas'],
+                colors: ['#435ebe', '#55c6e8', '#ff7976']
             }
 
             var bar = new ApexCharts(document.querySelector("#bar"), barOptions)

@@ -84,7 +84,7 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
                         <li class="sidebar-title">Menú Principal</li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-medico.php' ? 'active' : '' ?>">
-                            <a href="dashboard-medico.php" class="sidebar-link">
+                            <a href="medico/dashboard-medico.php" class="sidebar-link">
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Inicio</span>
                             </a>
@@ -729,5 +729,4 @@ endif; ?>
 
 </body>
 </html>
-
 

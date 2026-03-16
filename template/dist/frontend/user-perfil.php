@@ -93,7 +93,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
                         <?php if (isset($_SESSION['role']) && strtolower($_SESSION['role']) === 'profesional'): ?>
                             <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-medico.php' ? 'active' : '' ?>">
-                                <a href="dashboard-medico.php" class="sidebar-link">
+                                <a href="medico/dashboard-medico.php" class="sidebar-link">
                                     <i class="bi bi-house-door-fill"></i>
                                     <span>Inicio</span>
                                 </a>
