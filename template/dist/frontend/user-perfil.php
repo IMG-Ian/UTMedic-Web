@@ -2,6 +2,7 @@
 header('Content-Type: text/html; charset=utf-8');
 // Iniciar sesión para recuperar datos del usuario
 session_start();
+require_once '../backend/config/paths.php';
 
 // Validar si el usuario está autenticado
 if (!isset($_SESSION['user_id'])) {
@@ -153,7 +154,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                            <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -342,6 +343,10 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <script src="assets/compiled/js/app.js"></script>
 
     <script>
+        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_URL = '<?= API_URL ?>';
+
         document.getElementById('avatarInput').addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 const file = this.files[0];
@@ -358,7 +363,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
                 // Podemos cambiar el icono de la camara temporalmente por un spinner si quisieramos
                 // Aquí se envía
-                fetch('../backend/api/subir_avatar.php', {
+                fetch(`${API_URL}/subir_avatar.php`, {
                     method: 'POST',
                     body: formData
                 })

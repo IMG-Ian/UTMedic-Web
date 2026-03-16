@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once 'conexion.php';
+require_once '../config/conexion.php';
 
 $sql = "SELECT p.id_profesional as idPersonal, 
                CONCAT(u.nombre, ' ', u.apellido_pat) as nombre, 

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<?php require_once '../../backend/config/paths.php'; ?>
 <html lang="es">
 
 <head>
@@ -9,8 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
-    <link rel="stylesheet" href="assets/css/utmedic-auth.css?v=<?= time() ?>">
+        <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?php echo ASSETS_URL; ?>/css/utmedic-auth.css?v=<?= time() ?>">
 </head>
 
 <body>
@@ -90,6 +91,10 @@
     <script src="https://accounts.google.com/gsi/client" async></script>
     
     <script>
+        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_URL = '<?= API_URL ?>';
+
         // Función de callback que se ejecuta cuando el usuario se loguea en el Popup de Google
         function handleCredentialResponse(response) {
             // response.credential contiene el ID Token de Google
@@ -98,7 +103,7 @@
                 formData.append('credential', response.credential);
 
                 // Enviar el token al backend
-                fetch('../backend/login.php', {
+                fetch(`${BACKEND_URL}/login.php`, {
                     method: 'POST',
                     body: formData
                 })
@@ -128,7 +133,7 @@
 
             const formData = new FormData(this);
 
-            fetch('../backend/login.php', {
+            fetch(`${BACKEND_URL}/login.php`, {
                 method: 'POST',
                 body: formData
             })

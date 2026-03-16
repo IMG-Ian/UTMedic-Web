@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id']) || strtolower($_SESSION['role']) !== 'profesion
     exit();
 }
 
-require_once 'conexion.php';
+require_once '../config/conexion.php';
 
 // Ocultar cualquier Warning HTML residual generado por PHP o mysqli para asegurar salida JSON limpia
 ini_set('display_errors', 0);

@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 session_start();
+require_once '../backend/config/paths.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth-login.php");
@@ -117,7 +118,7 @@ require_once '../backend/controlador_inicio_paciente.php';
 
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                            <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -406,6 +407,10 @@ require_once '../backend/controlador_inicio_paciente.php';
     <script src="assets/compiled/js/app.js"></script>
 
     <script>
+        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_URL = '<?= API_URL ?>';
+
         // Pasar el string JSON PHP a nuestro Vector Nativo de JS para marcar las pastillas de calendario
         let patientAppointmentsDates = <?= json_encode($fechasJS) ?>; 
         

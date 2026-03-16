@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id']) || strtolower($_SESSION['role']) !== 'profesion
     exit();
 }
 
-require_once __DIR__ . '/api/conexion.php';
+require_once __DIR__ . '/config/conexion.php';
 
 $userId = $_SESSION['user_id'];
 

@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 session_start();
+require_once '../backend/config/paths.php';
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth-login.php");
     exit();
@@ -113,7 +114,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                            <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -272,11 +273,15 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <!-- Simple DataTable Initialization -->
     <script src="assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
     <script>
+        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_URL = '<?= API_URL ?>';
+
         document.addEventListener('DOMContentLoaded', () => {
             const tbody = document.querySelector('#historialTable tbody');
             
             // 1. Obtener los datos del historial dinamicamente
-            fetch('../backend/api/obtener_historial_citas.php')
+            fetch(`${API_URL}/obtener_historial_citas.php`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {

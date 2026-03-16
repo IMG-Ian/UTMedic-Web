@@ -652,17 +652,17 @@
                 <ul class="submenu ">
                     
                     <li class="submenu-item  ">
-                        <a href="auth-login.php" class="submenu-link">Login</a>
+                        <a href="auth/auth-login.php" class="submenu-link">Login</a>
                         
                     </li>
                     
                     <li class="submenu-item  ">
-                        <a href="auth-register.php" class="submenu-link">Register</a>
+                        <a href="auth/auth-register.php" class="submenu-link">Register</a>
                         
                     </li>
                     
                     <li class="submenu-item  ">
-                        <a href="auth-forgot-password.php" class="submenu-link">Forgot Password</a>
+                        <a href="auth/auth-forgot-password.php" class="submenu-link">Forgot Password</a>
                         
                     </li>
                     
@@ -681,17 +681,17 @@
                 <ul class="submenu ">
                     
                     <li class="submenu-item  ">
-                        <a href="error-403.php" class="submenu-link">403</a>
+                        <a href="errors/error-403.php" class="submenu-link">403</a>
                         
                     </li>
                     
                     <li class="submenu-item  ">
-                        <a href="error-404.php" class="submenu-link">404</a>
+                        <a href="errors/error-404.php" class="submenu-link">404</a>
                         
                     </li>
                     
                     <li class="submenu-item  ">
-                        <a href="error-500.php" class="submenu-link">500</a>
+                        <a href="errors/error-500.php" class="submenu-link">500</a>
                         
                     </li>
                     

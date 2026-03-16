@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 session_start();
+require_once '../backend/config/paths.php';
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth-login.php");
     exit();
@@ -115,7 +116,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                            <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -335,6 +336,10 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <script src="assets/compiled/js/app.js"></script>
 
     <script>
+        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_URL = '<?= API_URL ?>';
+
         document.addEventListener('DOMContentLoaded', () => {
             const specialtySelect = document.getElementById('specialtySelect');
             const doctorSelect = document.getElementById('doctorSelect');
@@ -357,7 +362,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
             dateSelect.setAttribute('min', localeDate);
 
             // Cargar Doctores Dinámicamente desde el backend
-            fetch('../backend/api/obtener_profesionales.php')
+            fetch(`${API_URL}/obtener_profesionales.php`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
@@ -446,7 +451,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 btnConfirmarCita.innerText = 'Guardando...';
 
                 // Enviar la estructura en JSON crudo a nuestro endpoint PHP
-                fetch('../backend/api/crear_cita.php', {
+                fetch(`${API_URL}/crear_cita.php`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

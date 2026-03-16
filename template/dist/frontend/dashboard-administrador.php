@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<?php require_once '../backend/config/paths.php'; ?>
 <html lang="en">
 
 <head>
@@ -111,7 +112,7 @@
                         </li>
                         
                         <li class="sidebar-item mt-5">
-                            <a href="../backend/logout.php" class='sidebar-link text-danger'>
+                            <a href="<?= BACKEND_URL ?>/logout.php" class='sidebar-link text-danger'>
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -291,6 +292,10 @@
     <script src="assets/extensions/apexcharts/apexcharts.min.js"></script>
     <script src="assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
     <script>
+        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_URL = '<?= API_URL ?>';
+
         document.addEventListener('DOMContentLoaded', function () {
             // ApexCharts Initialization
             var optionsProfileVisit = {
@@ -345,7 +350,7 @@
 
             const table = document.querySelector('#table1');
             const dataTable = new simpleDatatables.DataTable(table);
-            const API_URL = '../backend/api/obtener_usuarios.php';
+            const API_URL = '<?= API_URL ?>/obtener_usuarios.php';
 
             // Mostrar un mensaje de carga visualmente si lo deseas aquí
 

@@ -2,6 +2,7 @@
 header('Content-Type: text/html; charset=utf-8');
 // Importar el escudo protector de rutas validando que sea Médico (Profesional en BD)
 require_once __DIR__ . '/../backend/auth_medico.php';
+require_once __DIR__ . '/../backend/config/paths.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +10,7 @@ require_once __DIR__ . '/../backend/auth_medico.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Mazer Admin Dashboard</title>
+    <title>Dashboard - Medico</title>
 
     <link rel="shortcut icon"
         href="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2033%2034'%20fill-rule='evenodd'%20stroke-linejoin='round'%20stroke-miterlimit='2'%20xmlns:v='https://vecta.io/nano'%3e%3cpath%20d='M3%2027.472c0%204.409%206.18%205.552%2013.5%205.552%207.281%200%2013.5-1.103%2013.5-5.513s-6.179-5.552-13.5-5.552c-7.281%200-13.5%201.103-13.5%205.513z'%20fill='%23435ebe'%20fill-rule='nonzero'/%3e%3ccircle%20cx='16.5'%20cy='8.8'%20r='8.8'%20fill='%2341bbdd'/%3e%3c/svg%3e"
@@ -114,7 +115,7 @@ require_once __DIR__ . '/../backend/auth_medico.php';
                         
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                            <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -291,7 +292,9 @@ require_once __DIR__ . '/../backend/auth_medico.php';
     <script src="assets/static/js/pages/dashboard.js"></script>
 
     <!-- Custom ApexCharts Initialization for Doctor Dashboard -->
-    <script>
+    <script>        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_URL = '<?= API_URL ?>';
         // --- Líƒâ€œGICA DEL CALENDARIO DINíMICO ---
         let patientAppointmentsDates = []; // Aquí se inyectarán después desde la base de datos
         let currentDate = new Date();
@@ -299,7 +302,7 @@ require_once __DIR__ . '/../backend/auth_medico.php';
         document.addEventListener('DOMContentLoaded', function () {
             
             // Cargar datos dinámicos desde API
-            fetch('../backend/api/obtener_dashboard_medico.php?t=' + new Date().getTime(), { cache: 'no-store' })
+            fetch(`${API_URL}/obtener_dashboard_medico.php?t=${new Date().getTime()}`, { cache: 'no-store' })
                 .then(response => response.json())
                 .then(result => {
                     if (result.status === 'success') {

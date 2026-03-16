@@ -2,6 +2,7 @@
 header('Content-Type: text/html; charset=utf-8');
 // Importar el escudo protector de rutas validando que sea Médico (Profesional en BD)
 require_once __DIR__ . '/../backend/auth_medico.php';
+require_once __DIR__ . '/../backend/config/paths.php';
 
 $active_page = 'agenda';
 
@@ -119,7 +120,7 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
                         
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                            <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -442,6 +443,10 @@ endif; ?>
 
 
     <script>
+        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_URL = '<?= API_URL ?>';
+
         document.addEventListener('DOMContentLoaded', function() {
             // Lógica de filtrado de pastillas (Manejo de display CSS Local)
             const filterBtns = document.querySelectorAll('.nav-pills-custom .btn');
@@ -605,7 +610,7 @@ endif; ?>
                 cancelButtonText: 'No, mantener'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch('../backend/api/cancelar_cita_medico.php', {
+                    fetch(`${API_URL}/cancelar_cita_medico.php`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: 'id_cita=' + idCita
@@ -660,7 +665,7 @@ endif; ?>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 
-                <form action="../backend/controlador_agenda_medico.php" method="POST">
+                <form action="<?= BACKEND_URL ?>/controlador_agenda_medico.php" method="POST">
                     <!-- Envio del ID Oculto para UPDATE la Base de Datos -->
                     <input type="hidden" name="id_cita" id="modalConsulta_id" value="">
                     <!-- Parametro para que el backend sepa que hacer -->

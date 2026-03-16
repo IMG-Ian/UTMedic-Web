@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once 'conexion.php';
+require_once '../config/conexion.php';
 
 $userId = $_SESSION['user_id'];
 $today = date('Y-m-d');

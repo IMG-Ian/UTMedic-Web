@@ -7,7 +7,7 @@ header("Access-Control-Allow-Methods: GET");
 header("Content-Type: application/json; charset=UTF-8");
 
 // Incluir el archivo de conexión
-require_once 'conexion.php';
+require_once '../config/conexion.php';
 
 // Validar que la conexión exista (creada en conexion.php)
 if (!isset($conn)) {
