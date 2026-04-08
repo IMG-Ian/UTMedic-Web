@@ -21,6 +21,11 @@
     --bs-link-color: #005461;
     --bs-link-hover-color: #018790;
     --bs-heading-color: #005461;
+    --utm-success-bg: #d1f7e0;
+    --utm-success-text: #1b8a5a;
+
+    --utm-muted-bg: #f1f1f1;
+    --utm-muted-text: #777;
 }
 
 body {
@@ -78,12 +83,42 @@ h6,
     color: var(--utm-secondary) !important;
     border-color: var(--utm-secondary) !important;
 }
+.stats-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.stats-icon.icon-card i {
+    color : inherit !important;
+    font-size: 1.7rem; 
+    line-height: 1;
+}
 .btn-outline-primary:hover {
     background-color: var(--utm-secondary) !important;
     color: #ffffff !important;
 }
+/* ICONOS - MODO CLARO */
+.stats-icon.icon-card {
+    background-color: #d1fae5; 
+    color: #005461; 
+}
+.badge-status {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
 
+.badge-status.activo {
+    background-color: var(--utm-success-bg);
+    color: var(--utm-success-text);
+}
+
+.badge-status.inactivo {
+    background-color: var(--utm-muted-bg);
+    color: var(--utm-muted-text);
+}
 /* ========================================================================= */
 /* --- DARK MODE CORRECTIONS --- */
 /* Estas reglas solo aplican cuando se activa el modo oscuro.
@@ -121,4 +156,16 @@ h6,
 [data-bs-theme="dark"] .bg-light .text-primary,
 [data-bs-theme="dark"] .bg-white .text-primary {
     color: #005461 !important; /* Original dark primary color for light backgrounds */
+}
+/* ICONOS - MODO OSCURO */
+[data-bs-theme="dark"] .stats-icon.icon-card {
+    background-color: #018790; 
+    color: #c1ccc8; 
+}
+[data-bs-theme="dark"] {
+    --utm-success-bg: rgba(0, 183, 181, 0.15);
+    --utm-success-text: #00B7B5;
+
+    --utm-muted-bg: #2c2c2c;
+    --utm-muted-text: #bbb;
 }

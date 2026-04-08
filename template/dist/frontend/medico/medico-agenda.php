@@ -41,7 +41,7 @@ require_once __DIR__ . '/../../backend/controlador_agenda_medico.php';
                 <div class="sidebar-header position-relative px-4 py-3">
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
-                            <a href="index.php" class="text-decoration-none">
+                            <a href="medico/dashboard-medico.php" class="text-decoration-none">
                                 <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
