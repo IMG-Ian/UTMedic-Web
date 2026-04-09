@@ -119,6 +119,10 @@ h6,
     background-color: var(--utm-muted-bg);
     color: var(--utm-muted-text);
 }
+
+.dataTable-input {
+    width: 300px !important;
+}
 /* ========================================================================= */
 /* --- DARK MODE CORRECTIONS --- */
 /* Estas reglas solo aplican cuando se activa el modo oscuro.

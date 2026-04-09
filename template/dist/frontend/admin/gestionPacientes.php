@@ -190,17 +190,406 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- BOTÓN AGREGAR -->
+                        <!-- BOTÓN NUEVO PACIENTE -->
                         <div class="mb-3">
                             <button class="btn btn-primary" onclick="abrirModal()">
                                 <i class="bi bi-plus-circle"></i> Nuevo Paciente
                             </button>
                         </div>
+                        <!-- MODAL NUEVO PACIENTE -->
+                        <!-- MODAL PACIENTES -->
+                        <div class="modal fade" id="modalPaciente" tabindex="-1">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
 
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Nuevo Paciente</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <form id="formPaciente">
+
+                                            <div class="row">
+                                                <input type="hidden" id="id_paciente">
+
+                                                <!-- 👤 DATOS USUARIO -->
+                                                <div class="col-md-4 mb-2">
+                                                    <label class="form-label">Nombre</label>
+                                                    <input type="text" class="form-control" id="nombre" required>
+                                                </div>
+
+                                                <div class="col-md-4 mb-2">
+                                                    <label class="form-label">Apellido Paterno</label>
+                                                    <input type="text" class="form-control" id="apellido_pat" required>
+                                                </div>
+
+                                                <div class="col-md-4 mb-2">
+                                                    <label class="form-label">Apellido Materno</label>
+                                                    <input type="text" class="form-control" id="apellido_mat">
+                                                </div>
+
+                                                <div class="col-md-6 mb-2">
+                                                    <label class="form-label">Correo</label>
+                                                    <input type="email" class="form-control" id="correo" required>
+                                                </div>
+
+                                                <div class="col-md-6 mb-2">
+                                                    <label class="form-label">Contraseña</label>
+                                                    <input type="password" class="form-control" id="password" placeholder="Solo si deseas cambiarla">
+                                                </div>
+
+                                                <!-- 🎓 DATOS PACIENTE -->
+                                                <div class="col-md-6 mb-2">
+                                                    <label class="form-label">Matrícula</label>
+                                                    <input type="text" class="form-control" id="matricula" required>
+                                                </div>
+
+                                                <div class="col-md-6 mb-2">
+                                                    <label class="form-label">Carrera</label>
+                                                    <select class="form-control" id="carrera">
+                                                        <option value="">Seleccionar carrera</option>
+                                                        <option value="ti">TI</option>
+                                                        <option value="bio">BIO</option>
+                                                        <option value="meca">MECA</option>
+                                                        <option value="mante">MANTE</option>
+                                                        <option value="gastro">GASTRO</option>
+                                                        <option value="energia">ENERGÍA</option>
+                                                        <option value="textil">TEXTIL</option>
+                                                        <option value="asesor">ASESOR</option>
+                                                        <option value="electro">ELECTRO</option>
+                                                        <option value="enfermeria">ENFERMERÍA</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-6 mb-2">
+                                                    <label class="form-label">Teléfono</label>
+                                                    <input type="text" class="form-control" id="telefono">
+                                                </div>
+
+                                                <div class="col-md-6 mb-2">
+                                                    <label class="form-label">Contacto de Emergencia</label>
+                                                    <input type="text" class="form-control" id="contacto_emergencia">
+                                                </div>
+
+                                                <div class="col-md-6 mb-2">
+                                                    <label class="form-label">Alergias</label>
+                                                    <textarea class="form-control" id="alergias"></textarea>
+                                                </div>
+
+                                                <div class="col-md-6 mb-2">
+                                                    <label class="form-label">Padecimientos</label>
+                                                    <textarea class="form-control" id="padecimientos"></textarea>
+                                                </div>
+
+                                                <div class="col-md-6 mb-2">
+                                                    <label class="form-label">Estado</label>
+                                                    <select class="form-control" id="estado">
+                                                        <option value="1">Activo</option>
+                                                        <option value="0">Inactivo</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </form>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-primary" onclick="guardarPaciente()">Guardar</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <script>
+                            let modalPaciente;
+                            let dataTable;
+                            let listaPacientesGlobal = [];
+
+                            function abrirModal() {
+
+                                document.getElementById('formPaciente').reset();
+                                document.getElementById('id_paciente').value = '';
+                                document.querySelector('#modalPaciente .modal-title').textContent = "Nuevo Paciente";
+
+                                modalPaciente.show();
+                            }
+
+                            function guardarPaciente() {
+
+                                const id = document.getElementById('id_paciente').value;
+
+                                const data = {
+                                    nombre: document.getElementById('nombre').value,
+                                    apellido_pat: document.getElementById('apellido_pat').value,
+                                    apellido_mat: document.getElementById('apellido_mat').value,
+                                    correo: document.getElementById('correo').value,
+                                    password: document.getElementById('password').value,
+                                    matricula: document.getElementById('matricula').value,
+                                    carrera: document.getElementById('carrera').value,
+                                    telefono: document.getElementById('telefono').value,
+                                    contacto_emergencia: document.getElementById('contacto_emergencia').value,
+                                    alergias: document.getElementById('alergias').value,
+                                    padecimientos: document.getElementById('padecimientos').value,
+                                    estado: document.getElementById('estado').value
+                                };
+
+                                let url = `${API_BASE}/admin/pacientes/insertar.php`;
+
+                                if (id) {
+                                    data.id_paciente = id;
+                                    url = `${API_BASE}/admin/pacientes/editar.php`;
+                                }
+
+                                fetch(url, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(data)
+                                    })
+                                    .then(res => res.json())
+                                    .then(result => {
+
+                                        if (result.success || result.status === 'success') {
+
+                                            mostrarToast(id ? 'Paciente actualizado correctamente' : 'Paciente registrado correctamente');
+
+                                            modalPaciente.hide();
+
+                                            document.getElementById('formPaciente').reset();
+                                            document.getElementById('id_paciente').value = '';
+
+                                            cargarPacientes();
+                                            cargarStats();
+
+                                        } else {
+                                            mostrarToast(result.message, 'danger');
+                                        }
+
+                                    })
+                                    .catch(err => {
+                                        console.error(err);
+                                        mostrarToast('Error al guardar paciente', 'danger');
+                                    });
+                            }
+
+                            function eliminar(id) {
+
+                                if (!confirm("¿Desactivar paciente?")) return;
+
+                                fetch(`${API_BASE}/admin/pacientes/eliminar.php`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({
+                                            id_paciente: id
+                                        })
+                                    })
+                                    .then(res => res.json())
+                                    .then(result => {
+
+                                        if (result.status === 'success') {
+                                            mostrarToast('Paciente desactivado correctamente');
+                                            cargarPacientes();
+                                            cargarStats();
+                                        } else {
+                                            mostrarToast(result.message, 'danger');
+                                        }
+
+                                    })
+                                    .catch(err => {
+                                        console.error(err);
+                                        mostrarToast('Error al desactivar paciente', 'danger');
+                                    });
+                            }
+
+                            function editar(id) {
+
+                                const p = listaPacientesGlobal.find(x => x.id_paciente == id);
+
+                                if (!p) {
+                                    mostrarToast('Error: Paciente no encontrado', 'danger');
+                                    return;
+                                }
+
+                                document.getElementById('id_paciente').value = p.id_paciente;
+                                document.getElementById('nombre').value = p.nombre;
+                                document.getElementById('apellido_pat').value = p.apellido_pat;
+                                document.getElementById('apellido_mat').value = p.apellido_mat;
+                                document.getElementById('correo').value = p.correo;
+
+                                document.getElementById('matricula').value = p.matricula;
+                                document.getElementById('carrera').value = p.carrera;
+                                document.getElementById('telefono').value = p.telefono || '';
+                                document.getElementById('contacto_emergencia').value = p.contacto_emergencia || '';
+                                document.getElementById('alergias').value = p.alergias || '';
+                                document.getElementById('padecimientos').value = p.padecimientos || '';
+
+                                document.getElementById('estado').value = (p.estado === 'Activo') ? '1' : '0';
+
+                                document.getElementById('password').value = '';
+
+                                document.querySelector('#modalPaciente .modal-title').textContent = "Editar Paciente";
+
+                                modalPaciente.show();
+                            }
+
+                            function mostrarToast(mensaje, tipo = 'success') {
+
+                                const toastEl = document.getElementById('miToast');
+                                const toastMensaje = document.getElementById('toastMensaje');
+
+                                toastEl.classList.remove('bg-success', 'bg-danger');
+                                toastEl.classList.add(`bg-${tipo}`);
+
+                                toastMensaje.textContent = mensaje;
+
+                                new bootstrap.Toast(toastEl).show();
+                            }
+
+                            function aplicarFiltros() {
+
+                                const estado = document.getElementById('filtroEstado').value;
+                                const carrera = document.getElementById('filtroCarrera').value;
+
+                                let filtrados = listaPacientesGlobal;
+
+                                if (estado) {
+                                    filtrados = filtrados.filter(p =>
+                                        p.estado.toLowerCase() === estado
+                                    );
+                                }
+
+                                if (carrera) {
+                                    filtrados = filtrados.filter(p =>
+                                        p.carrera.toLowerCase() === carrera
+                                    );
+                                }
+
+                                recargarTabla(filtrados);
+                            }
+
+                            function recargarTabla(data) {
+
+                                if (dataTable) dataTable.destroy();
+
+                                const table = document.querySelector('#tablaPacientes');
+                                dataTable = new simpleDatatables.DataTable(table, {
+                                    labels: {
+                                        placeholder: "Busca nombre, matrícula, correo...",
+                                        perPage: "Registros por página",
+                                        noRows: "No hay datos disponibles",
+                                        noResults: "No se encontraron resultados",
+                                        info: "Mostrando {start} a {end} de {rows} registros"
+                                    }
+                                });
+
+                                const mappedData = data.map(p => {
+                                    const nombre = `${p.nombre} ${p.apellido_pat} ${p.apellido_mat}`;
+                                    const estado = p.estado.toLowerCase();
+                                    const estadoTexto = (estado === 'activo') ? 'act' : 'inact';
+
+                                    return [
+                                        p.id_paciente,
+                                        nombre,
+                                        p.correo,
+                                        p.matricula,
+                                        p.carrera.toUpperCase(),
+                                        p.telefono || 'N/A',
+                                        p.contacto_emergencia || 'N/A',
+                                        p.alergias || 'N/A',
+                                        p.padecimientos || 'N/A',
+                                        `<span class="badge-status ${estado}">${p.estado}</span>`,
+                                        `
+                                    <button class="btn btn-sm btn-outline-success me-1" onclick="editar(${p.id_paciente})">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="eliminar(${p.id_paciente})">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                        `
+                                    ];
+                                });
+
+                                dataTable.insert({
+                                    data: mappedData
+                                });
+                            }
+
+                            function cargarPacientes() {
+
+                                fetch(`${API_BASE}/admin/pacientes/listar.php`)
+                                    .then(res => res.json())
+                                    .then(result => {
+
+                                        if (result.status === 'success') {
+                                            listaPacientesGlobal = result.data;
+                                            recargarTabla(listaPacientesGlobal);
+                                        } else {
+                                            mostrarToast(result.message, 'danger');
+                                        }
+
+                                    })
+                                    .catch(err => {
+                                        console.error(err);
+                                        mostrarToast('Error al cargar pacientes', 'danger');
+                                    });
+                            }
+
+                            function cargarStats() {
+
+                                fetch(`${API_BASE}/admin/pacientes.php`)
+                                    .then(res => res.json())
+                                    .then(result => {
+
+                                        if (result.status === 'success') {
+                                            const data = result.data;
+
+                                            document.getElementById('totalPacientes').textContent = data.total;
+                                            document.getElementById('totalPacientesActivos').textContent = data.activos;
+                                            document.getElementById('totalPacientesInactivos').textContent = data.inactivos;
+                                        } else {
+                                            mostrarToast('No se pudieron cargar las estadísticas', 'danger');
+                                        }
+
+                                    })
+                                    .catch(err => {
+                                        console.error('Error stats:', err);
+                                        mostrarToast('Error al cargar estadísticas', 'danger');
+                                    });
+                            }
+                        </script>
                         <!-- TABLA -->
                         <div class="card shadow-sm border-0">
-                            <div class="card-header">
-                                <h5>Lista de Pacientes</h5>
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Lista de Pacientes</h5>
+
+                                <div class="d-flex gap-2">
+                                    <select id="filtroEstado" class="form-select" style="width: 170px;">
+                                        <option value="">Filtro por estado</option>
+                                        <option value="activo">Activo</option>
+                                        <option value="inactivo">Inactivo</option>
+                                    </select>
+
+                                    <select id="filtroCarrera" class="form-select" style="width: 210px;">
+                                        <option value="">Filtro por carrera</option>
+                                        <option value="ti">TI</option>
+                                        <option value="bio">BIO</option>
+                                        <option value="meca">MECA</option>
+                                        <option value="mante">MANTE</option>
+                                        <option value="gastro">GASTRO</option>
+                                        <option value="energia">ENERGÍA</option>
+                                        <option value="textil">TEXTIL</option>
+                                        <option value="asesor">ASESOR</option>
+                                        <option value="electro">ELECTRO</option>
+                                        <option value="enfermeria">ENFERMERÍA</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <table class="table table-hover" id="tablaPacientes">
@@ -208,7 +597,7 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Nombre</th>
-                                            <th>Email</th>
+                                            <th>Correo</th>
                                             <th>Matrícula</th>
                                             <th>Carrera</th>
                                             <th>Teléfono</th>
@@ -238,11 +627,6 @@
     </div>
     <script src="assets/static/js/components/dark.js"></script>
     <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-
-
-    <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-
-
     <script src="assets/compiled/js/app.js"></script>
     <script src="assets/extensions/apexcharts/apexcharts.min.js"></script>
     <script src="assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
@@ -250,90 +634,38 @@
         // Constantes de rutas desde PHP
         const BACKEND_URL = '<?= BACKEND_URL ?>';
         const API_BASE = '<?= API_URL ?>';
-        const API_URL = '<?= API_URL ?>';
 
-            document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('filtroEstado').addEventListener('change', aplicarFiltros);
+            document.getElementById('filtroCarrera').addEventListener('change', aplicarFiltros);
+            modalPaciente = new bootstrap.Modal(document.getElementById('modalPaciente'));
+            document.getElementById('modalPaciente')
+                .addEventListener('hidden.bs.modal', () => {
 
-        //STATS PACIENTES
-        fetch(`${API_BASE}/admin/pacientes.php`)
-            .then(res => res.json())
-            .then(result => {
+                    document.getElementById('formPaciente').reset();
+                    document.getElementById('id_paciente').value = '';
+                    document.querySelector('#modalPaciente .modal-title').textContent = "Nuevo Paciente";
 
-                if (result.status === 'success') {
-                    const data = result.data;
+                });
+            cargarPacientes();
+            cargarStats();
 
-                    document.getElementById('totalPacientes').textContent = data.total;
-                    document.getElementById('totalPacientesActivos').textContent = data.activos;
-                    document.getElementById('totalPacientesInactivos').textContent = data.inactivos;
-                } else {
-                    console.error('Error API:', result.message);
-                }
-
-            })
-            .catch(err => {
-                console.error('Error fetch stats:', err);
-            });
-
-        // 
-        //TABLA PACIENTES
-        // 
-        const table = document.querySelector('#tablaPacientes');
-        const dataTable = new simpleDatatables.DataTable(table);
-
-        fetch(`${API_BASE}/admin/pacientes/listar.php`)
-.then(async response => {
-    const textoCrudo = await response.text();
-    try {
-        return JSON.parse(textoCrudo);
-    } catch (err) {
-        throw new Error(`El servidor devolvió un texto en lugar de un JSON válido.\n\nContenido recibido (primeros 250 caractéres):\n\n${textoCrudo.substring(0, 250)}...`);
-    }
-})
-.then(result => {
-
-    if (result.status === 'success') {
-
-        const mappedData = result.data.map(p => {
-
-            const nombreCompleto = `${p.nombre} ${p.apellido_pat} ${p.apellido_mat}`;
-            const estado = p.estado.toLowerCase();
-
-            return [
-                p.id_paciente,
-                nombreCompleto,
-                p.correo,
-                p.matricula,
-                p.carrera,
-                p.telefono || 'N/A',
-                p.contacto_emergencia || 'N/A',
-                p.alergias || 'N/A',
-                p.padecimientos || 'N/A',
-                `<span class="badge-status ${estado}">${p.estado}</span>`,
-                `
-                <i class="bi bi-pencil-square text-success me-3 action-icon"
-                    onclick="editar(${p.id_paciente})"></i>
-                <i class="bi bi-trash text-danger action-icon"
-                    onclick="eliminar(${p.id_paciente})"></i>
-                `
-            ];
-        });
-
-        dataTable.insert({
-            data: mappedData
-        });
-
-    } else {
-        console.error('Error API pacientes:', result.message);
-    }
-
-})
-.catch(err => {
-    console.error('Error fetch pacientes:', err);
-});
-
-    }); //aqio
+        }); //D0MContentLoaded termina
     </script>
+    <div class="toast-container position-fixed top-0 end-0 p-3">
 
+        <div id="miToast" class="toast align-items-center text-white bg-success border-0" role="alert" data-bs-delay="3500">
+
+            <div class="d-flex">
+                <div class="toast-body" id="toastMensaje">
+                    Mensaje aquí
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+
+        </div>
+
+    </div>
 </body>
 
 </html>

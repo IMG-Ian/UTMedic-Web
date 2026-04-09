@@ -291,7 +291,6 @@
 
                             function abrirModal() {
 
-                                // LIMPIAR TODO 🔥
                                 document.getElementById('formPSalud').reset();
                                 document.getElementById('id_profesional').value = '';
                                 document.querySelector('#modalPSalud .modal-title').textContent = "Nuevo Personal de Salud";
@@ -447,7 +446,7 @@
                                 toast.show();
                             }
 
-                            function filtrarEstado() {
+                            function aplicarFiltros() {
                                 const estadoFiltro = document.getElementById('filtroEstado').value;
                                 const especialidadFiltro = document.getElementById('filtroEspecialidad').value;
 
@@ -469,7 +468,7 @@
 
                             function recargarTabla(data) {
 
-                                // 🔥 validar antes de destruir
+                                //  validar antes de destruir
                                 if (dataTable) {
                                     dataTable.destroy();
                                 }
@@ -480,6 +479,7 @@
                                         placeholder: "Busca nombre, cédula, correo...",
                                         perPage: "Registros por página",
                                         noRows: "No hay datos disponibles",
+                                        noResults: "No se encontraron resultados",
                                         info: "Mostrando {start} a {end} de {rows} registros"
                                     }
                                 });
@@ -497,17 +497,17 @@
                                         horario,
                                         `<span class="badge-status ${estado}">${p.estado}</span>`,
                                         `
-            <button class="btn btn-sm btn-outline-success me-1" onclick="editar(${p.id_profesional})">
-                <i class="bi bi-pencil-square"></i>
-            </button>
-            <button class="btn btn-sm btn-outline-danger" onclick="eliminar(${p.id_profesional})">
-                <i class="bi bi-trash"></i>
-            </button>
-            `
+                                        <button class="btn btn-sm btn-outline-success me-1" onclick="editar(${p.id_profesional})">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="eliminar(${p.id_profesional})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                        `
                                     ];
                                 });
 
-                                // 🔥 usar la variable correcta
+                                // usar la variable correcta
                                 dataTable.insert({
                                     data: mappedData
                                 });
@@ -619,13 +619,13 @@
         let listaPersonalGlobal = [];
 
         document.addEventListener('DOMContentLoaded', function() {
-            cargarStats();
             cargarPersonal();
+            cargarStats();
             document.getElementById('filtroEstado')
-                .addEventListener('change', filtrarEstado);
+                .addEventListener('change', aplicarFiltros);
 
             document.getElementById('filtroEspecialidad')
-                .addEventListener('change', filtrarEstado);
+                .addEventListener('change', aplicarFiltros);
             modalPSalud = new bootstrap.Modal(document.getElementById('modalPSalud'));
             document.getElementById('modalPSalud')
                 .addEventListener('hidden.bs.modal', () => {
@@ -635,7 +635,6 @@
                     document.querySelector('#modalPSalud .modal-title').textContent = "Nuevo Personal de Salud";
 
                 });
-            const table = document.querySelector('#tablaPersonal');
         }); //aqui termina el D0MContentLoaded
     </script>
     <div class="toast-container position-fixed top-0 end-0 p-3">
