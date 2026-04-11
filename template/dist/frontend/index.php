@@ -139,35 +139,51 @@ require_once '../backend/controlador_inicio_paciente.php';
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3>Panel Principal</h3>
                     <div class="d-flex align-items-center gap-3">
+                                                
+                                                
+                                                
+                                                
+                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
-                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">2</span>
+                                <?php if(isset($unreadCount) && $unreadCount > 0): ?>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;"><?= $unreadCount ?></span>
+                                <?php endif; ?>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
-                                <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px; max-height: 400px; overflow-y: auto; overflow-x: hidden;">
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
-                                        <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 text-sm font-bold text-dark">Cita Aceptada</h6>
-                                            <p class="mb-0 text-xs text-muted" style="font-size: 0.8rem;">Tu cita del 15 de Nov. ha sido confirmada.</p>
-                                        </div>
-                                    </a>
+                                    <h6 class="dropdown-header font-bold text-dark d-flex justify-content-between align-items-center pb-2">
+                                        Notificaciones
+                                    </h6>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center py-2 rounded mt-1" href="#" style="white-space: normal;">
-                                        <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><line x1="10" y1="14" x2="14" y2="18"></line><line x1="14" y1="14" x2="10" y2="18"></line></svg>
+                                <?php if(empty($notificacionesList)): ?>
+                                    <li><div class="dropdown-item text-muted text-center py-4" style="font-size: 0.9rem; white-space: normal;">No tienes notificaciones recientes.</div></li>
+                                <?php else: ?>
+                                    <?php foreach($notificacionesList as $notif): 
+                                        $icon = 'bi-info-circle';
+                                        $bgClass = 'bg-secondary';
+                                        if($notif['tipo'] === 'nueva_cita') { $icon = 'bi-calendar-plus'; $bgClass = 'bg-primary'; }
+                                        if($notif['tipo'] === 'cancelacion') { $icon = 'bi-calendar-x'; $bgClass = 'bg-danger'; }
+                                        if($notif['tipo'] === 'completada') { $icon = 'bi-check-circle'; $bgClass = 'bg-success'; }
+                                        
+                                        $opacity = $notif['leida'] == 0 ? '1' : '0.7';
+                                        $fontWeight = $notif['leida'] == 0 ? 'font-bold text-dark' : 'text-muted fw-semibold';
+                                    ?>
+                                    <li>
+                                        <div class="dropdown-item d-flex align-items-start py-3 rounded mt-1 border-bottom" style="white-space: normal; opacity: <?= $opacity ?>; min-width: 280px; text-decoration: none;">
+                                            <div class="<?= $bgClass ?> text-white rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px; font-size: 1.25rem;">
+                                                <i class="bi <?= $icon ?>" style="line-height: 0;"></i>
+                                            </div>
+                                            <div style="min-width: 0; flex: 1;">
+                                                <h6 class="mb-1 text-sm <?= $fontWeight ?>" style="white-space: normal; word-wrap: break-word; line-height: 1.3;"><?= htmlspecialchars($notif['titulo']) ?></h6>
+                                                <p class="mb-1 text-xs text-muted" style="font-size: 0.8rem; white-space: normal; word-wrap: break-word; line-height: 1.4;"><?= htmlspecialchars($notif['mensaje']) ?></p>
+                                                <small class="text-muted d-block mt-1" style="font-size: 0.7rem; font-weight: 500;"><?= date('d M Y H:i', strtotime($notif['fecha_creacion'])) ?></small>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h6 class="mb-0 text-sm font-bold text-dark">Cita Reagendada</h6>
-                                            <p class="mb-0 text-xs text-muted" style="font-size: 0.8rem;">El Nutriologo solicitó cambio de horario.</p>
-                                        </div>
-                                    </a>
-                                </li>
+                                    </li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </ul>
                         </div>
                         <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
@@ -243,7 +259,7 @@ require_once '../backend/controlador_inicio_paciente.php';
                                                                         <i class="bi bi-person me-2"></i>
                                                                         <span><?= htmlspecialchars($citasFront[$i]['profesional']) ?> (<?= htmlspecialchars($citasFront[$i]['especialidad']) ?>)</span>
                                                                     </div>
-                                                                    <button class="btn btn-primary bg-opacity-10 text-primary btn-sm w-100 fw-bold" style="border-radius: 50px;">Ver Detalles</button>
+                                                                    <button class="btn btn-primary btn-sm w-100 fw-bold text-white px-4" style="border-radius: 50px; background-color: var(--utm-accent); border-color: var(--utm-accent);">Ver Detalles</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -264,7 +280,7 @@ require_once '../backend/controlador_inicio_paciente.php';
                                                                         <i class="bi bi-person me-2"></i>
                                                                         <span><?= htmlspecialchars($citasFront[$i+1]['profesional']) ?> (<?= htmlspecialchars($citasFront[$i+1]['especialidad']) ?>)</span>
                                                                     </div>
-                                                                    <button class="btn btn-light btn-sm w-100 fw-bold" style="border-radius: 50px;">Ver Detalles</button>
+                                                                    <button class="btn btn-primary btn-sm w-100 fw-bold text-white px-4" style="border-radius: 50px; background-color: var(--utm-accent); border-color: var(--utm-accent);">Ver Detalles</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -484,8 +500,24 @@ require_once '../backend/controlador_inicio_paciente.php';
         // Inicializar calendario
         renderCalendar();
     </script>
+    
+
+<!-- Notificaciones Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let bellNodes = document.querySelectorAll('a[data-bs-toggle="dropdown"] i.bi-bell-fill');
+    bellNodes.forEach(icon => {
+        let toggle = icon.closest('a');
+        if (toggle) {
+            toggle.addEventListener('click', function() {
+                let badge = toggle.querySelector('.bg-danger');
+                if (badge) badge.remove();
+                fetch('../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
+            });
+        }
+    });
+});
+</script>
 </body>
 
 </html>
-
-

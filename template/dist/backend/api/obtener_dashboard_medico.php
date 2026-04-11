@@ -1,13 +1,8 @@
 <?php
-session_start();
-header('Content-Type: application/json');
-
-if (!isset($_SESSION['user_id']) || strtolower($_SESSION['role']) !== 'profesional') {
-    echo json_encode(["status" => "error", "message" => "No autorizado. Su rol es: " . ($_SESSION['role'] ?? 'Ninguno')]);
-    exit();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
-
-require_once 'conexion.php';
+require_once __DIR__ . '/conexion.php';
 
 // Ocultar cualquier Warning HTML residual generado por PHP o mysqli para asegurar salida JSON limpia
 ini_set('display_errors', 0);
@@ -37,18 +32,19 @@ $sqlDia = "
         c.id_cita, 
         c.fecha, 
         c.hora, 
-        CONCAT(u.nombre, ' ', u.apellido_pat) AS nombre_paciente
+        COALESCE(NULLIF(CONCAT_WS(' ', u.nombre, u.apellido_pat), ''), c.nombre_invitado, 'Paciente Invitado') AS nombre_paciente
     FROM cita c
-    INNER JOIN paciente p ON c.id_paciente = p.id_paciente
-    INNER JOIN usuario u ON p.id_usuario = u.id_usuario
+    LEFT JOIN paciente p ON c.id_paciente = p.id_paciente
+    LEFT JOIN usuario u ON p.id_usuario = u.id_usuario
     WHERE c.id_profesional = ? 
-      AND c.fecha = ?
+      AND c.fecha >= ?
+      AND c.fecha <= DATE_ADD(?, INTERVAL 7 DAY)
       AND c.estado NOT IN ('cancelada', 'atendida', 'completada')
-    ORDER BY c.hora ASC
+    ORDER BY c.fecha ASC, c.hora ASC
 ";
 
 $stmtDia = $conn->prepare($sqlDia);
-$stmtDia->bind_param("is", $idProfesional, $today);
+$stmtDia->bind_param("iss", $idProfesional, $today, $today);
 $stmtDia->execute();
 $resDia = $stmtDia->get_result();
 
@@ -57,7 +53,7 @@ while ($row = $resDia->fetch_assoc()) {
     $horaFormateada = date("h:i A", strtotime($row['hora']));
     $citasDia[] = [
         "id" => $row['id_cita'],
-        "horario" => $horaFormateada,
+        "horario" => date("d/m/Y", strtotime($row['fecha'])) . " " . $horaFormateada,
         "paciente" => $row['nombre_paciente']
     ];
 }
@@ -83,12 +79,13 @@ while ($row = $resCal->fetch_assoc()) {
 
 // 5. Citas Atendidas Chart (Próximos 5 días con citas, aunque sean atendidas pasadas)
 $sqlChart = "
-    SELECT fecha, COUNT(*) as total_citas 
+    SELECT DATE(fecha_atencion) as fecha, COUNT(*) as total_citas 
     FROM cita 
     WHERE id_profesional = ? 
       AND estado = 'atendida'
-    GROUP BY fecha 
-    ORDER BY fecha DESC 
+      AND fecha_atencion IS NOT NULL
+    GROUP BY DATE(fecha_atencion) 
+    ORDER BY DATE(fecha_atencion) DESC 
     LIMIT 5
 ";
 $stmtChart = $conn->prepare($sqlChart);
@@ -113,22 +110,25 @@ if (count($chartLabels) == 0) {
     $chartSeries = [0];
 }
 
-    $response = [
-        "status" => "success",
-        "data" => [
-            "citasDia" => $citasDia,
-            "totalPendientes" => $totalPendientes,
-            "calendarioFechas" => $fechasCalendario,
-            "chart" => [
-                "labels" => $chartLabels,
-                "series" => $chartSeries
-            ]
+    $dashboardData = [
+        "citasDia" => $citasDia,
+        "totalPendientes" => $totalPendientes,
+        "calendarioFechas" => $fechasCalendario,
+        "chart" => [
+            "labels" => $chartLabels,
+            "series" => $chartSeries
         ]
     ];
 
-    echo json_encode($response);
+    if (basename($_SERVER['PHP_SELF']) === 'obtener_dashboard_medico.php') {
+        echo json_encode(["status" => "success", "data" => $dashboardData]);
+        exit();
+    }
 
 } catch (Exception $e) {
-    echo json_encode(["status" => "error", "message" => "Error de BD: " . $e->getMessage()]);
+    if (basename($_SERVER['PHP_SELF']) === 'obtener_dashboard_medico.php') {
+        echo json_encode(["status" => "error", "message" => "Error de BD: " . $e->getMessage()]);
+        exit();
+    }
 }
 ?>

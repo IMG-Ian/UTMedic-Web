@@ -106,9 +106,22 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isse
                 case 'medico':
                 case 'doctor':
                 case 'profesional':
-                    // Temporalmente enviamos a medico, pero deberemos crear un dashboard único o router 
-                    // si un profesional puede ser psicologo o nutriologo basado en la tabla profesional.
                     $redirectUrl = '../frontend/dashboard-medico.php';
+                    // Fetch specialty to dynamic route correctly
+                    if (isset($conn)) {
+                        $stmtProf = $conn->prepare("SELECT especialidad FROM profesional WHERE id_usuario = ?");
+                        $stmtProf->bind_param("i", $user['id']);
+                        $stmtProf->execute();
+                        $resProf = $stmtProf->get_result();
+                        if ($resProf->num_rows > 0) {
+                            $sp = strtolower($resProf->fetch_assoc()['especialidad']);
+                            if (strpos($sp, 'nutricion') !== false || strpos($sp, 'nutriolog') !== false) {
+                                $redirectUrl = '../frontend/dashboard-nutricionista.php';
+                            } else if (strpos($sp, 'psicolog') !== false) {
+                                $redirectUrl = '../frontend/dashboard-psicologo.php';
+                            }
+                        }
+                    }
                     break;
             }
             

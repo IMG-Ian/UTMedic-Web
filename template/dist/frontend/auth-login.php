@@ -49,32 +49,8 @@
                         <button id="btnSubmit" type="submit" class="btn btn-primary shadow-lg w-100 mt-2">Iniciar Sesión</button>
                     </form>
 
-                    <div class="text-center mt-3 mb-3 text-secondary">
-                        <small>O</small>
-                    </div>
-
-                    <!-- Botón renderizado de Google Identity Services -->
-                    <!-- AQUI VA EL API DE GOOGLE -->
-                    <div id="g_id_onload"
-                         data-client_id="TU_CLIENT_ID_DE_GOOGLE.apps.googleusercontent.com" 
-                         data-context="signin"
-                         data-ux_mode="popup"
-                         data-callback="handleCredentialResponse"
-                         data-auto_prompt="false">
-                    </div>
-
-                    <div class="g_id_signin d-flex justify-content-center"
-                         data-type="standard"
-                         data-shape="rectangular"
-                         data-theme="outline"
-                         data-text="continue_with"
-                         data-size="large"
-                         data-logo_alignment="left">
-                    </div>
-
-                    <div class="text-center mt-5">
+                    <div class="text-center mt-3">
                         <p class="text-secondary">¿No tienes cuenta? <a href="auth-register.php">Regístrate</a>.</p>
-                        <p><a href="auth-forgot-password.php">¿Olvidaste tu contraseña?</a></p>
                     </div>
                 </div>
             </div>
@@ -87,35 +63,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://accounts.google.com/gsi/client" async></script>
-    
     <script>
-        // Función de callback que se ejecuta cuando el usuario se loguea en el Popup de Google
-        function handleCredentialResponse(response) {
-            // response.credential contiene el ID Token de Google
-            if(response.credential) {
-                const formData = new FormData();
-                formData.append('credential', response.credential);
-
-                // Enviar el token al backend
-                fetch('../backend/login.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        window.location.href = data.redirect;
-                    } else {
-                        showLoginError(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error Google Auth:', error);
-                    showLoginError('Error de conexión con el servidor.');
-                });
-            }
-        }
 
         // Lógica para enviar el formulario estándar
         document.getElementById('loginForm').addEventListener('submit', function(e) {

@@ -35,14 +35,13 @@ if ($idPaciente > 0) {
         INNER JOIN profesional ps ON c.id_profesional = ps.id_profesional
         INNER JOIN usuario u ON ps.id_usuario = u.id_usuario
         WHERE c.id_paciente = ? 
-          AND c.fecha >= ?
           AND c.estado NOT IN ('cancelada', 'completada', 'atendida')
         ORDER BY c.fecha ASC, c.hora ASC
         LIMIT 10
     ";
     
     $stmtCitas = $conn->prepare($sqlCitas);
-    $stmtCitas->bind_param("is", $idPaciente, $today);
+    $stmtCitas->bind_param("i", $idPaciente);
     $stmtCitas->execute();
     $resultCitas = $stmtCitas->get_result();
     

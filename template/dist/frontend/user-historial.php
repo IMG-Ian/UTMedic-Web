@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 session_start();
+require_once __DIR__ . '/../backend/api/obtener_historial_citas.php';
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth-login.php");
     exit();
@@ -135,35 +136,51 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3>Historial de Citas</h3>
                     <div class="d-flex align-items-center gap-3">
+                                                
+                                                
+                                                
+                                                
+                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
-                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">2</span>
+                                <?php if(isset($unreadCount) && $unreadCount > 0): ?>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;"><?= $unreadCount ?></span>
+                                <?php endif; ?>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
-                                <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px; max-height: 400px; overflow-y: auto; overflow-x: hidden;">
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
-                                        <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <i class="bi bi-check-circle"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 text-sm font-bold text-dark">Cita Aceptada</h6>
-                                            <p class="mb-0 text-xs text-muted" style="font-size: 0.8rem;">Tu cita del 15 de Nov. ha sido confirmada.</p>
-                                        </div>
-                                    </a>
+                                    <h6 class="dropdown-header font-bold text-dark d-flex justify-content-between align-items-center pb-2">
+                                        Notificaciones
+                                    </h6>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center py-2 rounded mt-1" href="#" style="white-space: normal;">
-                                        <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <i class="bi bi-calendar-x"></i>
+                                <?php if(empty($notificacionesList)): ?>
+                                    <li><div class="dropdown-item text-muted text-center py-4" style="font-size: 0.9rem; white-space: normal;">No tienes notificaciones recientes.</div></li>
+                                <?php else: ?>
+                                    <?php foreach($notificacionesList as $notif): 
+                                        $icon = 'bi-info-circle';
+                                        $bgClass = 'bg-secondary';
+                                        if($notif['tipo'] === 'nueva_cita') { $icon = 'bi-calendar-plus'; $bgClass = 'bg-primary'; }
+                                        if($notif['tipo'] === 'cancelacion') { $icon = 'bi-calendar-x'; $bgClass = 'bg-danger'; }
+                                        if($notif['tipo'] === 'completada') { $icon = 'bi-check-circle'; $bgClass = 'bg-success'; }
+                                        
+                                        $opacity = $notif['leida'] == 0 ? '1' : '0.7';
+                                        $fontWeight = $notif['leida'] == 0 ? 'font-bold text-dark' : 'text-muted fw-semibold';
+                                    ?>
+                                    <li>
+                                        <div class="dropdown-item d-flex align-items-start py-3 rounded mt-1 border-bottom" style="white-space: normal; opacity: <?= $opacity ?>; min-width: 280px; text-decoration: none;">
+                                            <div class="<?= $bgClass ?> text-white rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px; font-size: 1.25rem;">
+                                                <i class="bi <?= $icon ?>" style="line-height: 0;"></i>
+                                            </div>
+                                            <div style="min-width: 0; flex: 1;">
+                                                <h6 class="mb-1 text-sm <?= $fontWeight ?>" style="white-space: normal; word-wrap: break-word; line-height: 1.3;"><?= htmlspecialchars($notif['titulo']) ?></h6>
+                                                <p class="mb-1 text-xs text-muted" style="font-size: 0.8rem; white-space: normal; word-wrap: break-word; line-height: 1.4;"><?= htmlspecialchars($notif['mensaje']) ?></p>
+                                                <small class="text-muted d-block mt-1" style="font-size: 0.7rem; font-weight: 500;"><?= date('d M Y H:i', strtotime($notif['fecha_creacion'])) ?></small>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h6 class="mb-0 text-sm font-bold text-dark">Cita Reagendada</h6>
-                                            <p class="mb-0 text-xs text-muted" style="font-size: 0.8rem;">El cardiólogo solicitó cambio de horario.</p>
-                                        </div>
-                                    </a>
-                                </li>
+                                    </li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </ul>
                         </div>
                         <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
@@ -183,12 +200,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
             <div class="page-content">
                 <section class="section">
                     <div class="card shadow-sm border-0 mb-4" style="border-radius: 1rem;">
-                        <div
-                            class="card-header bg-transparent border-0 pt-4 pb-2 d-flex justify-content-between align-items-center">
+                        <div class="card-header bg-transparent border-0 pt-4 pb-2 d-flex justify-content-between align-items-center">
                             <h5 class="font-bold mb-0">Mis Consultas Anteriores</h5>
-                            <button class="btn btn-outline-primary btn-sm" style="border-radius: 50px;">
-                                <i class="bi bi-filter me-1"></i> Filtrar
-                            </button>
                         </div>
                         <div class="card-body p-4">
                             <div class="table-responsive">
@@ -204,7 +217,48 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Las citas se inyectarán de forma dinámica mediante JavaScript -->
+                                        <?php if(empty($citas)): ?>
+                                            <tr><td colspan="6" class="text-center py-4 text-muted">Aún no tienes consultas registradas.</td></tr>
+                                        <?php else: ?>
+                                            <?php foreach ($citas as $cita): 
+                                                $fechaArr = explode("-", $cita["fecha"]);
+                                                $formattedDate = isset($fechaArr[2]) ? $fechaArr[2]."/".$fechaArr[1]."/".$fechaArr[0] : $cita["fecha"];
+                                                
+                                                $horaParts = explode(":", $cita["hora"]);
+                                                $hour = (int)$horaParts[0];
+                                                $minute = $horaParts[1] ?? "00";
+                                                $suffix = $hour >= 12 ? "PM" : "AM";
+                                                $formattedHour = str_pad((($hour % 12) ?: 12), 2, "0", STR_PAD_LEFT);
+                                                $formattedTime = "$formattedHour:$minute $suffix";
+                                                
+                                                $badgeClass = "bg-primary";
+                                                if($cita["estado"] === "cancelada") $badgeClass = "bg-danger";
+                                                if($cita["estado"] === "atendida" || $cita["estado"] === "completada") $badgeClass = "bg-success";
+                                                if($cita["estado"] === "agendada") $badgeClass = "bg-info text-dark";
+                                                
+                                                $docName = $cita["doctor_nombre"] ? ($cita["doctor_nombre"] . " (" . $cita["doctor_especialidad"] . ")") : "Sin asignar";
+                                                $obs = current(explode("\n", trim($cita["observaciones"])));
+                                                $obs = $obs ? htmlspecialchars($obs) : "Ningún motivo registrado.";
+                                            ?>
+                                            <tr>
+                                                <td class="align-middle fw-semibold"><?= $formattedDate ?></td>
+                                                <td class="align-middle text-muted"><?= $formattedTime ?></td>
+                                                <td class="align-middle"><?= htmlspecialchars($docName) ?></td>
+                                                <td class="align-middle"><span class="d-inline-block text-truncate" style="max-width: 150px;"><?= $obs ?></span></td>
+                                                <td class="align-middle"><span class="badge <?= $badgeClass ?> px-3 py-2 rounded-pill"><?= htmlspecialchars(ucfirst($cita["estado"])) ?></span></td>
+                                                <td class="align-middle">
+                                                    <button class="btn btn-sm btn-outline-info rounded-pill px-3 ver-detalles-btn"
+                                                            data-fecha-hora="<?= $formattedDate ?> a las <?= $formattedTime ?>"
+                                                            data-doctor="<?= htmlspecialchars($docName) ?>"
+                                                            data-estado="<?= htmlspecialchars(ucfirst($cita["estado"])) ?>"
+                                                            data-motivo="<?= htmlspecialchars($cita["observaciones"] ?: "Ningún motivo registrado.") ?>"
+                                                            data-notas="<?= htmlspecialchars($cita["notas_medicas"] ?: "No hay notas médicas disponibles para esta cita.") ?>">
+                                                        Ver Detalles
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -245,13 +299,13 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                         </div>
                         <div>
                             <span class="text-muted d-block mb-2 font-bold"><i class="bi bi-person-lines-fill me-2"></i>Motivo del Paciente:</span>
-                            <div class="p-3 rounded text-dark mb-3" id="modal-motivo" style="font-size: 0.95rem; background-color: #f8f9fa; border-left: 3px solid #6c757d;">
+                            <div class="p-3 rounded mb-3" id="modal-motivo" style="font-size: 0.95rem; background-color: var(--bs-tertiary-bg); border-left: 3px solid #6c757d;">
                                 --
                             </div>
                         </div>
                         <div>
                             <span class="text-muted d-block mb-2 font-bold"><i class="bi bi-file-medical me-2"></i>Notas Médicas (Doctor):</span>
-                            <div class="p-3 rounded text-dark" id="modal-notas" style="min-height: 80px; font-size: 0.95rem; background-color: rgba(1, 135, 144, 0.05); border-left: 3px solid #018790;">
+                            <div class="p-3 rounded" id="modal-notas" style="min-height: 80px; font-size: 0.95rem; background-color: rgba(1, 135, 144, 0.1); border-left: 3px solid #018790;">
                                 --
                             </div>
                         </div>
@@ -273,116 +327,59 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <script src="assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const tbody = document.querySelector('#historialTable tbody');
-            
-            // 1. Obtener los datos del historial dinamicamente
-            fetch('../backend/api/obtener_historial_citas.php')
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        const citas = data.data;
-                        tbody.innerHTML = '';
-                        
-                        if (citas.length === 0) {
-                            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Aún no tienes consultas registradas.</td></tr>';
-                        } else {
-                            citas.forEach(cita => {
-                                // Formatear Fecha y Hora manualmente para prevenir desajustes de zona horaria de JS local
-                                let [year, month, day] = cita.fecha.split('-');
-                                let formattedDate = `${day}/${month}/${year}`;
-                                
-                                let [hour, minute] = cita.hora.split(':');
-                                let suffix = hour >= 12 ? "PM" : "AM";
-                                let formattedHour = ((hour % 12) || 12).toString().padStart(2, '0');
-                                let formattedTime = `${formattedHour}:${minute} ${suffix}`;
-                                
-                                // Color del Status
-                                let badgeClass = 'bg-primary'; 
-                                if(cita.estado === 'Cancelada'){ badgeClass = 'bg-danger'; }
-                                else if(cita.estado === 'Completada'){ badgeClass = 'bg-primary'; }
-                                
-                                let docName = cita.doctor_nombre ? `${cita.doctor_nombre} (${cita.doctor_especialidad})` : 'Sin asignar';
-                                // Sanitizar observaciones para pasarlo seguro al atributo data
-                                let obs = cita.observaciones ? cita.observaciones.replace(/"/g, '&quot;') : 'Ningún motivo registrado.';
-                                let notasMed = cita.notas_medicas ? cita.notas_medicas.replace(/"/g, '&quot;') : 'El especialista aún no ha añadido notas a esta consulta.';
-
-                                let tr = document.createElement('tr');
-                                tr.innerHTML = `
-                                    <td class="text-nowrap">${formattedDate}</td>
-                                    <td class="text-nowrap">${formattedTime}</td>
-                                    <td>${docName}</td>
-                                    <td class="text-truncate" style="max-width: 150px;" title="${cita.observaciones}">${cita.observaciones || '---'}</td>
-                                    <td><span class="badge ${badgeClass}" style="border-radius: 50px;">${cita.estado}</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-light py-0 px-2 btn-ver-detalle" 
-                                            data-fecha="${formattedDate} a las ${formattedTime}"
-                                            data-doctor="${docName}"
-                                            data-estado="${cita.estado}"
-                                            data-obs="${obs}"
-                                            data-notas="${notasMed}">
-                                            <svg class="text-secondary" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                        </button>
-                                    </td>
-                                `;
-                                tbody.appendChild(tr);
-                            });
-                        }
-
-                        // 2. Ahora sí, iniciar la tabla DataTables de paginación despues de haber cargado el contenido
-                        let dataTable = new simpleDatatables.DataTable(document.getElementById("historialTable"), {
-                            searchable: true,
-                            fixedHeight: true,
-                            labels: {
-                                placeholder: "Buscar cita...",
-                                searchTitle: "Buscar dentro de la tabla",
-                                pageTitle: "Página {page}",
-                                perPage: "citas por pág",
-                                noRows: "No se encontraron citas",
-                                info: "Mostrando {start} a {end} de {rows} citas",
-                                noResults: "No hay resultados para la búsqueda",
-                            }
-                        });
-
-                    } else {
-                        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Fallo al cargar el historial. ${data.message}</td></tr>`;
+            // Inicializar DataTable síncrono
+            const table = document.querySelector('#historialTable');
+            if (table) {
+                new simpleDatatables.DataTable(table, {
+                    searchable: true,
+                    fixedHeight: true,
+                    labels: {
+                        placeholder: "Buscar cita...",
+                        searchTitle: "Buscar dentro de la tabla",
+                        pageTitle: "Página {page}",
+                        perPage: "citas por página",
+                        noRows: "No hay citas que coincidan con tu búsqueda",
+                        info: "Mostrando {start} a {end} de {rows} citas",
+                        noResults: "No hay resultados que coincidan",
                     }
-                })
-                .catch(err => {
-                    console.error('Fetch error:', err);
-                    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Error de conexión al obtener citas.</td></tr>';
                 });
+            }
 
-            // 3. Listener Modal (Delegación de eventos sobre la tabla por si DataTables re-pinta la página)
-            document.getElementById("historialTable").addEventListener('click', function(e) {
-                let btn = e.target.closest('.btn-ver-detalle');
-                if (btn) {
-                    document.getElementById('modal-fecha-hora').innerText = btn.getAttribute('data-fecha');
+            // Bind de los botones de Detalles
+            const modalDetalles = new bootstrap.Modal(document.getElementById('citaDetallesModal'));
+            
+            // Usamos delegación de eventos en caso de que DataTable redibuje el DOM
+            document.body.addEventListener('click', function(e) {
+                if (e.target.closest('.ver-detalles-btn')) {
+                    const btn = e.target.closest('.ver-detalles-btn');
+                    document.getElementById('modal-fecha-hora').innerText = btn.getAttribute('data-fecha-hora');
                     document.getElementById('modal-doctor').innerText = btn.getAttribute('data-doctor');
                     document.getElementById('modal-estado').innerText = btn.getAttribute('data-estado');
-                    
-                    let motivoCrudo = btn.getAttribute('data-obs') || '';
-                    if (motivoCrudo.includes('--- Diagnóstico Médico Final ---')) {
-                        let partes = motivoCrudo.split('--- Diagnóstico Médico Final ---');
-                        document.getElementById('modal-motivo').innerText = partes[0].trim() || 'No especificado';
-                        document.getElementById('modal-notas').innerText = partes[1].trim();
-                    } else {
-                        document.getElementById('modal-motivo').innerText = motivoCrudo || 'Ningún motivo registrado.';
-                        document.getElementById('modal-notas').innerText = btn.getAttribute('data-notas') || 'El especialista aún no ha añadido notas a esta consulta.';
-                    }
-                    
-                    let estadoModal = document.getElementById('modal-estado');
-                    estadoModal.style.color = btn.getAttribute('data-estado') === 'Cancelada' ? '#dc3545' : 
-                                              (btn.getAttribute('data-estado') === 'Completada' ? '#198754' : '#0d6efd');
-
-                    let modalInstance = new bootstrap.Modal(document.getElementById('citaDetallesModal'));
-                    modalInstance.show();
+                    document.getElementById('modal-motivo').innerText = btn.getAttribute('data-motivo');
+                    document.getElementById('modal-notas').innerText = btn.getAttribute('data-notas');
+                    modalDetalles.show();
                 }
             });
         });
     </script>
 
-
-    </body>
+<!-- Notificaciones Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let bellNodes = document.querySelectorAll('a[data-bs-toggle="dropdown"] i.bi-bell-fill');
+    bellNodes.forEach(icon => {
+        let toggle = icon.closest('a');
+        if (toggle) {
+            toggle.addEventListener('click', function() {
+                let badge = toggle.querySelector('.bg-danger');
+                if (badge) badge.remove();
+                fetch('../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
+            });
+        }
+    });
+});
+</script>
+</body>
 
 </html>
 

@@ -2,6 +2,7 @@
 header('Content-Type: text/html; charset=utf-8');
 // Importar el escudo protector de rutas validando que sea Médico (Profesional en BD)
 require_once __DIR__ . '/../backend/auth_medico.php';
+require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -91,12 +92,7 @@ require_once __DIR__ . '/../backend/auth_medico.php';
                             </a>
                         </li>
 
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-historial.php' ? 'active' : '' ?>">
-                            <a href="medico-historial.php" class="sidebar-link">
-                                <i class="bi bi-clock-history"></i>
-                                <span>Historial Citas</span>
-                            </a>
-                        </li>
+
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-emergencia.php' ? 'active' : '' ?>">
                             <a href="medico-emergencia.php" class="sidebar-link">
@@ -135,24 +131,51 @@ require_once __DIR__ . '/../backend/auth_medico.php';
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3>Panel del Médico</h3>
                     <div class="d-flex align-items-center gap-3">
+                                                
+                                                
+                                                
+                                                
+                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
-                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">1</span>
+                                <?php if(isset($unreadCount) && $unreadCount > 0): ?>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;"><?= $unreadCount ?></span>
+                                <?php endif; ?>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
-                                <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px; max-height: 400px; overflow-y: auto; overflow-x: hidden;">
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
-                                        <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 text-sm font-bold text-dark">Llamado de Emergencia</h6>
-                                            <p class="mb-0 text-xs text-muted" style="font-size: 0.8rem;">Paciente registrado hace 5 mins.</p>
-                                        </div>
-                                    </a>
+                                    <h6 class="dropdown-header font-bold text-dark d-flex justify-content-between align-items-center pb-2">
+                                        Notificaciones
+                                    </h6>
                                 </li>
+                                <?php if(empty($notificacionesList)): ?>
+                                    <li><div class="dropdown-item text-muted text-center py-4" style="font-size: 0.9rem; white-space: normal;">No tienes notificaciones recientes.</div></li>
+                                <?php else: ?>
+                                    <?php foreach($notificacionesList as $notif): 
+                                        $icon = 'bi-info-circle';
+                                        $bgClass = 'bg-secondary';
+                                        if($notif['tipo'] === 'nueva_cita') { $icon = 'bi-calendar-plus'; $bgClass = 'bg-primary'; }
+                                        if($notif['tipo'] === 'cancelacion') { $icon = 'bi-calendar-x'; $bgClass = 'bg-danger'; }
+                                        if($notif['tipo'] === 'completada') { $icon = 'bi-check-circle'; $bgClass = 'bg-success'; }
+                                        
+                                        $opacity = $notif['leida'] == 0 ? '1' : '0.7';
+                                        $fontWeight = $notif['leida'] == 0 ? 'font-bold text-dark' : 'text-muted fw-semibold';
+                                    ?>
+                                    <li>
+                                        <div class="dropdown-item d-flex align-items-start py-3 rounded mt-1 border-bottom" style="white-space: normal; opacity: <?= $opacity ?>; min-width: 280px; text-decoration: none;">
+                                            <div class="<?= $bgClass ?> text-white rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px; font-size: 1.25rem;">
+                                                <i class="bi <?= $icon ?>" style="line-height: 0;"></i>
+                                            </div>
+                                            <div style="min-width: 0; flex: 1;">
+                                                <h6 class="mb-1 text-sm <?= $fontWeight ?>" style="white-space: normal; word-wrap: break-word; line-height: 1.3;"><?= htmlspecialchars($notif['titulo']) ?></h6>
+                                                <p class="mb-1 text-xs text-muted" style="font-size: 0.8rem; white-space: normal; word-wrap: break-word; line-height: 1.4;"><?= htmlspecialchars($notif['mensaje']) ?></p>
+                                                <small class="text-muted d-block mt-1" style="font-size: 0.7rem; font-weight: 500;"><?= date('d M Y H:i', strtotime($notif['fecha_creacion'])) ?></small>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </ul>
                         </div>
                         <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
@@ -185,7 +208,7 @@ require_once __DIR__ . '/../backend/auth_medico.php';
                         <div class="card shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-center mb-4">
-                                    <span class="badge rounded-pill bg-light text-dark px-4 py-2 fs-6 shadow-sm border" style="font-weight: 600;">Citas del día</span>
+                                    <span class="badge rounded-pill bg-light text-dark px-4 py-2 fs-6 shadow-sm border" style="font-weight: 600;">Citas a atender</span>
                                 </div>
                                 
                                 <div class="row px-2" id="citas-dia-container">
@@ -201,7 +224,7 @@ require_once __DIR__ . '/../backend/auth_medico.php';
                         <div class="card shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
                             <div class="card-body p-4 text-center">
                                 <h4 class="fw-bold text-dark mb-3">Citas Atendidas</h4>
-                                <div class="bg-white rounded p-2 shadow-sm border" style="border-radius: 12px !important;">
+                                <div class="rounded p-2 shadow-sm border" style="border-radius: 12px !important; background: var(--bs-body-bg);">
                                     <div id="chart-citas-pendientes"></div>
                                 </div>
                             </div>
@@ -292,98 +315,81 @@ require_once __DIR__ . '/../backend/auth_medico.php';
 
     <!-- Custom ApexCharts Initialization for Doctor Dashboard -->
     <script>
-        // --- Líƒâ€œGICA DEL CALENDARIO DINíMICO ---
-        let patientAppointmentsDates = []; // Aquí se inyectarán después desde la base de datos
+        // --- LÓGICA DEL CALENDARIO DINÁMICO ---
+        let patientAppointmentsDates = <?= json_encode($dashboardData["calendarioFechas"] ?? []) ?>;
         let currentDate = new Date();
 
         document.addEventListener('DOMContentLoaded', function () {
-            
-            // Cargar datos dinámicos desde API
-            fetch('../backend/api/obtener_dashboard_medico.php?t=' + new Date().getTime(), { cache: 'no-store' })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.status === 'success') {
-                        const data = result.data;
+            // 3. Renderizar ApexCharts Gráfico de Barras Citas Pendientes
+            var pendienteOptions = {
+                series: [{
+                    name: "Citas",
+                    data: <?= json_encode($dashboardData["chart"]["series"] ?? []) ?>
+                }],
+                chart: {
+                    type: "bar",
+                    height: 260,
+                    toolbar: { show: false },
+                    dropShadow: { enabled: true, top: 2, left: 0, blur: 4, opacity: 0.1 }
+                },
+                colors: ["var(--utm-primary)"],
+                plotOptions: { bar: { horizontal: false, columnWidth: "40%", borderRadius: 5 } },
+                dataLabels: { enabled: false },
+                stroke: { show: true, width: 2, colors: ["transparent"] },
+                xaxis: { categories: <?= json_encode($dashboardData["chart"]["labels"] ?? []) ?>, axisBorder: { show: false }, axisTicks: { show: false } },
+                yaxis: {
+                    title: { text: "N° Citas", style: { color: "#6c757d", fontWeight: 600 } },
+                    labels: { style: { colors: "#6c757d" } },
+                    tickAmount: <?= max(($dashboardData["chart"]["series"] ?? [0])) > 5 ? 5 : max(($dashboardData["chart"]["series"] ?? [0])) ?>
+                },
+                fill: { opacity: 1 },
+                tooltip: { theme: "light", y: { formatter: function (val) { return val + " citas" } } }
+            };
+            var chart = new ApexCharts(document.querySelector("#chart-citas-pendientes"), pendienteOptions);
+            chart.render();
 
-                        // 1. Llenar Citas Pendientes (numérico)
-                        document.getElementById('citas-atendidas-count').innerText = data.totalPendientes;
+            renderCalendar();
 
-                        // 2. Pintar Citas del Día
-                        const citasContainer = document.getElementById('citas-dia-container');
-                        if (data.citasDia.length > 0) {
-                            let html = '';
-                            data.citasDia.forEach(cita => {
-                                html += `
-                                    <div class="col-md-8 mx-auto mb-3">
-                                        <div class="card border-0 mb-0 shadow-sm" style="background: var(--utm-accent); color: white; border-radius: 0.8rem;">
-                                            <div class="card-body p-4">
-                                                <h5 class="text-white font-bold mb-3">Cita Médica</h5>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <i class="bi bi-clock me-2"></i>
-                                                    <span>${cita.horario}</span>
-                                                </div>
-                                                <div class="d-flex align-items-center mb-4">
-                                                    <i class="bi bi-person me-2"></i>
-                                                    <span>${cita.paciente}</span>
-                                                </div>
-                                                <a href="medico-agenda.php" class="btn btn-light btn-sm w-100 fw-bold text-dark" style="border-radius: 50px;">Ver Detalles</a>
-                                            </div>
-                                        </div>
+            // Rellenar dinámicamente Citas del Día y Pendientes
+            const dashboardDataObj = <?= json_encode($dashboardData ?? []) ?>;
+            const citasContainer = document.getElementById('citas-dia-container');
+            const countContainer = document.getElementById('citas-atendidas-count');
+
+            if (countContainer) {
+                countContainer.innerText = dashboardDataObj.totalPendientes ?? 0;
+            }
+
+            if (citasContainer) {
+                if (!dashboardDataObj.citasDia || dashboardDataObj.citasDia.length === 0) {
+                    citasContainer.innerHTML = '<div class="col-12 text-center text-muted py-4"><i class="bi bi-calendar-x opacity-50 mb-3" style="font-size: 2rem;"></i><p class="mb-0">No hay citas para hoy.</p></div>';
+                } else {
+                    let html = '';
+                    dashboardDataObj.citasDia.forEach(cita => {
+                        html += `
+                        <div class="col-12 col-md-6 col-lg-5 mb-4">
+                            <div class="card h-100 border-0 shadow-sm" style="background: var(--utm-accent); color: white; border-radius: 0.8rem;">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="text-white font-bold mb-0">Cita Médica</h5>
                                     </div>
-                                `;
-                            });
-                            citasContainer.innerHTML = html;
-                        } else {
-                            citasContainer.innerHTML = `
-                                <div class="col-12 py-4 text-center text-muted">
-                                    <h6 class="mt-2 text-dark">Día Libre</h6>
-                                    <p class="small mb-0">No hay citas programadas para hoy.</p>
+                                    <div class="d-flex align-items-center mb-2" style="color: rgba(255, 255, 255, 0.9);">
+                                        <i class="bi bi-clock me-2"></i>
+                                        <span>${cita.horario}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center mb-4" style="color: rgba(255, 255, 255, 0.9);">
+                                        <i class="bi bi-person me-2"></i>
+                                        <span>${cita.paciente}</span>
+                                    </div>
+                                    <a href="medico-agenda.php" class="btn btn-sm w-100 fw-bold text-white px-4" style="border-radius: 50px; background-color: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5); transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.3)'" onmouseout="this.style.backgroundColor='rgba(255,255,255,0.2)'">Atender Cita</a>
                                 </div>
-                            `;
-                        }
-
-                        // 3. Renderizar ApexCharts Gráfico de Barras Citas Pendientes
-                        var pendienteOptions = {
-                            series: [{
-                                name: "Citas",
-                                data: data.chart.series
-                            }],
-                            chart: {
-                                type: "bar",
-                                height: 260,
-                                toolbar: { show: false },
-                                dropShadow: { enabled: true, top: 2, left: 0, blur: 4, opacity: 0.1 }
-                            },
-                            colors: ["var(--utm-primary)"],
-                            plotOptions: { bar: { horizontal: false, columnWidth: "40%", borderRadius: 5 } },
-                            dataLabels: { enabled: false },
-                            stroke: { show: true, width: 2, colors: ["transparent"] },
-                            xaxis: { categories: data.chart.labels, axisBorder: { show: false }, axisTicks: { show: false } },
-                            yaxis: {
-                                title: { text: "Ní‚Â° Citas", style: { color: "#6c757d", fontWeight: 600 } },
-                                labels: { style: { colors: "#6c757d" } },
-                                tickAmount: Math.max(...data.chart.series) > 5 ? 5 : Math.max(...data.chart.series)
-                            },
-                            fill: { opacity: 1 },
-                            tooltip: { theme: "light", y: { formatter: function (val) { return val + " citas" } } }
-                        };
-                        var chart = new ApexCharts(document.querySelector("#chart-citas-pendientes"), pendienteOptions);
-                        chart.render();
-
-                        // 4. Inyectar fechas del calendario y renderizar
-                        patientAppointmentsDates = data.calendarioFechas;
-                        renderCalendar();
-
-                    } else {
-                        document.getElementById('citas-dia-container').innerHTML = `<div class="alert alert-danger mx-2 mt-2 w-100">Error: ${result.message}</div>`;
-                    }
-                })
-                .catch(err => {
-                    console.error('Error al obtener dashboard médico:', err);
-                    document.getElementById('citas-dia-container').innerHTML = `<div class="alert alert-warning mx-2 mt-2 w-100">Error de conexión base de datos.</div>`;
-                });
+                            </div>
+                        </div>`;
+                    });
+                    citasContainer.innerHTML = html;
+                }
+            }
         });
-        
+
         function renderCalendar() {
             const monthYearString = currentDate.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
             document.getElementById('calendar-title').innerText = monthYearString.charAt(0).toUpperCase() + monthYearString.slice(1);
@@ -447,7 +453,25 @@ require_once __DIR__ . '/../backend/auth_medico.php';
     </script>
 
 
-    </body>
+    
+
+<!-- Notificaciones Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let bellNodes = document.querySelectorAll('a[data-bs-toggle="dropdown"] i.bi-bell-fill');
+    bellNodes.forEach(icon => {
+        let toggle = icon.closest('a');
+        if (toggle) {
+            toggle.addEventListener('hidden.bs.dropdown', function() {
+                let badge = toggle.querySelector('.bg-danger');
+                if (badge) badge.remove();
+                fetch('../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
+            });
+        }
+    });
+});
+</script>
+</body>
 
 </html>
 

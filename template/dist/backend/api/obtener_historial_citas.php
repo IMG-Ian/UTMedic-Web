@@ -1,13 +1,16 @@
 <?php
-session_start();
-header('Content-Type: application/json');
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['status' => 'error', 'message' => 'No autorizado']);
+    return;
     exit();
 }
 
-require_once 'conexion.php';
+require_once __DIR__ . '/conexion.php';
+if(!isset($conn)) return;
 
 $userId = $_SESSION['user_id'];
 
@@ -18,7 +21,7 @@ $stmtProfile->execute();
 $resProfile = $stmtProfile->get_result();
 
 if ($resProfile->num_rows === 0) {
-    echo json_encode(['status' => 'success', 'data' => []]); // Usuario no es paciente
+    $citas = [];
     exit();
 }
 
@@ -33,7 +36,7 @@ $sql = "
         c.hora,
         c.estado,
         c.observaciones,
-        '' as notas_medicas,
+        c.notas_medicas,
         CONCAT(u.nombre, ' ', u.apellido_pat) as doctor_nombre,
         p.especialidad as doctor_especialidad
     FROM cita c
@@ -53,5 +56,5 @@ while ($row = $resCitas->fetch_assoc()) {
     $citas[] = $row;
 }
 
-echo json_encode(['status' => 'success', 'data' => $citas]);
+
 ?>

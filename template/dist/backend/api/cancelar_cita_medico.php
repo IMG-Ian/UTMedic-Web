@@ -41,6 +41,25 @@ try {
     
     if ($stmt->execute()) {
         if ($stmt->affected_rows > 0) {
+            // Notificación para el paciente
+            $stmtPac = $conn->prepare("SELECT p.id_usuario FROM cita c JOIN paciente p ON c.id_paciente = p.id_paciente WHERE c.id_cita = ?");
+            $stmtPac->bind_param("i", $idCita);
+            if ($stmtPac->execute()) {
+                $resPac = $stmtPac->get_result();
+                if ($rowPac = $resPac->fetch_assoc()) {
+                    $id_paciente_usuario = $rowPac['id_usuario'];
+                    $titulo = "Cita Cancelada";
+                    $mensaje = "Tu cita ha sido cancelada por el especialista.";
+                    $tipo = "cancelacion";
+                    $sqlN = "INSERT INTO notificaciones (usuario_id, titulo, mensaje, tipo) VALUES (?, ?, ?, ?)";
+                    $stmtN = $conn->prepare($sqlN);
+                    if ($stmtN) {
+                        $stmtN->bind_param("isss", $id_paciente_usuario, $titulo, $mensaje, $tipo);
+                        $stmtN->execute();
+                    }
+                }
+            }
+
             echo json_encode(["status" => "success", "message" => "Cita cancelada correctamente."]);
         } else {
             echo json_encode(["status" => "error", "message" => "No se pudo cancelar. Cita no encontrada o ya estaba cancelada."]);

@@ -82,8 +82,8 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
                     <ul class="menu">
                         <li class="sidebar-title">Menú Principal</li>
 
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-medico.php' ? 'active' : '' ?>">
-                            <a href="dashboard-medico.php" class="sidebar-link">
+                        <li class="sidebar-item <?= strpos(basename($_SERVER['PHP_SELF']), 'dashboard-') !== false ? 'active' : '' ?>">
+                            <a href="dashboard-<?= isset($_SESSION['especialidad']) ? (strpos(strtolower($_SESSION['especialidad']), 'nutri') !== false ? 'nutricionista' : (strpos(strtolower($_SESSION['especialidad']), 'psicolo') !== false ? 'psicologo' : 'medico')) : 'medico' ?>.php" class="sidebar-link">
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Inicio</span>
                             </a>
@@ -96,19 +96,16 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
                             </a>
                         </li>
 
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-historial.php' ? 'active' : '' ?>">
-                            <a href="medico-historial.php" class="sidebar-link">
-                                <i class="bi bi-clock-history"></i>
-                                <span>Historial Citas</span>
-                            </a>
-                        </li>
 
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-emergencia.php' ? 'active' : '' ?>">
+
+                        <?php if (!isset($_SESSION["especialidad"]) || strpos(strtolower($_SESSION["especialidad"]), "medico") !== false): ?>
+<li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-emergencia.php' ? 'active' : '' ?>">
                             <a href="medico-emergencia.php" class="sidebar-link">
                                 <i class="bi bi-exclamation-triangle-fill text-danger"></i>
                                 <span>Emergencia</span>
                             </a>
                         </li>
+<?php endif; ?>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
                             <a href="user-perfil.php" class="sidebar-link">
@@ -138,26 +135,51 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
 
             <div class="page-heading">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3>Panel del Médico</h3>
+                    <h3>Panel <?php echo (isset($_SESSION['especialidad']) && strpos(strtolower($_SESSION['especialidad']), 'nutriolog') !== false) ? 'de Nutriología' : ((isset($_SESSION['especialidad']) && strpos(strtolower($_SESSION['especialidad']), 'psicolog') !== false) ? 'de Psicología' : 'del Médico'); ?></h3>
                     <div class="d-flex align-items-center gap-3">
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWalkIn" style="border-radius: 50px; font-weight: bold;"><i class="bi bi-calendar-plus me-2"></i>Agendar Walk-in</button>
+                                                
+                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
-                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">1</span>
+                                <?php if(isset($unreadCount) && $unreadCount > 0): ?>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;"><?= $unreadCount ?></span>
+                                <?php endif; ?>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
-                                <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px; max-height: 400px; overflow-y: auto; overflow-x: hidden;">
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
-                                        <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 text-sm font-bold text-dark">Llamado de Emergencia</h6>
-                                            <p class="mb-0 text-xs text-muted" style="font-size: 0.8rem;">Paciente registrado hace 5 mins.</p>
-                                        </div>
-                                    </a>
+                                    <h6 class="dropdown-header font-bold text-dark d-flex justify-content-between align-items-center pb-2">
+                                        Notificaciones
+                                    </h6>
                                 </li>
+                                <?php if(empty($notificacionesList)): ?>
+                                    <li><div class="dropdown-item text-muted text-center py-4" style="font-size: 0.9rem; white-space: normal;">No tienes notificaciones recientes.</div></li>
+                                <?php else: ?>
+                                    <?php foreach($notificacionesList as $notif): 
+                                        $icon = 'bi-info-circle';
+                                        $bgClass = 'bg-secondary';
+                                        if($notif['tipo'] === 'nueva_cita') { $icon = 'bi-calendar-plus'; $bgClass = 'bg-primary'; }
+                                        if($notif['tipo'] === 'cancelacion') { $icon = 'bi-calendar-x'; $bgClass = 'bg-danger'; }
+                                        if($notif['tipo'] === 'completada') { $icon = 'bi-check-circle'; $bgClass = 'bg-success'; }
+                                        
+                                        $opacity = $notif['leida'] == 0 ? '1' : '0.7';
+                                        $fontWeight = $notif['leida'] == 0 ? 'font-bold text-dark' : 'text-muted fw-semibold';
+                                    ?>
+                                    <li>
+                                        <div class="dropdown-item d-flex align-items-start py-3 rounded mt-1 border-bottom" style="white-space: normal; opacity: <?= $opacity ?>; min-width: 280px; text-decoration: none;">
+                                            <div class="<?= $bgClass ?> text-white rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px; font-size: 1.25rem;">
+                                                <i class="bi <?= $icon ?>" style="line-height: 0;"></i>
+                                            </div>
+                                            <div style="min-width: 0; flex: 1;">
+                                                <h6 class="mb-1 text-sm <?= $fontWeight ?>" style="white-space: normal; word-wrap: break-word; line-height: 1.3;"><?= htmlspecialchars($notif['titulo']) ?></h6>
+                                                <p class="mb-1 text-xs text-muted" style="font-size: 0.8rem; white-space: normal; word-wrap: break-word; line-height: 1.4;"><?= htmlspecialchars($notif['mensaje']) ?></p>
+                                                <small class="text-muted d-block mt-1" style="font-size: 0.7rem; font-weight: 500;"><?= date('d M Y H:i', strtotime($notif['fecha_creacion'])) ?></small>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </ul>
                         </div>
                         <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
@@ -196,7 +218,7 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
                             <?php
 if (empty($citasDelMedico)): ?>
                                 <!-- Empty State -->
-                                <div class="text-center py-5 bg-white shadow-sm" style="border-radius: 12px; border: 1px dashed #ced4da;">
+                                <div class="text-center py-5 shadow-sm" style="border-radius: 12px; border: 1px dashed var(--bs-border-color); background-color: var(--bs-body-bg);">
                                     <i class="bi bi-calendar2-x text-muted opacity-50 mb-3" style="font-size: 3rem;"></i>
                                     <h5 class="text-muted">No hay citas registradas en tu agenda</h5>
                                     <p class="text-sm text-secondary">Aún no se te han asignado pacientes.</p>
@@ -652,11 +674,11 @@ endif; ?>
         }
     </style>
     <!-- Modal Atender Cita (Reemplazo de redirección manual) -->
-    <div class="modal fade" id="modalAtenderCita" tabindex="-1" aria-labelledby="modalAtenderCitaLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal fade" id="modalAtenderCita" tabindex="-1" aria-labelledby="modalAtenderCitaLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; background-color: #f8f9fa;">
-                <div class="modal-header bg-white border-bottom-0 pb-0" style="border-top-left-radius: 12px; border-top-right-radius: 12px;">
-                    <h5 class="modal-title fw-bold text-dark w-100 fs-5 text-center" id="modalAtenderCitaLabel">Atender Cita</h5>
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; background-color: var(--bs-body-bg);">
+                <div class="modal-header border-bottom-0 pb-0" style="border-top-left-radius: 12px; border-top-right-radius: 12px; background-color: transparent;">
+                    <h5 class="modal-title fw-bold w-100 fs-5 text-center" id="modalAtenderCitaLabel">Atender Cita</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 
@@ -670,20 +692,20 @@ endif; ?>
                         <div class="row g-4">
                             <!-- Columna Izquierda: Datos Constantes del Paciente -->
                             <div class="col-12 col-md-5 col-lg-4">
-                                <div class="card h-100 border-0 shadow-sm" style="border-radius: 10px; background-color: #cbd5e1;">
+                                <div class="card h-100 border-0 shadow-sm" style="border-radius: 10px; background-color: var(--bs-tertiary-bg);">
                                     <div class="card-body text-center p-4">
-                                        <h6 class="fw-bold text-dark mb-4 text-center" style="font-size: 1.1rem;">Paciente Detalles</h6>
+                                        <h6 class="fw-bold mb-4 text-center" style="font-size: 1.1rem;">Paciente Detalles</h6>
                                         
                                         <div class="avatar avatar-xl bg-white mb-4 p-1 shadow-sm mx-auto" style="width: 100px; height: 100px;">
                                             <img src="assets/compiled/jpg/1.jpg" alt="Foto Paciente" style="object-fit:cover; width: 100%; height: 100%;">
                                         </div>
                                         
                                         <div class="text-center mt-3 px-2" style="font-size: 0.9rem;">
-                                            <p class="mb-3"><span class="text-muted fw-bold d-block" style="font-size: 0.75rem;">Motivo de la Cita:</span> <span id="modalConsulta_motivo" class="text-dark"></span></p>
-                                            <p class="mb-3"><span class="text-muted fw-bold d-block" style="font-size: 0.75rem;">Nombre Completo</span> <span id="modalConsulta_nombre" class="text-dark"></span></p>
-                                            <p class="mb-3"><span class="text-muted fw-bold d-block" style="font-size: 0.75rem;">Matricula</span> <span id="modalConsulta_matricula" class="text-dark"></span></p>
-                                            <p class="mb-3"><span class="text-muted fw-bold d-block" style="font-size: 0.75rem;">Alergias Relevantes:</span> <span id="modalConsulta_alergias" class="text-dark fw-semibold"></span></p>
-                                            <p class="mb-3"><span class="text-muted fw-bold d-block" style="font-size: 0.75rem;">Padecimientos Crónicos:</span> <span id="modalConsulta_padecimientos" class="text-dark"></span></p>
+                                            <p class="mb-3"><span class="text-muted fw-bold d-block" style="font-size: 0.75rem;">Motivo de la Cita:</span> <span id="modalConsulta_motivo"></span></p>
+                                            <p class="mb-3"><span class="text-muted fw-bold d-block" style="font-size: 0.75rem;">Nombre Completo</span> <span id="modalConsulta_nombre"></span></p>
+                                            <p class="mb-3"><span class="text-muted fw-bold d-block" style="font-size: 0.75rem;">Matricula</span> <span id="modalConsulta_matricula"></span></p>
+                                            <p class="mb-3"><span class="text-muted fw-bold d-block" style="font-size: 0.75rem;">Alergias Relevantes:</span> <span id="modalConsulta_alergias" class="fw-semibold"></span></p>
+                                            <p class="mb-3"><span class="text-muted fw-bold d-block" style="font-size: 0.75rem;">Padecimientos Crónicos:</span> <span id="modalConsulta_padecimientos"></span></p>
                                         </div>
                                     </div>
                                 </div>
@@ -691,7 +713,7 @@ endif; ?>
                             
                             <!-- Columna Derecha: Formulario Final -->
                             <div class="col-12 col-md-7 col-lg-8">
-                                <div class="card h-100 border-0 shadow-sm" style="border-radius: 10px; background-color: #adb5bd;">
+                                <div class="card h-100 border-0 shadow-sm" style="border-radius: 10px; background-color: var(--bs-secondary-bg);">
                                     <div class="card-body p-4 d-flex flex-column">
                                         
                                         <!-- Historial Médico Pasado (Reemplazo de Signos) -->
@@ -722,6 +744,141 @@ endif; ?>
     </div>
     <!-- Fin Modal -->
 
+    
+
+    <!-- Modal Walk-In -->
+    <div class="modal fade" id="modalWalkIn" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; background-color: var(--bs-body-bg);">
+                <div class="modal-header bg-transparent border-bottom-0 pb-0" style="border-top-left-radius: 12px; border-top-right-radius: 12px;">
+                    <h5 class="modal-title fw-bold text-dark px-2 pt-2">Agendar Cita Presencial (Walk-In)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="formWalkIn">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Tipo de Paciente</label>
+                                <select class="form-select" id="tipoPaciente" style="border-radius: 8px;">
+                                    <option value="invitado" selected>Invitado (Sin Perfil)</option>
+                                    <option value="existente">Paciente Existente</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-12" id="divNombreInvitado">
+                                <label class="form-label fw-bold">Nombre del Paciente <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="nombre_invitado" id="nombre_invitado" placeholder="Juan Pérez" style="border-radius: 8px;" required>
+                            </div>
+
+                            <div class="col-12 d-none" id="divPacienteExistente">
+                                <label class="form-label fw-bold">Buscar Paciente Existente <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="matricula_paciente" id="matricula_paciente" list="pacientesWalkinList" placeholder="Escribe el nombre o matrícula..." style="border-radius: 8px;" autocomplete="off">
+                                <datalist id="pacientesWalkinList">
+                                    <?php
+                                    if(isset($conn)){
+                                        $stmtPacs = $conn->query("SELECT p.matricula, u.nombre, u.apellido_pat FROM paciente p INNER JOIN usuario u ON p.id_usuario = u.id_usuario");
+                                        if ($stmtPacs && $stmtPacs->num_rows > 0) {
+                                            while($rPac = $stmtPacs->fetch_assoc()) {
+                                                $n = htmlspecialchars(trim($rPac['nombre'] . ' ' . $rPac['apellido_pat']));
+                                                $m = htmlspecialchars($rPac['matricula']);
+                                                echo "<option value=\"$m\">$n - Matrícula: $m</option>";
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                </datalist>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Fecha <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="fecha" id="fechaWalkin" style="border-radius: 8px;" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Hora <span class="text-danger">*</span></label>
+                                <input type="time" class="form-control" name="hora" id="horaWalkin" style="border-radius: 8px;" required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Motivo</label>
+                                <select class="form-select" name="id_motivo" id="motivoWalkin" style="border-radius: 8px;" required>
+                                    <option value="1">Consulta General</option>
+                                    <option value="2">Revisión Result.</option>
+                                    <option value="3">Urgencia Ligera</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12 mt-4 text-end">
+                                <button type="button" class="btn btn-light me-2" data-bs-dismiss="modal" style="border-radius: 8px;">Cancelar</button>
+                                <button type="submit" class="btn text-white" style="background-color: var(--utm-secondary); border-radius: 8px; font-weight: bold;">Registrar Cita</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const localeDate = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+            document.getElementById('fechaWalkin').value = localeDate;
+            document.getElementById('fechaWalkin').setAttribute('min', localeDate);
+            
+            document.getElementById('tipoPaciente').addEventListener('change', function() {
+                if (this.value === 'invitado') {
+                    document.getElementById('divNombreInvitado').classList.remove('d-none');
+                    document.getElementById('nombre_invitado').setAttribute('required', 'required');
+                    
+                    document.getElementById('divPacienteExistente').classList.add('d-none');
+                    document.getElementById('matricula_paciente').removeAttribute('required');
+                } else {
+                    document.getElementById('divPacienteExistente').classList.remove('d-none');
+                    document.getElementById('matricula_paciente').setAttribute('required', 'required');
+                    
+                    document.getElementById('divNombreInvitado').classList.add('d-none');
+                    document.getElementById('nombre_invitado').removeAttribute('required');
+                }
+            });
+
+            document.getElementById('formWalkIn').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                formData.append('tipo_paciente', document.getElementById('tipoPaciente').value);
+                
+                fetch('../backend/api/registrar_walkin.php', { method: 'POST', body: formData })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        Swal.fire('Éxito', 'Cita presencial registrada.', 'success').then(() => location.reload());
+                    } else {
+                        Swal.fire('Error', data.message, 'error');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    Swal.fire('Error', 'Ocurrió un error en la conexión.', 'error');
+                });
+            });
+        });
+    </script>
+<!-- Notificaciones Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let bellNodes = document.querySelectorAll('a[data-bs-toggle="dropdown"] i.bi-bell-fill');
+    bellNodes.forEach(icon => {
+        let toggle = icon.closest('a');
+        if (toggle) {
+            toggle.addEventListener('hidden.bs.dropdown', function() {
+                let badge = toggle.querySelector('.bg-danger');
+                if (badge) badge.remove();
+                fetch('../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
+            });
+        }
+    });
+});
+</script>
 </body>
 </html>
 

@@ -2,7 +2,8 @@
 header('Content-Type: text/html; charset=utf-8');
 // Importar el escudo protector de rutas validando que sea Médico (Profesional en BD)
 require_once __DIR__ . '/../backend/auth_medico.php';
-require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
+
+$active_page = 'emergencia';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,8 +24,25 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .light-bar {
+            animation: flash 1s infinite alternate;
+        }
+        .red-light {
+            box-shadow: 0 0 15px 5px rgba(220, 53, 69, 0.5);
+        }
+        .blue-light {
+            box-shadow: 0 0 15px 5px rgba(13, 202, 240, 0.5);
+            animation-delay: 0.5s;
+        }
+        @keyframes flash {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; filter: brightness(1.5); }
+        }
+    </style>
 </head>
 
 <body>
@@ -61,13 +79,7 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
                                     style="cursor: pointer">
                                 <label class="form-check-label"></label>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                aria-hidden="true" role="img" class="iconify iconify--mdi" width="20" height="20"
-                                preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                                <path fill="currentColor"
-                                    d="m17.75 4.09l-2.53 1.94l.91 3.06l-2.63-1.81l-2.63 1.81l.91-3.06l-2.53-1.94L12.44 4l1.06-3l1.06 3l3.19.09m3.5 6.91l-1.64 1.25l.59 1.98l-1.7-1.17l-1.7 1.17l.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95l2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85c-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14c.4-.4.82-.76 1.27-1.08c.75-.53 1.93.36 1.85 1.19c-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82c-2.81 3.14-2.7 7.96.31 10.98c3.02 3.01 7.84 3.12 10.98.31Z">
-                                </path>
-                            </svg>
+                            <!-- Iconos luna sol movidos o removidos -->
                         </div>
                         <div class="sidebar-toggler  x">
                             <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -78,8 +90,8 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
                     <ul class="menu">
                         <li class="sidebar-title">Menú Principal</li>
 
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-psicologo.php' ? 'active' : '' ?>">
-                            <a href="dashboard-psicologo.php" class="sidebar-link">
+                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-medico.php' ? 'active' : '' ?>">
+                            <a href="dashboard-<?= isset($_SESSION['especialidad']) ? (strpos(strtolower($_SESSION['especialidad']), 'nutri') !== false ? 'nutricionista' : (strpos(strtolower($_SESSION['especialidad']), 'psicolo') !== false ? 'psicologo' : 'medico')) : 'medico' ?>.php" class="sidebar-link">
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Inicio</span>
                             </a>
@@ -92,9 +104,14 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
                             </a>
                         </li>
 
-
-
-                        
+                        <?php if (!isset($_SESSION["especialidad"]) || strpos(strtolower($_SESSION["especialidad"]), "medico") !== false): ?>
+<li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-emergencia.php' ? 'active' : '' ?>">
+                            <a href="medico-emergencia.php" class="sidebar-link">
+                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                                <span>Emergencia</span>
+                            </a>
+                        </li>
+<?php endif; ?>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
                             <a href="user-perfil.php" class="sidebar-link">
@@ -124,12 +141,8 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
 
             <div class="page-heading">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3>Panel de Psicólogo</h3>
+                    <h3>Registro de Emergencia</h3>
                     <div class="d-flex align-items-center gap-3">
-                                                
-                                                
-                                                
-                                                
                         <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
                             <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
@@ -178,104 +191,123 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
                                 <img src="<?= htmlspecialchars($_SESSION['user_avatar'] ?? 'assets/compiled/jpg/1.jpg') ?>" id="top-nav-avatar" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover;">
                             </div>
                             <div class="ms-2">
-                                <h6 class="mb-0 fs-6 user-name-display text-dark opacity-100"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Psicólogo') ?></h6>
-                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">Psicólogo</p>
+                                <h6 class="mb-0 fs-6 user-name-display text-dark opacity-100"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Médico') ?></h6>
+                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">Profesional</p>
                             </div>
                         </a>
                     </div>
                 </div>
             </div>
             <div class="page-content">
-                <section class="row">
-                    <!-- Left Column: Bienvenida y Citas del Día -->
-                    <div class="col-12 col-lg-8">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-11 col-lg-9">
                         
-                        <!-- Tarjeta de Bienvenida -->
-                        <div class="card mb-4 shadow-sm border-0" style="background: linear-gradient(135deg, #005461 0%, #018790 100%); border-radius: 1rem;">
-                            <div class="card-body py-4 px-5">
-                                <h2 class="fw-bold mb-3" style="color: white !important;">¡Buen día, <span style="color: var(--utm-accent) !important;"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Psicólogo') ?></span>!</h2>
-                                <p class="mb-4 fs-5" style="color: rgba(255,255,255,0.85);">Ten un excelente día usando<br>utmedic para tus citas de psicólogo.</p>
-                                <a href="medico-agenda.php" class="btn rounded-pill px-4 py-2 shadow-sm fw-bold text-dark" style="background-color: var(--utm-accent); border: 1px solid var(--utm-accent); transition: all 0.3s ease;">Atender las Citas</a>
-                            </div>
+                        <div class="text-center mb-5">
+                            <h3 class="font-bold text-dark">Registro Emergencia</h3>
+                            <p class="text-muted fs-5">"Por favor, complete la siguiente información para registrar la emergencia"</p>
                         </div>
 
-                        <!-- Tarjeta Citas del Día -->
-                        <div class="card shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
-                            <div class="card-body p-4">
-                                <div class="d-flex justify-content-center mb-4">
-                                    <span class="badge rounded-pill bg-light text-dark px-4 py-2 fs-6 shadow-sm border" style="font-weight: 600;">Citas a atender</span>
-                                </div>
+                        <!-- AMBULANCE SHAPE CONTAINER -->
+                        <div class="ambulance-container position-relative mx-auto mt-4 mb-5" style="max-width: 850px;">
+                            <!-- Lightbars on top -->
+                            <div class="position-absolute d-flex justify-content-between w-100 px-5" style="top: -20px; left: 0; z-index: 2;">
+                                <div class="light-bar red-light bg-danger rounded-top" style="width: 60px; height: 25px;"></div>
+                                <div class="siren bg-secondary rounded-top px-3 text-center text-white lh-base fw-bold" style="width: 90px; height: 25px; font-size: 0.7rem; padding-top:4px; letter-spacing: 1px;">S.O.S</div>
+                                <div class="light-bar blue-light bg-info rounded-top" style="width: 60px; height: 25px;"></div>
+                            </div>
+
+                            <div class="card shadow-lg border-2 border-info" style="
+                                border-radius: 15px; 
+                                border-top-right-radius: 90px; 
+                                border-bottom: 12px solid #343a40;
+                                background-color: var(--bs-card-bg);">
                                 
-                                <div class="row px-2" id="citas-dia-container">
-                                    <div class="col-12 text-center text-muted py-4">
-                                        <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-                                        <span class="ms-2">Cargando citas...</span>
-                                    </div>
+
+                                <div class="card-body p-4 p-md-5 position-relative" style="z-index: 1;">
+                                    <form id="emergencyForm">
+                                        <div class="row g-4">
+                                            <!-- Izquierda -->
+                                            <div class="col-md-6 border-end pe-4">
+                                                <h6 class="fw-bold mb-4 text-primary">Datos de la Emergencia:</h6>
+                                                
+                                                <div class="mb-4">
+                                                    <label class="form-label fw-bold text-dark mb-1">Nombre Paciente <span class="text-danger">*</span></label>
+                                                    <input type="text" name="nombre_paciente" id="emergencia_nombre" class="form-control form-control-lg border-2" placeholder="Ingresa el nombre completo" style="border-radius: 8px;" required>
+                                                </div>
+                                                
+                                                <div class="mb-4">
+                                                    <label class="form-label fw-bold text-dark mb-1">Tipo de Emergencia <span class="text-danger">*</span></label>
+                                                    <select name="tipo_emergencia" id="emergencia_tipo" class="form-select form-select-lg border-2" style="border-radius: 8px;" required>
+                                                        <option value="" selected disabled>Selecciona un tipo principal</option>
+                                                        <option value="Traumatismo">Traumatismo / Accidente</option>
+                                                        <option value="Cardiaca">Emergencia Cardíaca (Infarto)</option>
+                                                        <option value="Respiratoria">Emergencia Respiratoria</option>
+                                                        <option value="Neurologica">Emergencia Neurológica</option>
+                                                        <option value="Otro">Otro</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="row g-3">
+                                                    <div class="col-6">
+                                                        <label class="form-label fw-bold text-dark mb-1">Fecha de la Emergencia <span class="text-danger">*</span></label>
+                                                        <input type="date" name="fecha_emergencia" class="form-control border-2 text-center" style="border-radius: 8px;" required id="defaultDate">
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="form-label fw-bold text-dark mb-1">Hora de la Emergencia <span class="text-danger">*</span></label>
+                                                        <input type="time" name="hora_emergencia" class="form-control border-2 text-center" style="border-radius: 8px;" required id="defaultTime">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Derecha -->
+                                            <div class="col-md-6 ps-md-4">
+                                                <h6 class="fw-bold mb-4 text-primary">Observación:</h6>
+                                                
+                                                <div class="mb-4">
+                                                    <label class="form-label fw-bold text-dark mb-1">Ingrese una observación/dato de la emergencia:</label>
+                                                    <textarea name="observaciones" id="emergencia_observaciones" class="form-control border-2" rows="6" placeholder="Escríbelo aquí la evaluación rápida o condición de llegada..." style="border-radius: 8px; resize: none;"></textarea>
+                                                </div>
+                                                
+                                                <div class="mb-3 pt-2">
+                                                    <label class="form-label fw-bold text-dark d-block mb-3">Requirió Ambulancia <span class="text-danger">*</span></label>
+                                                    <div class="d-flex gap-4">
+                                                        <div class="form-check form-check-inline form-check-lg" style="transform: scale(1.2);">
+                                                            <input class="form-check-input border-2 border-primary cursor-pointer" type="radio" name="ambulanciaRadio" id="ambSi" value="SI">
+                                                            <label class="form-check-label fw-bold text-dark ms-1 cursor-pointer" for="ambSi">SI</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline form-check-lg" style="transform: scale(1.2);">
+                                                            <input class="form-check-input border-2 border-secondary cursor-pointer" type="radio" name="ambulanciaRadio" id="ambNo" value="NO" checked>
+                                                            <label class="form-check-label fw-bold text-dark ms-1 cursor-pointer" for="ambNo">NO</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-5 pt-3 border-top text-center">
+                                            <button type="submit" class="btn btn-primary text-white px-5 py-3 w-100 fw-bold fs-5 shadow-lg" style="border-radius: 12px; background-color: var(--utm-accent); border-color: var(--utm-accent); letter-spacing: 1px;">
+                                                <i class="bi bi-file-earmark-medical me-2"></i> Registrar Emergencia
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Tarjeta Citas Atendidas (Gráfico movido) -->
-                        <div class="card shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
-                            <div class="card-body p-4 text-center">
-                                <h4 class="fw-bold text-dark mb-3">Citas Atendidas</h4>
-                                <div class="rounded p-2 shadow-sm border" style="border-radius: 12px !important; background: var(--bs-body-bg);">
-                                    <div id="chart-citas-pendientes"></div>
-                                </div>
+
+                            <!-- Wheels -->
+                            <div class="position-absolute rounded-circle shadow-lg d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; bottom: -40px; left: 100px; border: 15px solid #212529; background-color: #e9ecef; z-index: 3;">
+                                <div class="bg-dark rounded-circle" style="width: 20px; height:20px;"></div>
+                            </div>
+                            <div class="position-absolute rounded-circle shadow-lg d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; bottom: -40px; right: 120px; border: 15px solid #212529; background-color: #e9ecef; z-index: 3;">
+                                <div class="bg-dark rounded-circle" style="width: 20px; height:20px;"></div>
                             </div>
                         </div>
 
                     </div>
-
-                    <!-- Right Column: Emergencia y Estadísticas -->
-                    <div class="col-12 col-lg-4">
-                        
-                        <!-- Mini Calendar -->
-                        <div class="card shadow-sm border-0 mb-4" style="border-radius: 1rem;">
-                            <div class="card-header bg-transparent border-0 pt-4 pb-2 text-center">
-                                <h5 class="font-bold mb-0">Calendario</h5>
-                            </div>
-                            <div class="card-body p-3">
-                                <!-- Calendar Container para JS -->
-                                <div class="calendar-wrapper border rounded-3 p-3" style="background: var(--bs-body-bg);">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="fw-bold fs-6 text-body" id="calendar-title">Cargando...</span>
-                                        <div class="gap-1 d-flex">
-                                            <button class="btn btn-sm btn-light py-0 px-2" id="prev-month-btn">
-                                                <i class="bi bi-chevron-left small"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-light py-0 px-2" id="next-month-btn">
-                                                <i class="bi bi-chevron-right small"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="calendar-grid text-center" style="font-size: 0.85rem;">
-                                        <div class="row gx-1 fw-bold text-muted mb-2">
-                                            <div class="col">Lun</div>
-                                            <div class="col">Mar</div>
-                                            <div class="col">Mié</div>
-                                            <div class="col">Jue</div>
-                                            <div class="col">Vie</div>
-                                            <div class="col">Sáb</div>
-                                            <div class="col">Dom</div>
-                                        </div>
-                                        <!-- Los días se inyectarán aquí -->
-                                        <div id="calendar-days"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        
-                            </div>
-                        </div>
-
-                        <!-- Div movido a izquierda -->
-                </section>
+                </div>
             </div>
 
             <footer>
-                <div class="footer clearfix mb-0 text-muted pb-4">
+                <div class="footer clearfix mb-0 text-muted pb-4 mt-5">
                     <div class="float-start">
                         <p>2024 &copy; UTMedic</p>
                     </div>
@@ -285,155 +317,54 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
     </div>
     <script src="assets/static/js/components/dark.js"></script>
     <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-
-
     <script src="assets/compiled/js/app.js"></script>
 
-
-
-    <script src="assets/extensions/apexcharts/apexcharts.min.js"></script>
-    <script src="assets/static/js/pages/dashboard.js"></script>
-
-    <!-- Custom ApexCharts Initialization for Doctor Dashboard -->
     <script>
-        // --- LÓGICA DEL CALENDARIO DINÁMICO ---
-        let patientAppointmentsDates = <?= json_encode($dashboardData["calendarioFechas"] ?? []) ?>;
-        let currentDate = new Date();
-
-        document.addEventListener('DOMContentLoaded', function () {
-            // 3. Renderizar ApexCharts Gráfico de Barras Citas Pendientes
-            var pendienteOptions = {
-                series: [{
-                    name: "Citas",
-                    data: <?= json_encode($dashboardData["chart"]["series"] ?? []) ?>
-                }],
-                chart: {
-                    type: "bar",
-                    height: 260,
-                    toolbar: { show: false },
-                    dropShadow: { enabled: true, top: 2, left: 0, blur: 4, opacity: 0.1 }
-                },
-                colors: ["var(--utm-primary)"],
-                plotOptions: { bar: { horizontal: false, columnWidth: "40%", borderRadius: 5 } },
-                dataLabels: { enabled: false },
-                stroke: { show: true, width: 2, colors: ["transparent"] },
-                xaxis: { categories: <?= json_encode($dashboardData["chart"]["labels"] ?? []) ?>, axisBorder: { show: false }, axisTicks: { show: false } },
-                yaxis: {
-                    title: { text: "N° Citas", style: { color: "#6c757d", fontWeight: 600 } },
-                    labels: { style: { colors: "#6c757d" } },
-                    tickAmount: <?= max(($dashboardData["chart"]["series"] ?? [0])) > 5 ? 5 : max(($dashboardData["chart"]["series"] ?? [0])) ?>
-                },
-                fill: { opacity: 1 },
-                tooltip: { theme: "light", y: { formatter: function (val) { return val + " citas" } } }
-            };
-            var chart = new ApexCharts(document.querySelector("#chart-citas-pendientes"), pendienteOptions);
-            chart.render();
-
-            renderCalendar();
-
-            // Rellenar dinámicamente Citas del Día y Pendientes
-            const dashboardDataObj = <?= json_encode($dashboardData ?? []) ?>;
-            const citasContainer = document.getElementById('citas-dia-container');
-            const countContainer = document.getElementById('citas-atendidas-count');
-
-            if (countContainer) {
-                countContainer.innerText = dashboardDataObj.totalPendientes ?? 0;
-            }
-
-            if (citasContainer) {
-                if (!dashboardDataObj.citasDia || dashboardDataObj.citasDia.length === 0) {
-                    citasContainer.innerHTML = '<div class="col-12 text-center text-muted py-4"><i class="bi bi-calendar-x opacity-50 mb-3" style="font-size: 2rem;"></i><p class="mb-0">No hay citas para hoy.</p></div>';
-                } else {
-                    let html = '';
-                    dashboardDataObj.citasDia.forEach(cita => {
-                        html += `
-                        <div class="col-12 col-md-6 col-lg-5 mb-4">
-                            <div class="card h-100 border-0 shadow-sm" style="background: var(--utm-accent); color: white; border-radius: 0.8rem;">
-                                <div class="card-body p-4">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h5 class="text-white font-bold mb-0">Cita Médica</h5>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-2" style="color: rgba(255, 255, 255, 0.9);">
-                                        <i class="bi bi-clock me-2"></i>
-                                        <span>${cita.horario}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-4" style="color: rgba(255, 255, 255, 0.9);">
-                                        <i class="bi bi-person me-2"></i>
-                                        <span>${cita.paciente}</span>
-                                    </div>
-                                    <a href="medico-agenda.php" class="btn btn-sm w-100 fw-bold text-white px-4" style="border-radius: 50px; background-color: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5); transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.3)'" onmouseout="this.style.backgroundColor='rgba(255,255,255,0.2)'">Atender Cita</a>
-                                </div>
-                            </div>
-                        </div>`;
-                    });
-                    citasContainer.innerHTML = html;
-                }
-            }
-        });
-
-        function renderCalendar() {
-            const monthYearString = currentDate.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
-            document.getElementById('calendar-title').innerText = monthYearString.charAt(0).toUpperCase() + monthYearString.slice(1);
+        document.addEventListener('DOMContentLoaded', () => {
+            // Autocompletar fecha y hora actual
+            const now = new Date();
+            // Evitar offset en la timezone
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            const dateStr = now.toISOString().split('T')[0];
+            const timeStr = now.toISOString().split('T')[1].substring(0,5);
             
-            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-            const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-            
-            let startingDay = firstDay.getDay() - 1; 
-            if (startingDay === -1) startingDay = 6; 
-            
-            const totalDays = lastDay.getDate();
-            const prevMonthLastDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
-            
-            let html = '';
-            let dayCount = 1;
-            let nextMonthDayCount = 1;
-            
-            const today = new Date();
-            const isCurrentMonth = today.getMonth() === currentDate.getMonth() && today.getFullYear() === currentDate.getFullYear();
-            
-            for (let row = 0; row < 6; row++) {
-                html += '<div class="row gx-1 mb-1">';
-                for (let col = 0; col < 7; col++) {
-                    if (row === 0 && col < startingDay) {
-                        const prevDay = prevMonthLastDay - startingDay + col + 1;
-                        html += `<div class="col text-muted opacity-50">${prevDay}</div>`;
-                    } else if (dayCount > totalDays) {
-                        html += `<div class="col text-muted opacity-50">${nextMonthDayCount++}</div>`;
+            document.getElementById('defaultDate').value = dateStr;
+            document.getElementById('defaultTime').value = timeStr;
+
+            document.getElementById('emergencyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                
+                fetch('../backend/api/registrar_emergencia.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        Swal.fire({
+                            title: '¡Emergencia Registrada!',
+                            text: 'Los datos de la emergencia se guardaron exitosamente en la bitácora.',
+                            icon: 'success',
+                            confirmButtonColor: '#018790'
+                        }).then(() => {
+                            this.reset();
+                            document.getElementById('defaultDate').value = dateStr;
+                            document.getElementById('defaultTime').value = timeStr;
+                            document.getElementById('ambNo').checked = true;
+                        });
                     } else {
-                        const loopDateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(dayCount).padStart(2, '0')}`;
-                        const isAppointmentDay = patientAppointmentsDates.includes(loopDateStr);
-
-                        if (isCurrentMonth && dayCount === today.getDate()) {
-                            html += `<div class="col text-white fw-bold rounded-circle" style="background-color: var(--utm-secondary);" title="Hoy">${dayCount}</div>`;
-                        } else if (isAppointmentDay) {
-                            html += `<div class="col text-dark fw-bold rounded-circle shadow-sm" style="background-color: var(--utm-accent); cursor: pointer;" title="Tienes evento médico este día">${dayCount}</div>`;
-                        } else {
-                            html += `<div class="col cursor-pointer hover-bg-light rounded-circle" style="cursor: pointer;">${dayCount}</div>`;
-                        }
-                        dayCount++;
+                        Swal.fire('Error', data.message || 'Error al guardar la emergencia.', 'error');
                     }
-                }
-                html += '</div>';
-                if (dayCount > totalDays && row > 3) break;
-            }
-            
-            document.getElementById('calendar-days').innerHTML = html;
-        }
-
-        document.getElementById('prev-month-btn').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    Swal.fire('Error', 'Ocurrió un error en el servidor.', 'error');
+                });
+            });
         });
-
-        document.getElementById('next-month-btn').addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
-        });
-
-        renderCalendar();
     </script>
-
-
     
 
 <!-- Notificaciones Script -->
@@ -455,5 +386,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </body>
 
 </html>
-
-

@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'administrador') {
+    header('Location: auth-login.php');
+    exit();
+}
+require_once __DIR__ . '/../backend/api/obtener_usuarios.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -250,7 +258,27 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <!-- Los datos se inyectarán con fetch() y JS -->
+                                                <?php if(empty($usuariosData)): ?>
+                                                    <tr><td colspan="6" class="text-center py-4 text-muted">No hay usuarios cargados en la Base de Datos.</td></tr>
+                                                <?php else: ?>
+                                                    <?php foreach ($usuariosData as $user): 
+                                                        $badgeHtml = '<span class="badge bg-secondary">Desconocido</span>';
+                                                        if (!empty($user['estatus'])) {
+                                                            $status = strtolower($user['estatus']);
+                                                            if ($status === 'activo' || $status === 'active') $badgeHtml = '<span class="badge bg-success">Activo</span>';
+                                                            else if ($status === 'inactivo' || $status === 'inactive') $badgeHtml = '<span class="badge bg-danger">Inactivo</span>';
+                                                        }
+                                                    ?>
+                                                    <tr>
+                                                        <td><?= htmlspecialchars($user['id']) ?></td>
+                                                        <td><?= htmlspecialchars($user['nombre']) ?></td>
+                                                        <td><?= htmlspecialchars($user['matricula']) ?></td>
+                                                        <td><?= htmlspecialchars($user['email']) ?></td>
+                                                        <td><?= htmlspecialchars($user['telefono']) ?></td>
+                                                        <td><?= $badgeHtml ?></td>
+                                                    </tr>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -344,44 +372,18 @@
             profileVisitChart.render();
 
             const table = document.querySelector('#table1');
-            const dataTable = new simpleDatatables.DataTable(table);
-            const API_URL = '../backend/api/obtener_usuarios.php';
-
-            // Mostrar un mensaje de carga visualmente si lo deseas aquí
-
-            fetch(API_URL)
-                .then(async response => {
-                    const textoCrudo = await response.text();
-                    try {
-                        return JSON.parse(textoCrudo);
-                    } catch (err) {
-                        throw new Error(`El servidor devolvió un texto en lugar de un JSON válido.\n\nContenido recibido (primeros 250 caractéres):\n\n${textoCrudo.substring(0, 250)}...`);
+            if (table) {
+                const dataTable = new simpleDatatables.DataTable(table, {
+                    searchable: true,
+                    fixedHeight: true,
+                    labels: {
+                        placeholder: "Buscar...",
+                        perPage: "{select} usuarios por página",
+                        noRows: "No hay usuarios",
+                        info: "Mostrando {start} a {end} de {rows} usuarios"
                     }
-                })
-                .then(result => {
-                    if (result.status === 'success') {
-                        // La tabla inicia vacía del HTML, por ende no precisamos llamar remove()
-
-                        if (result.data && result.data.length > 0) {
-                            // Preparar filas para Simple-DataTables
-                            const mappedData = result.data.map(user => {
-                                // Mapear atributos del PHP al Frontend
-                                let badgeHtml = '<span class="badge bg-secondary">Desconocido</span>';
-                                if (user.estatus) {
-                                    const status = user.estatus.toLowerCase();
-                                    if (status === 'activo' || status === 'active') badgeHtml = '<span class="badge bg-success">Activo</span>';
-                                    else if (status === 'inactivo' || status === 'inactive') badgeHtml = '<span class="badge bg-danger">Inactivo</span>';
-                                }
-
-                                return [
-                                    user.id || '',
-                                    user.nombre || '',
-                                    user.matricula || '',
-                                    user.email || '',
-                                    user.telefono || '',
-                                    badgeHtml
-                                ];
-                            });
+                });
+            }
 
                             // Insertar filas en la DataTable
                             dataTable.insert({ data: mappedData });
