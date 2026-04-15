@@ -30,7 +30,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
@@ -127,8 +127,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
         </div>
         <div id="main">
             <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
+                <a href="#" class="burger-btn d-block d-xl-none" onclick="event.preventDefault();"> <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
 
@@ -143,7 +142,9 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">2</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
-                                <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
+                                <li>
+                                    <h6 class="dropdown-header font-bold text-dark">Notificaciones</h6>
+                                </li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
                                         <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
@@ -223,7 +224,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 </div>
             </footer>
         </div>
-        
+
         <!-- Modal para ver Observaciones Completas -->
         <div class="modal fade" id="citaDetallesModal" tabindex="-1" aria-labelledby="citaDetallesModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -280,7 +281,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
         document.addEventListener('DOMContentLoaded', () => {
             const tbody = document.querySelector('#historialTable tbody');
-            
+
             // 1. Obtener los datos del historial dinamicamente
             fetch(`${API_URL}/obtener_historial_citas.php`)
                 .then(res => res.json())
@@ -288,7 +289,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                     if (data.status === 'success') {
                         const citas = data.data;
                         tbody.innerHTML = '';
-                        
+
                         if (citas.length === 0) {
                             tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">Aún no tienes consultas registradas.</td></tr>';
                         } else {
@@ -296,17 +297,20 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 // Formatear Fecha y Hora manualmente para prevenir desajustes de zona horaria de JS local
                                 let [year, month, day] = cita.fecha.split('-');
                                 let formattedDate = `${day}/${month}/${year}`;
-                                
+
                                 let [hour, minute] = cita.hora.split(':');
                                 let suffix = hour >= 12 ? "PM" : "AM";
                                 let formattedHour = ((hour % 12) || 12).toString().padStart(2, '0');
                                 let formattedTime = `${formattedHour}:${minute} ${suffix}`;
-                                
+
                                 // Color del Status
-                                let badgeClass = 'bg-primary'; 
-                                if(cita.estado === 'Cancelada'){ badgeClass = 'bg-danger'; }
-                                else if(cita.estado === 'Completada'){ badgeClass = 'bg-primary'; }
-                                
+                                let badgeClass = 'bg-primary';
+                                if (cita.estado === 'Cancelada') {
+                                    badgeClass = 'bg-danger';
+                                } else if (cita.estado === 'Completada') {
+                                    badgeClass = 'bg-primary';
+                                }
+
                                 let docName = cita.doctor_nombre ? `${cita.doctor_nombre} (${cita.doctor_especialidad})` : 'Sin asignar';
                                 // Sanitizar observaciones para pasarlo seguro al atributo data
                                 let obs = cita.observaciones ? cita.observaciones.replace(/"/g, '&quot;') : 'Ningún motivo registrado.';
@@ -365,7 +369,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                     document.getElementById('modal-fecha-hora').innerText = btn.getAttribute('data-fecha');
                     document.getElementById('modal-doctor').innerText = btn.getAttribute('data-doctor');
                     document.getElementById('modal-estado').innerText = btn.getAttribute('data-estado');
-                    
+
                     let motivoCrudo = btn.getAttribute('data-obs') || '';
                     if (motivoCrudo.includes('--- Diagnóstico Médico Final ---')) {
                         let partes = motivoCrudo.split('--- Diagnóstico Médico Final ---');
@@ -375,10 +379,10 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                         document.getElementById('modal-motivo').innerText = motivoCrudo || 'Ningún motivo registrado.';
                         document.getElementById('modal-notas').innerText = btn.getAttribute('data-notas') || 'El especialista aún no ha añadido notas a esta consulta.';
                     }
-                    
+
                     let estadoModal = document.getElementById('modal-estado');
-                    estadoModal.style.color = btn.getAttribute('data-estado') === 'Cancelada' ? '#dc3545' : 
-                                              (btn.getAttribute('data-estado') === 'Completada' ? '#198754' : '#0d6efd');
+                    estadoModal.style.color = btn.getAttribute('data-estado') === 'Cancelada' ? '#dc3545' :
+                        (btn.getAttribute('data-estado') === 'Completada' ? '#198754' : '#0d6efd');
 
                     let modalInstance = new bootstrap.Modal(document.getElementById('citaDetallesModal'));
                     modalInstance.show();
@@ -388,8 +392,6 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     </script>
 
 
-    </body>
+</body>
 
 </html>
-
-

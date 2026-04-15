@@ -1,3 +1,9 @@
+<?php
+header('Content-Type: text/html; charset=utf-8');
+// Importar el escudo protector de rutas validando que sea Administrador (Profesional en BD)
+require_once __DIR__ . '/../../backend/auth_admin.php';
+require_once __DIR__ . '/../../backend/config/paths.php';
+?>
 <!DOCTYPE html>
 <?php require_once '../../backend/config/paths.php'; ?>
 <html lang="en">
@@ -117,8 +123,7 @@
         </div>
         <div id="main">
             <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
+                <a href="#" class="burger-btn d-block d-xl-none" onclick="event.preventDefault();"> <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
 
@@ -482,7 +487,6 @@
                                 dataTable = new simpleDatatables.DataTable(table, {
                                     labels: {
                                         placeholder: "Busca nombre, matrícula, correo...",
-                                        perPage: "Registros por página",
                                         noRows: "No hay datos disponibles",
                                         noResults: "No se encontraron resultados",
                                         info: "Mostrando {start} a {end} de {rows} registros"

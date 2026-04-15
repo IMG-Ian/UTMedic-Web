@@ -18,7 +18,7 @@
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
@@ -722,8 +722,7 @@
         </div>
         <div id="main">
             <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
+                <a href="#" class="burger-btn d-block d-xl-none" onclick="event.preventDefault();"> <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
 
@@ -975,14 +974,12 @@
 
     <!-- Custom ApexCharts Initialization for Psychologist Dashboard -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             var barOptions = {
-                series: [
-                    {
-                        name: "Pacientes",
-                        data: [15, 12, 8, 5, 5],
-                    },
-                ],
+                series: [{
+                    name: "Pacientes",
+                    data: [15, 12, 8, 5, 5],
+                }, ],
                 chart: {
                     type: "bar",
                     height: 350,
@@ -1055,7 +1052,6 @@
     </script>
 
 
-    </body>
+</body>
 
 </html>
-

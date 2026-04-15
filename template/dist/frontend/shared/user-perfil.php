@@ -37,7 +37,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
@@ -130,21 +130,21 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                     <span>Inicio</span>
                                 </a>
                             </li>
-    
+
                             <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-agendar-cita.php' ? 'active' : '' ?>">
                                 <a href="user/user-agendar-cita.php" class="sidebar-link">
                                     <i class="bi bi-calendar-plus-fill"></i>
                                     <span>Nueva Cita</span>
                                 </a>
                             </li>
-    
+
                             <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-historial.php' ? 'active' : '' ?>">
                                 <a href="user/user-historial.php" class="sidebar-link">
                                     <i class="bi bi-clock-history"></i>
                                     <span>Historial Citas</span>
                                 </a>
                             </li>
-    
+
                             <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
                                 <a href="shared/user-perfil.php" class="sidebar-link">
                                     <i class="bi bi-person-fill"></i>
@@ -167,8 +167,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
         </div>
         <div id="main">
             <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
+                <a href="#" class="burger-btn d-block d-xl-none" onclick="event.preventDefault();"> <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
 
@@ -183,11 +182,16 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">2</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
-                                <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
+                                <li>
+                                    <h6 class="dropdown-header font-bold text-dark">Notificaciones</h6>
+                                </li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
                                         <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                            </svg>
                                         </div>
                                         <div>
                                             <h6 class="mb-0 text-sm font-bold text-dark">Cita Aceptada</h6>
@@ -198,7 +202,14 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded mt-1" href="#" style="white-space: normal;">
                                         <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><line x1="10" y1="14" x2="14" y2="18"></line><line x1="14" y1="14" x2="10" y2="18"></line></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                                                <line x1="10" y1="14" x2="14" y2="18"></line>
+                                                <line x1="14" y1="14" x2="10" y2="18"></line>
+                                            </svg>
                                         </div>
                                         <div>
                                             <h6 class="mb-0 text-sm font-bold text-dark">Cita Reagendada</h6>
@@ -235,9 +246,9 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                             <div class="rounded-circle overflow-hidden shadow-sm d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; border: 4px solid #fff; background-color: var(--bs-body-bg);">
                                                 <img src="<?= htmlspecialchars($avatarUsuario) ?>" id="main-profile-avatar" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; color: transparent; text-indent: -9999px;">
                                             </div>
-                                            <button 
-                                                onclick="document.getElementById('avatarInput').click()" 
-                                                class="btn btn-primary position-absolute rounded-circle shadow-sm" 
+                                            <button
+                                                onclick="document.getElementById('avatarInput').click()"
+                                                class="btn btn-primary position-absolute rounded-circle shadow-sm"
                                                 style="background-color: #018790; border-color: #018790; width: 38px; height: 38px; bottom: 0; right: 8px; padding: 0; align-items: center; justify-content: center; line-height: 0;"
                                                 title="Cambiar foto de perfil">
                                                 <i class="bi bi-camera-fill" style="font-size: 1.1rem; margin: 0; padding: 0; transform: translateY(-1px);"></i>
@@ -351,7 +362,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
         document.getElementById('avatarInput').addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 const file = this.files[0];
-                
+
                 // Validar tamaño (max 5MB)
                 if (file.size > 5 * 1024 * 1024) {
                     alert('La imagen pesa demasiado. El límite es 5MB.');
@@ -365,33 +376,31 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 // Podemos cambiar el icono de la camara temporalmente por un spinner si quisieramos
                 // Aquí se envía
                 fetch(`${API_URL}/subir_avatar.php`, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        const newUrl = data.avatar_url + '?t=' + new Date().getTime(); // cache buster
-                        
-                        // Actualizamos las dos imagenes en pantalla: la del panel centro y la de Navbar arrriba derecha
-                        document.getElementById('main-profile-avatar').src = newUrl;
-                        
-                        const topNavAvatar = document.getElementById('top-nav-avatar');
-                        if (topNavAvatar) topNavAvatar.src = newUrl;
-                        
-                    } else {
-                        alert('Error: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Falló la conexión al servidor. Intenta de nuevo.');
-                });
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            const newUrl = data.avatar_url + '?t=' + new Date().getTime(); // cache buster
+
+                            // Actualizamos las dos imagenes en pantalla: la del panel centro y la de Navbar arrriba derecha
+                            document.getElementById('main-profile-avatar').src = newUrl;
+
+                            const topNavAvatar = document.getElementById('top-nav-avatar');
+                            if (topNavAvatar) topNavAvatar.src = newUrl;
+
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Falló la conexión al servidor. Intenta de nuevo.');
+                    });
             }
         });
     </script>
 </body>
 
 </html>
-
-

@@ -34,7 +34,7 @@ require_once '../../backend/controlador_inicio_paciente.php';
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
@@ -131,8 +131,7 @@ require_once '../../backend/controlador_inicio_paciente.php';
         </div>
         <div id="main">
             <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
+                <a href="#" class="burger-btn d-block d-xl-none" onclick="event.preventDefault();"> <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
 
@@ -147,11 +146,16 @@ require_once '../../backend/controlador_inicio_paciente.php';
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">2</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
-                                <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
+                                <li>
+                                    <h6 class="dropdown-header font-bold text-dark">Notificaciones</h6>
+                                </li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
                                         <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                            </svg>
                                         </div>
                                         <div>
                                             <h6 class="mb-0 text-sm font-bold text-dark">Cita Aceptada</h6>
@@ -162,7 +166,14 @@ require_once '../../backend/controlador_inicio_paciente.php';
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded mt-1" href="#" style="white-space: normal;">
                                         <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><line x1="10" y1="14" x2="14" y2="18"></line><line x1="14" y1="14" x2="10" y2="18"></line></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                                                <line x1="10" y1="14" x2="14" y2="18"></line>
+                                                <line x1="14" y1="14" x2="10" y2="18"></line>
+                                            </svg>
                                         </div>
                                         <div>
                                             <h6 class="mb-0 text-sm font-bold text-dark">Cita Reagendada</h6>
@@ -222,14 +233,14 @@ require_once '../../backend/controlador_inicio_paciente.php';
                                                 <p class="text-secondary small">Puedes agendar una nueva cita desde el menú.</p>
                                             </div>
                                         <?php else: ?>
-                                            <?php 
+                                            <?php
                                             $slideIndex = 0;
-                                            for ($i = 0; $i < count($citasFront); $i += 2): 
+                                            for ($i = 0; $i < count($citasFront); $i += 2):
                                                 $isFirst = ($i === 0) ? 'active' : '';
                                             ?>
                                                 <div class="carousel-item <?= $isFirst ?>">
                                                     <div class="row g-3 justify-content-center">
-                                                        
+
                                                         <!-- Cita 1 del Slide -->
                                                         <div class="col-md-5">
                                                             <div class="card border-0 mb-0 shadow-sm" style="background: var(--utm-accent); color: white; border-radius: 0.8rem;">
@@ -252,49 +263,49 @@ require_once '../../backend/controlador_inicio_paciente.php';
 
                                                         <!-- Cita 2 del Slide (si existe) -->
                                                         <?php if ($i + 1 < count($citasFront)): ?>
-                                                        <div class="col-md-5">
-                                                            <div class="card border-0 mb-0 shadow-sm" style="background: var(--utm-accent); color: white; border-radius: 0.8rem;">
-                                                                <div class="card-body p-4">
-                                                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                                                        <h5 class="text-white font-bold mb-0">Cita Médica</h5>
+                                                            <div class="col-md-5">
+                                                                <div class="card border-0 mb-0 shadow-sm" style="background: var(--utm-accent); color: white; border-radius: 0.8rem;">
+                                                                    <div class="card-body p-4">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                            <h5 class="text-white font-bold mb-0">Cita Médica</h5>
+                                                                        </div>
+                                                                        <div class="d-flex align-items-center mb-2">
+                                                                            <i class="bi bi-clock me-2"></i>
+                                                                            <span><?= htmlspecialchars($citasFront[$i + 1]['fecha']) ?> | <?= htmlspecialchars($citasFront[$i + 1]['horario']) ?></span>
+                                                                        </div>
+                                                                        <div class="d-flex align-items-center mb-4">
+                                                                            <i class="bi bi-person me-2"></i>
+                                                                            <span><?= htmlspecialchars($citasFront[$i + 1]['profesional']) ?> (<?= htmlspecialchars($citasFront[$i + 1]['especialidad']) ?>)</span>
+                                                                        </div>
+                                                                        <button class="btn btn-light btn-sm w-100 fw-bold" style="border-radius: 50px;">Ver Detalles</button>
                                                                     </div>
-                                                                    <div class="d-flex align-items-center mb-2">
-                                                                        <i class="bi bi-clock me-2"></i>
-                                                                        <span><?= htmlspecialchars($citasFront[$i+1]['fecha']) ?> | <?= htmlspecialchars($citasFront[$i+1]['horario']) ?></span>
-                                                                    </div>
-                                                                    <div class="d-flex align-items-center mb-4">
-                                                                        <i class="bi bi-person me-2"></i>
-                                                                        <span><?= htmlspecialchars($citasFront[$i+1]['profesional']) ?> (<?= htmlspecialchars($citasFront[$i+1]['especialidad']) ?>)</span>
-                                                                    </div>
-                                                                    <button class="btn btn-light btn-sm w-100 fw-bold" style="border-radius: 50px;">Ver Detalles</button>
                                                                 </div>
                                                             </div>
-                                                        </div>
                                                         <?php endif; ?>
 
                                                     </div>
                                                 </div>
-                                            <?php 
-                                            $slideIndex++;
-                                            endfor; 
+                                            <?php
+                                                $slideIndex++;
+                                            endfor;
                                             ?>
                                         <?php endif; ?>
                                     </div>
-                                    
+
                                     <!-- Controles de carrusel (Ocultar si no hay suficientes tarjetas para slidetear) -->
                                     <?php if (!empty($citasFront) && count($citasFront) > 2): ?>
-                                    <div class="d-flex justify-content-center mt-3 gap-2" id="appointmentsControls">
-                                        <button class="btn btn-sm btn-outline-secondary" type="button"
-                                            data-bs-target="#appointmentsCarousel" data-bs-slide="prev"
-                                            style="border-radius: 50px;">
-                                            <i class="bi bi-chevron-left"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-secondary" type="button"
-                                            data-bs-target="#appointmentsCarousel" data-bs-slide="next"
-                                            style="border-radius: 50px;">
-                                            <i class="bi bi-chevron-right"></i>
-                                        </button>
-                                    </div>
+                                        <div class="d-flex justify-content-center mt-3 gap-2" id="appointmentsControls">
+                                            <button class="btn btn-sm btn-outline-secondary" type="button"
+                                                data-bs-target="#appointmentsCarousel" data-bs-slide="prev"
+                                                style="border-radius: 50px;">
+                                                <i class="bi bi-chevron-left"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary" type="button"
+                                                data-bs-target="#appointmentsCarousel" data-bs-slide="next"
+                                                style="border-radius: 50px;">
+                                                <i class="bi bi-chevron-right"></i>
+                                            </button>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -413,36 +424,39 @@ require_once '../../backend/controlador_inicio_paciente.php';
         const API_URL = '<?= API_URL ?>';
 
         // Pasar el string JSON PHP a nuestro Vector Nativo de JS para marcar las pastillas de calendario
-        let patientAppointmentsDates = <?= json_encode($fechasJS) ?>; 
-        
+        let patientAppointmentsDates = <?= json_encode($fechasJS) ?>;
+
         document.addEventListener('DOMContentLoaded', () => {
             renderCalendar();
         });
 
         // --- Líƒâ€œGICA DEL CALENDARIO DINíMICO ---
         let currentDate = new Date();
-        
+
         function renderCalendar() {
-            const monthYearString = currentDate.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
+            const monthYearString = currentDate.toLocaleString('es-ES', {
+                month: 'long',
+                year: 'numeric'
+            });
             document.getElementById('calendar-title').innerText = monthYearString.charAt(0).toUpperCase() + monthYearString.slice(1);
-            
+
             const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
             const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-            
+
             // Ajustar para que la semana empiece en Lunes (0 Lunes, 6 Domingo)
-            let startingDay = firstDay.getDay() - 1; 
-            if (startingDay === -1) startingDay = 6; 
-            
+            let startingDay = firstDay.getDay() - 1;
+            if (startingDay === -1) startingDay = 6;
+
             const totalDays = lastDay.getDate();
             const prevMonthLastDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
-            
+
             let html = '';
             let dayCount = 1;
             let nextMonthDayCount = 1;
-            
+
             const today = new Date();
             const isCurrentMonth = today.getMonth() === currentDate.getMonth() && today.getFullYear() === currentDate.getFullYear();
-            
+
             for (let row = 0; row < 6; row++) {
                 html += '<div class="row gx-1 mb-1">';
                 for (let col = 0; col < 7; col++) {
@@ -473,7 +487,7 @@ require_once '../../backend/controlador_inicio_paciente.php';
                 html += '</div>';
                 if (dayCount > totalDays && row > 3) break; // No renderizar fila 6 si no se necesita
             }
-            
+
             document.getElementById('calendar-days').innerHTML = html;
         }
 
@@ -493,5 +507,3 @@ require_once '../../backend/controlador_inicio_paciente.php';
 </body>
 
 </html>
-
-

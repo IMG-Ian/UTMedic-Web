@@ -24,7 +24,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
@@ -113,7 +113,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                 <span>Perfil</span>
                             </a>
                         </li>
-                        
+
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
                             <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
@@ -128,8 +128,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
         </div>
         <div id="main">
             <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
+                <a href="#" class="burger-btn d-block d-xl-none" onclick="event.preventDefault();"> <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
 
@@ -143,11 +142,17 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">1</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
-                                <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
+                                <li>
+                                    <h6 class="dropdown-header font-bold text-dark">Notificaciones</h6>
+                                </li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
                                         <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                            </svg>
                                         </div>
                                         <div>
                                             <h6 class="mb-0 text-sm font-bold text-dark">Llamado de Emergencia</h6>
@@ -173,7 +178,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                 <section class="row">
                     <!-- Left Column: Bienvenida y Citas del Día -->
                     <div class="col-12 col-lg-8">
-                        
+
                         <!-- Tarjeta de Bienvenida -->
                         <div class="card mb-4 shadow-sm border-0" style="background: linear-gradient(135deg, #005461 0%, #018790 100%); border-radius: 1rem;">
                             <div class="card-body py-4 px-5">
@@ -189,7 +194,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                 <div class="d-flex justify-content-center mb-4">
                                     <span class="badge rounded-pill bg-light text-dark px-4 py-2 fs-6 shadow-sm border" style="font-weight: 600;">Citas del día</span>
                                 </div>
-                                
+
                                 <div class="row px-2" id="citas-dia-container">
                                     <div class="col-12 text-center text-muted py-4">
                                         <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
@@ -198,7 +203,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Tarjeta Citas Atendidas (Gráfico movido) -->
                         <div class="card shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
                             <div class="card-body p-4 text-center">
@@ -213,7 +218,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
 
                     <!-- Right Column: Emergencia y Estadísticas -->
                     <div class="col-12 col-lg-4">
-                        
+
                         <!-- Mini Calendar -->
                         <div class="card shadow-sm border-0 mb-4" style="border-radius: 1rem;">
                             <div class="card-header bg-transparent border-0 pt-4 pb-2 text-center">
@@ -249,7 +254,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Tarjeta EMERGENCIA -->
                         <div class="card mb-4 shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
                             <div class="card-body py-5 px-4 text-center">
@@ -257,7 +262,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                 <a href="medico-emergencia.php" class="btn btn-danger w-100 py-3 rounded-pill fw-bold" style="background-color: #bd1a1a; border-color: #bd1a1a; font-size: 1.1rem; box-shadow: 0 6px 15px rgba(189,26,26,0.4); text-transform: uppercase;">Emergencia</a>
                             </div>
                         </div>
-                        
+
                         <!-- Tarjeta Citas Pendientes -->
                         <div class="card mb-4 shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
                             <div class="card-body py-4 text-center">
@@ -293,17 +298,20 @@ require_once __DIR__ . '/../../backend/config/paths.php';
     <script src="assets/static/js/pages/dashboard.js"></script>
 
     <!-- Custom ApexCharts Initialization for Doctor Dashboard -->
-    <script>        // Constantes de rutas desde PHP
+    <script>
+        // Constantes de rutas desde PHP
         const BACKEND_URL = '<?= BACKEND_URL ?>';
         const API_URL = '<?= API_URL ?>';
         // --- Líƒâ€œGICA DEL CALENDARIO DINíMICO ---
         let patientAppointmentsDates = []; // Aquí se inyectarán después desde la base de datos
         let currentDate = new Date();
 
-        document.addEventListener('DOMContentLoaded', function () {
-            
+        document.addEventListener('DOMContentLoaded', function() {
+
             // Cargar datos dinámicos desde API
-            fetch(`${API_URL}/obtener_dashboard_medico.php?t=${new Date().getTime()}`, { cache: 'no-store' })
+            fetch(`${API_URL}/obtener_dashboard_medico.php?t=${new Date().getTime()}`, {
+                    cache: 'no-store'
+                })
                 .then(response => response.json())
                 .then(result => {
                     if (result.status === 'success') {
@@ -355,21 +363,68 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                             chart: {
                                 type: "bar",
                                 height: 260,
-                                toolbar: { show: false },
-                                dropShadow: { enabled: true, top: 2, left: 0, blur: 4, opacity: 0.1 }
+                                toolbar: {
+                                    show: false
+                                },
+                                dropShadow: {
+                                    enabled: true,
+                                    top: 2,
+                                    left: 0,
+                                    blur: 4,
+                                    opacity: 0.1
+                                }
                             },
                             colors: ["var(--utm-primary)"],
-                            plotOptions: { bar: { horizontal: false, columnWidth: "40%", borderRadius: 5 } },
-                            dataLabels: { enabled: false },
-                            stroke: { show: true, width: 2, colors: ["transparent"] },
-                            xaxis: { categories: data.chart.labels, axisBorder: { show: false }, axisTicks: { show: false } },
+                            plotOptions: {
+                                bar: {
+                                    horizontal: false,
+                                    columnWidth: "40%",
+                                    borderRadius: 5
+                                }
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            stroke: {
+                                show: true,
+                                width: 2,
+                                colors: ["transparent"]
+                            },
+                            xaxis: {
+                                categories: data.chart.labels,
+                                axisBorder: {
+                                    show: false
+                                },
+                                axisTicks: {
+                                    show: false
+                                }
+                            },
                             yaxis: {
-                                title: { text: "Ní‚Â° Citas", style: { color: "#6c757d", fontWeight: 600 } },
-                                labels: { style: { colors: "#6c757d" } },
+                                title: {
+                                    text: "Ní‚Â° Citas",
+                                    style: {
+                                        color: "#6c757d",
+                                        fontWeight: 600
+                                    }
+                                },
+                                labels: {
+                                    style: {
+                                        colors: "#6c757d"
+                                    }
+                                },
                                 tickAmount: Math.max(...data.chart.series) > 5 ? 5 : Math.max(...data.chart.series)
                             },
-                            fill: { opacity: 1 },
-                            tooltip: { theme: "light", y: { formatter: function (val) { return val + " citas" } } }
+                            fill: {
+                                opacity: 1
+                            },
+                            tooltip: {
+                                theme: "light",
+                                y: {
+                                    formatter: function(val) {
+                                        return val + " citas"
+                                    }
+                                }
+                            }
                         };
                         var chart = new ApexCharts(document.querySelector("#chart-citas-pendientes"), pendienteOptions);
                         chart.render();
@@ -387,27 +442,30 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                     document.getElementById('citas-dia-container').innerHTML = `<div class="alert alert-warning mx-2 mt-2 w-100">Error de conexión base de datos.</div>`;
                 });
         });
-        
+
         function renderCalendar() {
-            const monthYearString = currentDate.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
+            const monthYearString = currentDate.toLocaleString('es-ES', {
+                month: 'long',
+                year: 'numeric'
+            });
             document.getElementById('calendar-title').innerText = monthYearString.charAt(0).toUpperCase() + monthYearString.slice(1);
-            
+
             const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
             const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-            
-            let startingDay = firstDay.getDay() - 1; 
-            if (startingDay === -1) startingDay = 6; 
-            
+
+            let startingDay = firstDay.getDay() - 1;
+            if (startingDay === -1) startingDay = 6;
+
             const totalDays = lastDay.getDate();
             const prevMonthLastDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
-            
+
             let html = '';
             let dayCount = 1;
             let nextMonthDayCount = 1;
-            
+
             const today = new Date();
             const isCurrentMonth = today.getMonth() === currentDate.getMonth() && today.getFullYear() === currentDate.getFullYear();
-            
+
             for (let row = 0; row < 6; row++) {
                 html += '<div class="row gx-1 mb-1">';
                 for (let col = 0; col < 7; col++) {
@@ -433,7 +491,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                 html += '</div>';
                 if (dayCount > totalDays && row > 3) break;
             }
-            
+
             document.getElementById('calendar-days').innerHTML = html;
         }
 
@@ -451,8 +509,6 @@ require_once __DIR__ . '/../../backend/config/paths.php';
     </script>
 
 
-    </body>
+</body>
 
 </html>
-
-

@@ -129,8 +129,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
         </div>
         <div id="main">
             <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
+                <a href="#" class="burger-btn d-block d-xl-none" onclick="event.preventDefault();"> <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
 
@@ -145,7 +144,9 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">2</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
-                                <li><h6 class="dropdown-header font-bold text-dark">Notificaciones</h6></li>
+                                <li>
+                                    <h6 class="dropdown-header font-bold text-dark">Notificaciones</h6>
+                                </li>
                                 <li>
                                     <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
                                         <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
@@ -249,7 +250,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                                 background-color: transparent !important;
                                                 transition: all 0.2s ease-in-out;
                                             }
-                                            .btn-outline-utm-green:hover, 
+
+                                            .btn-outline-utm-green:hover,
                                             .btn-outline-utm-green.active {
                                                 background-color: var(--utm-accent) !important;
                                                 color: var(--utm-primary) !important;
@@ -346,7 +348,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
             const doctorSelect = document.getElementById('doctorSelect');
             const dateSelect = document.getElementById('dateSelect');
             const timeButtons = document.querySelectorAll('.time-slot-btn:not(.disabled)');
-            
+
             const summarySpecialty = document.getElementById('summary-specialty');
             const summaryDoctor = document.getElementById('summary-doctor');
             const summaryDate = document.getElementById('summary-date');
@@ -383,15 +385,15 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
             // --- Listeners de Actualización al Resumen de la Derecha ---
             specialtySelect.addEventListener('change', () => {
-                summarySpecialty.innerText = specialtySelect.value !== "Selecciona una opción..." 
-                    ? specialtySelect.options[specialtySelect.selectedIndex].text 
-                    : 'Seleccione esp...';
+                summarySpecialty.innerText = specialtySelect.value !== "Selecciona una opción..." ?
+                    specialtySelect.options[specialtySelect.selectedIndex].text :
+                    'Seleccione esp...';
             });
 
             doctorSelect.addEventListener('change', () => {
-                summaryDoctor.innerText = doctorSelect.value === '' 
-                    ? '---' 
-                    : doctorSelect.options[doctorSelect.selectedIndex].text;
+                summaryDoctor.innerText = doctorSelect.value === '' ?
+                    '---' :
+                    doctorSelect.options[doctorSelect.selectedIndex].text;
             });
 
             dateSelect.addEventListener('change', () => {
@@ -411,7 +413,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                         b.classList.remove('active');
                         // Asegurarnos de que todos vuelven al "outline" base
                     });
-                    
+
                     // Poner estado activo SOLO a este botón.
                     // El CSS que agregamos arriba (.btn-outline-utm-green.active) se encargará
                     // orgánicamente de ponerle el fondo verde clarito.
@@ -453,52 +455,52 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
                 // Enviar la estructura en JSON crudo a nuestro endpoint PHP
                 fetch(`${API_URL}/crear_cita.php`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        idPersonal: doctorId,
-                        fecha: fecha,
-                        hora: selectedTime,
-                        observaciones: observaciones
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            idPersonal: doctorId,
+                            fecha: fecha,
+                            hora: selectedTime,
+                            observaciones: observaciones
+                        })
                     })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    btnConfirmarCita.disabled = false;
-                    btnConfirmarCita.innerText = 'Confirmar Cita';
-                    
-                    if (data.status === 'success') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'íƒâ€ší‚¡Cita Agendada!',
-                            text: 'Tu cita se ha guardado exitosamente en el sistema.',
-                            confirmButtonColor: '#018790'
-                        }).then(() => {
-                            window.location.href = 'user/index.php'; // Redirigirlo a inicio
-                        });
-                    } else {
+                    .then(res => res.json())
+                    .then(data => {
+                        btnConfirmarCita.disabled = false;
+                        btnConfirmarCita.innerText = 'Confirmar Cita';
+
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'íƒâ€ší‚¡Cita Agendada!',
+                                text: 'Tu cita se ha guardado exitosamente en el sistema.',
+                                confirmButtonColor: '#018790'
+                            }).then(() => {
+                                window.location.href = 'user/index.php'; // Redirigirlo a inicio
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Algo salió mal',
+                                text: data.message
+                            });
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error:', err);
                         Swal.fire({
                             icon: 'error',
-                            title: 'Algo salió mal',
-                            text: data.message
+                            title: 'Error de conexión',
+                            text: 'Falló la conexión al servidor. Revisa tu internet.'
                         });
-                    }
-                })
-                .catch(err => {
-                    console.error('Error:', err);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error de conexión',
-                        text: 'Falló la conexión al servidor. Revisa tu internet.'
+                        btnConfirmarCita.disabled = false;
+                        btnConfirmarCita.innerText = 'Confirmar Cita';
                     });
-                    btnConfirmarCita.disabled = false;
-                    btnConfirmarCita.innerText = 'Confirmar Cita';
-                });
             });
         });
     </script>
 </body>
 
 </html>
-
-
