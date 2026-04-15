@@ -7,7 +7,7 @@ header("Access-Control-Allow-Methods: GET");
 header("Content-Type: application/json; charset=UTF-8");
 
 // Incluir el archivo de conexión
-require_once 'conexion.php';
+require_once '../../config/conexion.php';
 
 // Validar que la conexión exista (creada en conexion.php)
 if (!isset($conn)) {
@@ -17,12 +17,10 @@ if (!isset($conn)) {
 
     // Hacemos LEFT JOIN con paciente para obtener matrícula y teléfono si se trata de un estudiante
     $sql = "SELECT 
-                u.id_usuario as id, 
                 CONCAT(u.nombre, ' ', u.apellido_pat) as nombre, 
                 IFNULL(p.matricula, 'N/A') as matricula, 
                 u.correo as email,
-                IFNULL(p.telefono, 'No registrado') as telefono,
-                IF(u.estado = 1, 'Activo', 'Inactivo') as estatus 
+                IF(u.estado = 1, 'Activo', 'Inactivo') as estado 
             FROM usuario u
             LEFT JOIN paciente p ON u.id_usuario = p.id_usuario 
             ORDER BY u.id_usuario DESC

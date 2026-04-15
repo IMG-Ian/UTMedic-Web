@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+<?php require_once '../../backend/config/paths.php'; ?>
 <html lang="en">
 
 <head>
+    <base href="../">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Mazer Admin Dashboard</title>
+    <title>Admin Dashboard</title>
 
     <link rel="shortcut icon"
         href="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2033%2034'%20fill-rule='evenodd'%20stroke-linejoin='round'%20stroke-miterlimit='2'%20xmlns:v='https://vecta.io/nano'%3e%3cpath%20d='M3%2027.472c0%204.409%206.18%205.552%2013.5%205.552%207.281%200%2013.5-1.103%2013.5-5.513s-6.179-5.552-13.5-5.552c-7.281%200-13.5%201.103-13.5%205.513z'%20fill='%23435ebe'%20fill-rule='nonzero'/%3e%3ccircle%20cx='16.5'%20cy='8.8'%20r='8.8'%20fill='%2341bbdd'/%3e%3c/svg%3e"
@@ -19,7 +21,6 @@
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-    <link rel="stylesheet" href="./assets/css/utmedic-custom.css">
     <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
@@ -32,7 +33,7 @@
                 <div class="sidebar-header position-relative px-4 py-3">
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
-                            <a href="index.php" class="text-decoration-none">
+                            <a href="admin/dashboard-administrador.php" class="text-decoration-none">
                                 <h3 class="mb-0 fw-bold" style="color: var(--utm-green); letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
@@ -76,42 +77,35 @@
                         <li class="sidebar-title">Menú Administrador</li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-administrador.php' ? 'active' : '' ?>">
-                            <a href="dashboard-administrador.php" class="sidebar-link">
+                            <a href="admin/dashboard-administrador.php" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
-                                <span>Dashboard Base de Datos</span>
+                                <span>Inicio</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item ">
-                            <a href="#" class='sidebar-link'>
+                            <a href="admin/gestionPSalud.php" class='sidebar-link'>
                                 <i class="bi bi-people-fill"></i>
-                                <span>Gestión de Usuarios</span>
+                                <span>Gestión de Personal de Salud</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item ">
-                            <a href="#" class='sidebar-link'>
+                            <a href="admin/gestionPacientes.php" class='sidebar-link'>
                                 <i class="bi bi-person-lines-fill"></i>
                                 <span>Gestión de Pacientes</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item ">
-                            <a href="#" class='sidebar-link'>
-                                <i class="bi bi-calendar-event-fill"></i>
-                                <span>Control de Citas</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item ">
-                            <a href="#" class='sidebar-link'>
+                            <a href="admin/reportes.php" class='sidebar-link'>
                                 <i class="bi bi-file-earmark-bar-graph-fill"></i>
                                 <span>Reportes</span>
                             </a>
                         </li>
-                        
+
                         <li class="sidebar-item mt-5">
-                            <a href="../backend/logout.php" class='sidebar-link text-danger'>
+                            <a href="<?= BACKEND_URL ?>/logout.php" class='sidebar-link text-danger'>
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -132,17 +126,7 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last">
-                            <h3>Gestión Admin</h3>
-                            <p class="text-subtitle text-muted">Añadir, remover y visualizar todos los usuarios y
-                                estadísticas del sistema.</p>
-                        </div>
-                        <div class="col-12 col-md-6 order-md-2 order-first">
-                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="dashboard-administrador.php">Administrador</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                                </ol>
-                            </nav>
+                            <h3>Panel de Administración</h3>
                         </div>
                     </div>
                 </div>
@@ -156,14 +140,13 @@
                                     <div class="row">
                                         <div
                                             class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
-                                            <div class="stats-icon purple mb-2"
-                                                style="background-color: #e0f2f1; color: var(--utm-secondary);">
-                                                <i class="iconly-boldShow"></i>
+                                            <div class="stats-icon icon-card mb-2">
+                                                <i class="bi bi-people-fill"></i>
                                             </div>
                                         </div>
                                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                            <h6 class="text-muted font-semibold">Visitas a Perfiles</h6>
-                                            <h6 class="font-extrabold mb-0">112.000</h6>
+                                            <h6 class="text-muted font-semibold">Total Personal Salud</h6>
+                                            <h6 class="font-extrabold mb-0" id="totalPersonal">0</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -175,14 +158,13 @@
                                     <div class="row">
                                         <div
                                             class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
-                                            <div class="stats-icon blue mb-2"
-                                                style="background-color: #e0f2f1; color: var(--utm-secondary);">
-                                                <i class="iconly-boldProfile"></i>
+                                            <div class="stats-icon icon-card mb-2">
+                                                <i class="bi bi-person-fill"></i>
                                             </div>
                                         </div>
                                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                            <h6 class="text-muted font-semibold">Total Usuarios</h6>
-                                            <h6 class="font-extrabold mb-0">183.000</h6>
+                                            <h6 class="text-muted font-semibold">Total Pacientes</h6>
+                                            <h6 class="font-extrabold mb-0" id="totalPacientes">0</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -194,14 +176,13 @@
                                     <div class="row">
                                         <div
                                             class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
-                                            <div class="stats-icon green mb-2"
-                                                style="background-color: #e0f2f1; color: var(--utm-secondary);">
-                                                <i class="iconly-boldAdd-User"></i>
+                                            <div class="stats-icon icon-card mb-2">
+                                                <i class="bi bi-calendar2-event"></i>
                                             </div>
                                         </div>
                                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                            <h6 class="text-muted font-semibold">Nuevos Pacientes</h6>
-                                            <h6 class="font-extrabold mb-0">80.000</h6>
+                                            <h6 class="text-muted font-semibold">Total Citas</h6>
+                                            <h6 class="font-extrabold mb-0" id="totalCitas">0</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -213,14 +194,13 @@
                                     <div class="row">
                                         <div
                                             class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
-                                            <div class="stats-icon red mb-2"
-                                                style="background-color: #e0f2f1; color: var(--utm-secondary);">
-                                                <i class="iconly-boldBookmark"></i>
+                                            <div class="stats-icon icon-card mb-2">
+                                                <i class="bi bi-exclamation-circle"></i>
                                             </div>
                                         </div>
                                         <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                            <h6 class="text-muted font-semibold">Citas Atendidas</h6>
-                                            <h6 class="font-extrabold mb-0">112</h6>
+                                            <h6 class="text-muted font-semibold">Total Emergencias</h6>
+                                            <h6 class="font-extrabold mb-0" id="totalEmergencias">0</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -241,11 +221,9 @@
                                         <table class="table table-hover" id="table1">
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
                                                     <th>Nombre</th>
                                                     <th>Matrícula</th>
                                                     <th>Email</th>
-                                                    <th>Teléfono</th>
                                                     <th>Estatus</th>
                                                 </tr>
                                             </thead>
@@ -260,7 +238,8 @@
                         <div class="col-12 col-lg-4">
                             <div class="card shadow-sm border-0">
                                 <div class="card-header border-0 bg-transparent">
-                                    <h5 class="card-title font-bold">Resumen de Visitas</h5>
+                                    <h5 class="card-title font-bold">Resumen de Citas por Mes
+                                    </h5>
                                 </div>
                                 <div class="card-body">
                                     <div id="visits-chart"></div>
@@ -291,7 +270,12 @@
     <script src="assets/extensions/apexcharts/apexcharts.min.js"></script>
     <script src="assets/extensions/simple-datatables/umd/simple-datatables.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_BASE = '<?= API_URL ?>';
+        const API_URL = '<?= API_URL ?>';
+
+        document.addEventListener('DOMContentLoaded', function() {
             // ApexCharts Initialization
             var optionsProfileVisit = {
                 annotations: {
@@ -302,7 +286,7 @@
                 },
                 chart: {
                     type: 'bar',
-                    height: 300,
+                    height: 200,
                     toolbar: {
                         show: false
                     }
@@ -321,7 +305,7 @@
                 }],
                 colors: ['var(--utm-secondary)'],
                 xaxis: {
-                    categories: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                    categories: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
                     labels: {
                         style: {
                             colors: '#9ca3af'
@@ -338,6 +322,13 @@
                 grid: {
                     borderColor: '#f1f1f1',
                     strokeDashArray: 4,
+                },
+                yaxis: {
+                    labels: {
+                        style: {
+                            colors: '#9ca3af'
+                        }
+                    }
                 }
             }
             var profileVisitChart = new ApexCharts(document.querySelector("#visits-chart"), optionsProfileVisit);
@@ -345,11 +336,11 @@
 
             const table = document.querySelector('#table1');
             const dataTable = new simpleDatatables.DataTable(table);
-            const API_URL = '../backend/api/obtener_usuarios.php';
+
 
             // Mostrar un mensaje de carga visualmente si lo deseas aquí
 
-            fetch(API_URL)
+            fetch(API_BASE + '/admin/obtener_usuarios.php')
                 .then(async response => {
                     const textoCrudo = await response.text();
                     try {
@@ -367,24 +358,24 @@
                             const mappedData = result.data.map(user => {
                                 // Mapear atributos del PHP al Frontend
                                 let badgeHtml = '<span class="badge bg-secondary">Desconocido</span>';
-                                if (user.estatus) {
-                                    const status = user.estatus.toLowerCase();
-                                    if (status === 'activo' || status === 'active') badgeHtml = '<span class="badge bg-success">Activo</span>';
-                                    else if (status === 'inactivo' || status === 'inactive') badgeHtml = '<span class="badge bg-danger">Inactivo</span>';
+                                if (user.estado) {
+                                    const status = user.estado.toLowerCase();
+                                    if (status === 'activo' || status === 'active') badgeHtml = '<span class="badge-status activo">Activo</span>';
+                                    else if (status === 'inactivo' || status === 'inactive') badgeHtml = '<span class="badge-status inactivo">Inactivo</span>';
                                 }
 
                                 return [
-                                    user.id || '',
                                     user.nombre || '',
                                     user.matricula || '',
                                     user.email || '',
-                                    user.telefono || '',
                                     badgeHtml
                                 ];
                             });
 
                             // Insertar filas en la DataTable
-                            dataTable.insert({ data: mappedData });
+                            dataTable.insert({
+                                data: mappedData
+                            });
                         } else {
                             dataTable.wrapper.innerHTML = `<div class='alert alert-info m-3'>No hay usuarios cargados en la Base de Datos.</div>`;
                         }
@@ -401,10 +392,50 @@
                         ${error}
                         </div>`;
                 });
+            fetch(`${API_BASE}/admin/stats.php`)
+                .then(res => res.json())
+                .then(result => {
+                    console.log('Stats API Result:', result);
+                    if (result.status === 'success') {
+                        const data = result.data;
+
+                        document.getElementById('totalPersonal').textContent = data.profesionales;
+                        document.getElementById('totalPacientes').textContent = data.pacientes;
+                        document.getElementById('totalCitas').textContent = data.citas;
+                        document.getElementById('totalEmergencias').textContent = data.emergencias;
+                    }
+                })
+                .catch(err => console.error('Error stats:', err));
+
+            fetch(`${API_BASE}/admin/citas_por_mes.php`)
+                .then(res => res.json())
+                .then(result => {
+
+    if(result.status === 'success'){
+
+        let data = new Array(12).fill(0);
+
+        result.data.forEach(item => {
+            data[item.mes - 1] = item.total;
         });
+        let max = Math.ceil(Math.max(...data) / 5) * 5;
+            if(max === 0) max = 5;
+        profileVisitChart.updateOptions({
+            yaxis: {
+                max: max
+            }
+        });
+
+        profileVisitChart.updateSeries([{
+            name: 'Citas',
+            data: data
+        }]);
+    }
+
+});
+        }); //aqio
     </script>
 
-    </body>
+</body>
 
 </html>
-

@@ -2,7 +2,7 @@
 // controlador_inicio_paciente.php
 // Este controlador centraliza la lógica de carga de lado del servidor para el Dashboard (index.php) del Paciente.
 
-require_once __DIR__ . '/api/conexion.php';
+require_once __DIR__ . '/config/conexion.php';
 
 // Validar que exista la sesión en el archivo que importa este controlador
 if (!isset($_SESSION['user_id'])) {

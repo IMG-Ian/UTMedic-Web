@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id']) || strtolower($_SESSION['role']) !== 'profesion
     exit();
 }
 
-require_once 'conexion.php';
+require_once '../config/conexion.php';
 
 // Habilitar errores temporalmente para debug (luego hay que quitarlo)
 ini_set('display_errors', 1);

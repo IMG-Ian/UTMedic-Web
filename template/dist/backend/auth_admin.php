@@ -7,8 +7,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Validar si el rol en sesión corresponde al perfil Profesional / Médico
-if (strtolower($_SESSION['role']) !== 'profesional') {
+// Validar si el rol en sesión corresponde al perfil Admin
+if (strtolower($_SESSION['role']) !== 'admin') {
     header('Location: logout.php');
     exit();
 }

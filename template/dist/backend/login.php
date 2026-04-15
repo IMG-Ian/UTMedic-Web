@@ -4,7 +4,7 @@
 session_start();
 
 // Incluir el archivo de conexión a la base de datos
-require_once 'api/conexion.php';
+require_once 'config/conexion.php';
 
 // Establecer cabeceras para permitir respuestas JSON, en caso de peticiones AJAX
 header('Content-Type: application/json');
@@ -97,18 +97,22 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isse
             $_SESSION['user_avatar'] = !empty($user['foto_perfil']) ? $user['foto_perfil'] : 'assets/compiled/jpg/1.jpg';
             
             // Redirección basada en el rol del usuario
-            $redirectUrl = '../frontend/index.php'; // Por defecto (Paciente/Estudiante)
+            $redirectUrl = '../user/index.php'; // Por defecto (Paciente / Estudiante / rol no reconocido)
             switch (strtolower($user['rol'])) {
                 case 'administrador':
                 case 'admin':
-                    $redirectUrl = '../frontend/dashboard-administrador.php';
+                    $redirectUrl = '../admin/dashboard-administrador.php';
                     break;
                 case 'medico':
                 case 'doctor':
                 case 'profesional':
-                    // Temporalmente enviamos a medico, pero deberemos crear un dashboard único o router 
-                    // si un profesional puede ser psicologo o nutriologo basado en la tabla profesional.
-                    $redirectUrl = '../frontend/dashboard-medico.php';
+                    $redirectUrl = '../medico/dashboard-medico.php';
+                    break;
+                case 'nutricionista':
+                    $redirectUrl = '../nutricionista/dashboard-nutricionista.php';
+                    break;
+                case 'psicólogo':
+                    $redirectUrl = '../psicologo/dashboard-psicologo.php';
                     break;
             }
             

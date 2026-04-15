@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once 'conexion.php';
+require_once '../config/conexion.php';
 
 // Leemos el payload en crudo como JSON enviado por fetch()
 $input = file_get_contents("php://input");
