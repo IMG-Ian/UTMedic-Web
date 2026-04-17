@@ -8,6 +8,7 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
 <html lang="en">
 
 <head>
+    <base href="../">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Mazer Admin Dashboard</title>
@@ -78,8 +79,8 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
                     <ul class="menu">
                         <li class="sidebar-title">Menú Principal</li>
 
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-medico.php' ? 'active' : '' ?>">
-                            <a href="dashboard-medico.php" class="sidebar-link">
+                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-psicologo.php' ? 'active' : '' ?>">
+                            <a href="dashboard-psicologo.php" class="sidebar-link">
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Inicio</span>
                             </a>
@@ -94,12 +95,7 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
 
 
 
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-emergencia.php' ? 'active' : '' ?>">
-                            <a href="medico-emergencia.php" class="sidebar-link">
-                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
-                                <span>Emergencia</span>
-                            </a>
-                        </li>
+                        
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
                             <a href="user-perfil.php" class="sidebar-link">
@@ -129,7 +125,7 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
 
             <div class="page-heading">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3>Panel del Médico</h3>
+                    <h3>Panel de Psicólogo</h3>
                     <div class="d-flex align-items-center gap-3">
                                                 
                                                 
@@ -183,8 +179,8 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
                                 <img src="<?= htmlspecialchars($_SESSION['user_avatar'] ?? 'assets/compiled/jpg/1.jpg') ?>" id="top-nav-avatar" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover;">
                             </div>
                             <div class="ms-2">
-                                <h6 class="mb-0 fs-6 user-name-display text-dark opacity-100"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Médico') ?></h6>
-                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">Profesional</p>
+                                <h6 class="mb-0 fs-6 user-name-display text-dark opacity-100"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Psicólogo') ?></h6>
+                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">Psicólogo</p>
                             </div>
                         </a>
                     </div>
@@ -198,8 +194,8 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
                         <!-- Tarjeta de Bienvenida -->
                         <div class="card mb-4 shadow-sm border-0" style="background: linear-gradient(135deg, #005461 0%, #018790 100%); border-radius: 1rem;">
                             <div class="card-body py-4 px-5">
-                                <h2 class="fw-bold mb-3" style="color: white !important;">¡Buen día, <span style="color: var(--utm-accent) !important;"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Médico') ?></span>!</h2>
-                                <p class="mb-4 fs-5" style="color: rgba(255,255,255,0.85);">Ten un excelente día usando<br>utmedic para tus citas médicas.</p>
+                                <h2 class="fw-bold mb-3" style="color: white !important;">¡Buen día, <span style="color: var(--utm-accent) !important;"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Psicólogo') ?></span>!</h2>
+                                <p class="mb-4 fs-5" style="color: rgba(255,255,255,0.85);">Ten un excelente día usando<br>utmedic para tus citas de psicólogo.</p>
                                 <a href="medico-agenda.php" class="btn rounded-pill px-4 py-2 shadow-sm fw-bold text-dark" style="background-color: var(--utm-accent); border: 1px solid var(--utm-accent); transition: all 0.3s ease;">Atender las Citas</a>
                             </div>
                         </div>
@@ -271,21 +267,7 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
                             </div>
                         </div>
                         
-                        <!-- Tarjeta EMERGENCIA -->
-                        <div class="card mb-4 shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
-                            <div class="card-body py-5 px-4 text-center">
-                                <p class="text-secondary fw-bold mb-4" style="letter-spacing: 2px;">EMERGENCIA</p>
-                                <a href="medico-emergencia.php" class="btn btn-danger w-100 py-3 rounded-pill fw-bold" style="background-color: #bd1a1a; border-color: #bd1a1a; font-size: 1.1rem; box-shadow: 0 6px 15px rgba(189,26,26,0.4); text-transform: uppercase;">Emergencia</a>
-                            </div>
-                        </div>
                         
-                        <!-- Tarjeta Citas Pendientes -->
-                        <div class="card mb-4 shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
-                            <div class="card-body py-4 text-center">
-                                <h4 class="fw-bold text-dark mb-4 lh-base">Citas<br>Pendientes</h4>
-                                <div id="citas-atendidas-count" class="d-inline-flex align-items-center justify-content-center bg-dark text-white rounded-circle shadow-lg" style="width: 85px; height: 85px; font-size: 2.5rem; font-weight: 800; border: 4px solid #fff;">
-                                    0
-                                </div>
                             </div>
                         </div>
 

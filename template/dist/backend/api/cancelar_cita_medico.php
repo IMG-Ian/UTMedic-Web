@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id']) || strtolower($_SESSION['role']) !== 'profesion
     exit();
 }
 
-require_once 'conexion.php';
+require_once '../config/conexion.php';
 
 // Validar parámetros
 if (!isset($_POST['id_cita']) || empty($_POST['id_cita'])) {

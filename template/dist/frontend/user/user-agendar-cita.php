@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 session_start();
+require_once '../../backend/config/paths.php';
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth-login.php");
     exit();
@@ -13,6 +14,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 <html lang="en">
 
 <head>
+    <base href="../">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Mazer Admin Dashboard</title>
@@ -42,7 +44,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 <div class="sidebar-header position-relative px-4 py-3">
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
-                            <a href="index.php" class="text-decoration-none">
+                            <a href="user/index.php" class="text-decoration-none">
                                 <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
@@ -86,28 +88,28 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                         <li class="sidebar-title">Menú Principal</li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">
-                            <a href="index.php" class="sidebar-link">
+                            <a href="user/index.php" class="sidebar-link">
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Inicio</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-agendar-cita.php' ? 'active' : '' ?>">
-                            <a href="user-agendar-cita.php" class="sidebar-link">
+                            <a href="user/user-agendar-cita.php" class="sidebar-link">
                                 <i class="bi bi-calendar-plus-fill"></i>
                                 <span>Nueva Cita</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-historial.php' ? 'active' : '' ?>">
-                            <a href="user-historial.php" class="sidebar-link">
+                            <a href="user/user-historial.php" class="sidebar-link">
                                 <i class="bi bi-clock-history"></i>
                                 <span>Historial Citas</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
-                            <a href="user-perfil.php" class="sidebar-link">
+                            <a href="shared/user-perfil.php" class="sidebar-link">
                                 <i class="bi bi-person-fill"></i>
                                 <span>Perfil</span>
                             </a>
@@ -115,7 +117,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                            <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -184,7 +186,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                 <?php endif; ?>
                             </ul>
                         </div>
-                        <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
+                        <a href="shared/user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
                             <div class="avatar avatar-sm border border-2 border-primary d-flex align-items-center justify-content-center overflow-hidden" style="background: white; border-radius: 50%; min-width: 32px; min-height: 32px;">
                                 <img src="<?= htmlspecialchars($avatarUsuario) ?>" id="top-nav-avatar" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover; color: transparent; text-indent: -9999px;">
                             </div>
@@ -311,7 +313,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                     Confirmar Cita
                                 </button>
                                 <div class="text-center mt-3">
-                                    <a href="index.php" class="text-muted text-decoration-none small">Cancelar</a>
+                                    <a href="user/index.php" class="text-muted text-decoration-none small">Cancelar</a>
                                 </div>
                             </div>
                         </div>
@@ -336,6 +338,10 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <script src="assets/compiled/js/app.js"></script>
 
     <script>
+        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_URL = '<?= API_URL ?>';
+
         document.addEventListener('DOMContentLoaded', () => {
             const specialtySelect = document.getElementById('specialtySelect');
             const doctorSelect = document.getElementById('doctorSelect');

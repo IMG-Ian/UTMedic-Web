@@ -2,6 +2,7 @@
 header('Content-Type: text/html; charset=utf-8');
 // Iniciar sesión para recuperar datos del usuario
 session_start();
+require_once '../../backend/config/paths.php';
 
 // Validar si el usuario está autenticado
 if (!isset($_SESSION['user_id'])) {
@@ -48,6 +49,7 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
 <html lang="es">
 
 <head>
+    <base href="../">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Mazer Admin Dashboard</title>
@@ -75,7 +77,7 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
                 <div class="sidebar-header position-relative px-4 py-3">
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
-                            <a href="index.php" class="text-decoration-none">
+                            <a href="user/index.php" class="text-decoration-none">
                                 <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
@@ -126,7 +128,7 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
                                 </a>
                             </li>
                             <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-agenda.php' ? 'active' : '' ?>">
-                                <a href="medico-agenda.php" class="sidebar-link">
+                                <a href="medico/medico-agenda.php" class="sidebar-link">
                                     <i class="bi bi-calendar-check-fill"></i>
                                     <span>Agenda de Citas</span>
                                 </a>
@@ -141,35 +143,35 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
                             </li>
 <?php endif; ?>
                             <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
-                                <a href="user-perfil.php" class="sidebar-link">
+                                <a href="shared/user-perfil.php" class="sidebar-link">
                                     <i class="bi bi-person-circle"></i>
                                     <span>Perfil</span>
                                 </a>
                             </li>
                         <?php else: ?>
                             <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">
-                                <a href="index.php" class="sidebar-link">
+                                <a href="user/index.php" class="sidebar-link">
                                     <i class="bi bi-house-door-fill"></i>
                                     <span>Inicio</span>
                                 </a>
                             </li>
     
                             <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-agendar-cita.php' ? 'active' : '' ?>">
-                                <a href="user-agendar-cita.php" class="sidebar-link">
+                                <a href="user/user-agendar-cita.php" class="sidebar-link">
                                     <i class="bi bi-calendar-plus-fill"></i>
                                     <span>Nueva Cita</span>
                                 </a>
                             </li>
     
                             <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-historial.php' ? 'active' : '' ?>">
-                                <a href="user-historial.php" class="sidebar-link">
+                                <a href="user/user-historial.php" class="sidebar-link">
                                     <i class="bi bi-clock-history"></i>
                                     <span>Historial Citas</span>
                                 </a>
                             </li>
     
                             <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
-                                <a href="user-perfil.php" class="sidebar-link">
+                                <a href="shared/user-perfil.php" class="sidebar-link">
                                     <i class="bi bi-person-fill"></i>
                                     <span>Perfil</span>
                                 </a>
@@ -178,7 +180,7 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
 
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                            <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -244,7 +246,7 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
                                 <?php endif; ?>
                             </ul>
                         </div>
-                        <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
+                        <a href="shared/user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
                             <div class="avatar avatar-sm border border-2 border-primary d-flex align-items-center justify-content-center overflow-hidden" style="background: white; border-radius: 50%; min-width: 32px; min-height: 32px;">
                                 <img src="<?= htmlspecialchars($avatarUsuario) ?>" id="top-nav-avatar" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover;">
                             </div>
@@ -422,6 +424,10 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
     <script src="assets/compiled/js/app.js"></script>
 
     <script>
+        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_URL = '<?= API_URL ?>';
+
         document.getElementById('avatarInput').addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 const file = this.files[0];
@@ -438,7 +444,7 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
 
                 // Podemos cambiar el icono de la camara temporalmente por un spinner si quisieramos
                 // Aquí se envía
-                fetch('../backend/api/subir_avatar.php', {
+                fetch(`${API_URL}/subir_avatar.php`, {
                     method: 'POST',
                     body: formData
                 })

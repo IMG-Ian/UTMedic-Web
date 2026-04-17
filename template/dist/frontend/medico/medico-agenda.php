@@ -1,17 +1,19 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 // Importar el escudo protector de rutas validando que sea Médico (Profesional en BD)
-require_once __DIR__ . '/../backend/auth_medico.php';
+require_once __DIR__ . '/../../backend/auth_medico.php';
+require_once __DIR__ . '/../../backend/config/paths.php';
 
 $active_page = 'agenda';
 
 // [BACKEND EXTERNO] Obtener Citas del Profesional logueado
-require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
+require_once __DIR__ . '/../../backend/controlador_agenda_medico.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <base href="../">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Mazer Admin Dashboard</title>
@@ -39,7 +41,7 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
                 <div class="sidebar-header position-relative px-4 py-3">
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
-                            <a href="index.php" class="text-decoration-none">
+                            <a href="medico/dashboard-medico.php" class="text-decoration-none">
                                 <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
@@ -90,7 +92,7 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-agenda.php' ? 'active' : '' ?>">
-                            <a href="medico-agenda.php" class="sidebar-link">
+                            <a href="medico/medico-agenda.php" class="sidebar-link">
                                 <i class="bi bi-calendar-check-fill"></i>
                                 <span>Agenda de Citas</span>
                             </a>
@@ -107,8 +109,8 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
                         </li>
 <?php endif; ?>
 
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
-                            <a href="user-perfil.php" class="sidebar-link">
+                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'shared/user-perfil.php' ? 'active' : '' ?>">
+                            <a href="shared/user-perfil.php" class="sidebar-link">
                                 <i class="bi bi-person-circle"></i>
                                 <span>Perfil</span>
                             </a>
@@ -116,7 +118,7 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
                         
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                            <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -182,7 +184,7 @@ require_once __DIR__ . '/../backend/controlador_agenda_medico.php';
                                 <?php endif; ?>
                             </ul>
                         </div>
-                        <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
+                        <a href="shared/user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
                             <div class="avatar avatar-sm border border-2 border-primary d-flex align-items-center justify-content-center overflow-hidden" style="background: white; border-radius: 50%; min-width: 32px; min-height: 32px;">
                                 <img src="<?= htmlspecialchars($_SESSION['user_avatar'] ?? 'assets/compiled/jpg/1.jpg') ?>" id="top-nav-avatar" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover;">
                             </div>
@@ -464,6 +466,10 @@ endif; ?>
 
 
     <script>
+        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_URL = '<?= API_URL ?>';
+
         document.addEventListener('DOMContentLoaded', function() {
             // Lógica de filtrado de pastillas (Manejo de display CSS Local)
             const filterBtns = document.querySelectorAll('.nav-pills-custom .btn');
@@ -627,7 +633,7 @@ endif; ?>
                 cancelButtonText: 'No, mantener'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch('../backend/api/cancelar_cita_medico.php', {
+                    fetch(`${API_URL}/cancelar_cita_medico.php`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: 'id_cita=' + idCita
@@ -682,7 +688,7 @@ endif; ?>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 
-                <form action="../backend/controlador_agenda_medico.php" method="POST">
+                <form action="<?= BACKEND_URL ?>/controlador_agenda_medico.php" method="POST">
                     <!-- Envio del ID Oculto para UPDATE la Base de Datos -->
                     <input type="hidden" name="id_cita" id="modalConsulta_id" value="">
                     <!-- Parametro para que el backend sepa que hacer -->
@@ -881,5 +887,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
-
 
