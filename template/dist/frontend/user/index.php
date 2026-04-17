@@ -145,7 +145,7 @@ require_once '../../backend/controlador_inicio_paciente.php';
                                                 
                                                 
                                                 
-                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
+                        <?php require_once '../../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
                             <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', function() {
             toggle.addEventListener('click', function() {
                 let badge = toggle.querySelector('.bg-danger');
                 if (badge) badge.remove();
-                fetch('../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
+                fetch('../../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
             });
         }
     });

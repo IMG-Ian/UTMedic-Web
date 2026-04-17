@@ -77,7 +77,7 @@
 
             const formData = new FormData(this);
 
-            fetch(`${BACKEND_URL}/login.php`, {
+            fetch('<?= BACKEND_URL ?>/login.php', {
                 method: 'POST',
                 body: formData
             })

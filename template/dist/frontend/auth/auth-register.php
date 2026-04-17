@@ -141,7 +141,7 @@
             btn.disabled = true;
             btn.innerText = 'Registrando...';
             
-            fetch('../backend/api/registro.php', {
+            fetch('<?= getApiUrl('registro.php') ?>', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)

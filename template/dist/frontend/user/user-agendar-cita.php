@@ -143,7 +143,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                                 
                                                 
                                                 
-                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
+                        <?php require_once '../../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
                             <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
@@ -201,7 +201,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
             </div>
 
             <div class="page-content">
-                <form method="POST" action="../backend/api/crear_cita.php" class="row" id="formCrearCita" onsubmit="return validarCita(event);">
+                <form method="POST" action="../../backend/api/crear_cita.php" class="row" id="formCrearCita" onsubmit="return validarCita(event);">
                     <!-- Left Column: Form Details -->
                     <div class="col-12 col-lg-8">
 
@@ -481,7 +481,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 observaciones: reasonInput ? reasonInput.value : ''
             };
 
-            fetch('../backend/api/crear_cita.php', {
+            fetch('../../backend/api/crear_cita.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', function() {
             toggle.addEventListener('hidden.bs.dropdown', function() {
                 let badge = toggle.querySelector('.bg-danger');
                 if (badge) badge.remove();
-                fetch('../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
+                fetch('../../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
             });
         }
     });

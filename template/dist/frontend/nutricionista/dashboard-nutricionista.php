@@ -1,8 +1,8 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 // Importar el escudo protector de rutas validando que sea Médico (Profesional en BD)
-require_once __DIR__ . '/../backend/auth_medico.php';
-require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
+require_once __DIR__ . '/../../backend/auth_medico.php';
+require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -106,7 +106,7 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
                         
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                            <a href="../../backend/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -131,7 +131,7 @@ require_once __DIR__ . '/../backend/api/obtener_dashboard_medico.php';
                                                 
                                                 
                                                 
-                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
+                        <?php require_once '../../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
                             <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
@@ -447,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
             toggle.addEventListener('hidden.bs.dropdown', function() {
                 let badge = toggle.querySelector('.bg-danger');
                 if (badge) badge.remove();
-                fetch('../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
+                fetch('../../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
             });
         }
     });

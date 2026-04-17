@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 session_start();
-require_once __DIR__ . '/../backend/api/obtener_historial_citas.php';
+require_once __DIR__ . '/../../backend/api/obtener_historial_citas.php';
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth-login.php");
     exit();
@@ -141,7 +141,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                                 
                                                 
                                                 
-                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
+                        <?php require_once '../../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
                             <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
             toggle.addEventListener('click', function() {
                 let badge = toggle.querySelector('.bg-danger');
                 if (badge) badge.remove();
-                fetch('../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
+                fetch('../../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
             });
         }
     });

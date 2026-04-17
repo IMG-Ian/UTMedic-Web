@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once '../backend/api/conexion.php';
+require_once '../../backend/api/conexion.php';
 
 $userId = $_SESSION['user_id'];
 $userData = [];
@@ -203,7 +203,7 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
                     <h3>Mi Perfil</h3>
                     <div class="d-flex align-items-center gap-3">
                         
-                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
+                        <?php require_once '../../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
                             <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
@@ -491,7 +491,7 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
                 contacto_tel: document.getElementById('perfilContactoTel') ? document.getElementById('perfilContactoTel').value : ''
             };
 
-            fetch('../backend/api/actualizar_perfil.php', {
+            fetch('../../backend/api/actualizar_perfil.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -531,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
             toggle.addEventListener('click', function() {
                 let badge = toggle.querySelector('.bg-danger');
                 if (badge) badge.remove();
-                fetch('../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
+                fetch('../../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
             });
         }
     });

@@ -141,7 +141,7 @@ require_once __DIR__ . '/../../backend/controlador_agenda_medico.php';
                     <div class="d-flex align-items-center gap-3">
 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalWalkIn" style="border-radius: 50px; font-weight: bold;"><i class="bi bi-calendar-plus me-2"></i>Agendar Walk-in</button>
                                                 
-                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
+                        <?php require_once '../../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
                             <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
@@ -853,7 +853,7 @@ endif; ?>
                 const formData = new FormData(this);
                 formData.append('tipo_paciente', document.getElementById('tipoPaciente').value);
                 
-                fetch('../backend/api/registrar_walkin.php', { method: 'POST', body: formData })
+                fetch('../../backend/api/registrar_walkin.php', { method: 'POST', body: formData })
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
@@ -879,7 +879,7 @@ document.addEventListener('DOMContentLoaded', function() {
             toggle.addEventListener('hidden.bs.dropdown', function() {
                 let badge = toggle.querySelector('.bg-danger');
                 if (badge) badge.remove();
-                fetch('../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
+                fetch('../../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
             });
         }
     });
