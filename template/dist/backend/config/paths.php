@@ -1,9 +1,20 @@
 <?php
 // Configuración de rutas base para UTMedic-Web
-// Este archivo centraliza las rutas para evitar rutas relativas rotas al mover archivos
+// Este archivo auto-detecta la ruta base del proyecto para que funcione
+// sin importar en qué carpeta se clone el repositorio.
 
-// Ruta base del proyecto
-define('BASE_URL', '/utmedic2.0/template/dist');
+// Auto-detectar la ruta base del proyecto
+// Busca la carpeta "template/dist" dentro de DOCUMENT_ROOT para construir la URL
+if (!defined('BASE_URL')) {
+    $scriptPath = str_replace('\\', '/', __DIR__);
+    $docRoot    = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT'] ?? '');
+
+    // __DIR__ apunta a backend/config/, subimos 2 niveles para llegar a template/dist
+    $distDir = dirname(dirname($scriptPath)); // → .../template/dist
+    $baseUrl = str_replace($docRoot, '', $distDir);
+
+    define('BASE_URL', $baseUrl);
+}
 
 // Rutas derivadas
 define('FRONTEND_URL', BASE_URL . '/frontend');

@@ -64,6 +64,25 @@
 
                         <div class="form-group">
                             <div class="form-control-icon">
+                                <i class="bi bi-mortarboard"></i>
+                            </div>
+                            <select class="form-control form-control-xl" id="regCarrera" required>
+                                <option value="" disabled selected>Selecciona tu carrera</option>
+                                <option value="ti">TI</option>
+                                <option value="bio">BIO</option>
+                                <option value="meca">MECA</option>
+                                <option value="mante">MANTE</option>
+                                <option value="gastro">GASTRO</option>
+                                <option value="energia">ENERGÍA</option>
+                                <option value="textil">TEXTIL</option>
+                                <option value="asesor">ASESOR</option>
+                                <option value="electro">ELECTRO</option>
+                                <option value="enfermeria">ENFERMERÍA</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-control-icon">
                                 <i class="bi bi-shield-lock"></i>
                             </div>
                             <input type="password" class="form-control form-control-xl" id="regPassword" placeholder="Contraseña" required>
@@ -107,6 +126,7 @@
                 apellido_mat: document.getElementById('regApellidoMat').value,
                 correo: document.getElementById('regCorreo').value,
                 matricula: document.getElementById('regMatricula').value,
+                carrera: document.getElementById('regCarrera').value,
                 password: document.getElementById('regPassword').value,
                 confirm_password: document.getElementById('regConfirmPassword').value
             };

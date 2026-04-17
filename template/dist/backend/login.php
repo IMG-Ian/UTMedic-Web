@@ -101,7 +101,7 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isse
             switch (strtolower($user['rol'])) {
                 case 'administrador':
                 case 'admin':
-                    $redirectUrl = '../frontend/dashboard-administrador.php';
+                    $redirectUrl = '../frontend/admin/dashboard-administrador.php';
                     break;
                 case 'medico':
                 case 'doctor':

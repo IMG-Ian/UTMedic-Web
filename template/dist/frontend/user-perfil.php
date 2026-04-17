@@ -33,6 +33,8 @@ $avatarUsuario = !empty($userData['foto_perfil']) ? $userData['foto_perfil'] : (
 $apellidos = trim(($userData['apellido_pat'] ?? '') . ' ' . ($userData['apellido_mat'] ?? ''));
 $correoUser = $userData['correo'] ?? '';
 $telefonoUser = $userData['telefono'] ?? '';
+$carreraUser = strtoupper($userData['carrera'] ?? 'N/A');
+$matriculaUser = $userData['matricula'] ?? 'N/A';
 $padecimientos = $userData['padecimientos'] ?? '';
 $alergias = $userData['alergias'] ?? '';
 $contacto_emerg = $userData['contacto_emergencia'] ?? '';
@@ -322,6 +324,22 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
 
                                                 <?php if (isset($_SESSION['role']) && strtolower($_SESSION['role']) !== 'profesional'): ?>
                                                     <!-- Vista Paciente -->
+                                                    <h5 class="text-primary mb-4 mt-5 border-bottom pb-2 fw-bold">Información Escolar</h5>
+                                                    <div class="row g-4 mb-4">
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-bold text-dark small mb-1">Matrícula</label>
+                                                            <input type="text" class="form-control" disabled
+                                                                style="border-radius: 8px; padding: 0.6rem 1rem; border: 2px solid #dee2e6; background-color: var(--bs-secondary-bg);"
+                                                                value="<?= htmlspecialchars($matriculaUser) ?>">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-bold text-dark small mb-1">Carrera</label>
+                                                            <input type="text" class="form-control" disabled
+                                                                style="border-radius: 8px; padding: 0.6rem 1rem; border: 2px solid #dee2e6; background-color: var(--bs-secondary-bg);"
+                                                                value="<?= htmlspecialchars($carreraUser) ?>">
+                                                        </div>
+                                                    </div>
+
                                                     <h5 class="text-primary mb-4 mt-5 border-bottom pb-2 fw-bold">Información Médica Básica</h5>
                                                     <div class="row g-4 mb-4">
                                                         <div class="col-12">

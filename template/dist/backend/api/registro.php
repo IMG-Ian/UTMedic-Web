@@ -18,6 +18,7 @@ $confirm_password = $data['confirm_password'] ?? '';
 $nombre = trim($data['nombre'] ?? '');
 $apellido_pat = trim($data['apellido_pat'] ?? '');
 $apellido_mat = trim($data['apellido_mat'] ?? '');
+$carrera = trim($data['carrera'] ?? '');
 
 // 1. Validaciones Básicas
 if (empty($correo) || empty($matricula) || empty($password) || empty($nombre) || empty($apellido_pat)) {
@@ -60,8 +61,8 @@ try {
     
     $id_usuario = $conn->insert_id;
 
-    $stmtPac = $conn->prepare("INSERT INTO paciente (id_usuario, matricula) VALUES (?, ?)");
-    $stmtPac->bind_param("is", $id_usuario, $matricula);
+    $stmtPac = $conn->prepare("INSERT INTO paciente (id_usuario, matricula, carrera) VALUES (?, ?, ?)");
+    $stmtPac->bind_param("iss", $id_usuario, $matricula, $carrera);
     $stmtPac->execute();
 
     $conn->commit();

@@ -1,10 +1,12 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'administrador') {
+if (!isset($_SESSION['user_id']) || !in_array(strtolower($_SESSION['role'] ?? ''), ['administrador', 'admin'])) {
     header('Location: auth-login.php');
     exit();
 }
-require_once __DIR__ . '/../backend/api/obtener_usuarios.php';
+// Redirigir al dashboard de admin correcto
+header('Location: admin/dashboard-administrador.php');
+exit();
 ?>
 <!DOCTYPE html>
 <html lang="en">

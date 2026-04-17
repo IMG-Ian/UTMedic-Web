@@ -1,5 +1,12 @@
 <!DOCTYPE html>
-<?php require_once __DIR__ . '/../../backend/config/paths.php'; ?>
+<?php
+session_start();
+if (!isset($_SESSION['user_id']) || !in_array(strtolower($_SESSION['role'] ?? ''), ['administrador', 'admin'])) {
+    header('Location: ../auth-login.php');
+    exit();
+}
+require_once __DIR__ . '/../../backend/config/paths.php';
+?>
 <html lang="en">
 
 <head>
@@ -27,6 +34,7 @@
 
 <body>
     <script src="assets/static/js/initTheme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <div id="app">
         <div id="sidebar">
             <div class="sidebar-wrapper active">
@@ -467,7 +475,7 @@
 
                                 if (carrera) {
                                     filtrados = filtrados.filter(p =>
-                                        p.carrera.toLowerCase() === carrera
+                                        (p.carrera || '').toLowerCase() === carrera
                                     );
                                 }
 
@@ -490,16 +498,16 @@
                                 });
 
                                 const mappedData = data.map(p => {
-                                    const nombre = `${p.nombre} ${p.apellido_pat} ${p.apellido_mat}`;
-                                    const estado = p.estado.toLowerCase();
+                                    const nombre = `${p.nombre || ''} ${p.apellido_pat || ''} ${p.apellido_mat || ''}`.trim();
+                                    const estado = (p.estado || 'Desconocido').toLowerCase();
                                     const estadoTexto = (estado === 'activo') ? 'act' : 'inact';
 
                                     return [
                                         p.id_paciente,
                                         nombre,
-                                        p.correo,
-                                        p.matricula,
-                                        p.carrera.toUpperCase(),
+                                        p.correo || '',
+                                        p.matricula || '',
+                                        (p.carrera || 'N/A').toUpperCase(),
                                         p.telefono || 'N/A',
                                         p.contacto_emergencia || 'N/A',
                                         p.alergias || 'N/A',

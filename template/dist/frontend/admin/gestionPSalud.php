@@ -1,5 +1,12 @@
 <!DOCTYPE html>
-<?php require_once __DIR__ . '/../../backend/config/paths.php'; ?>
+<?php
+session_start();
+if (!isset($_SESSION['user_id']) || !in_array(strtolower($_SESSION['role'] ?? ''), ['administrador', 'admin'])) {
+    header('Location: ../auth-login.php');
+    exit();
+}
+require_once __DIR__ . '/../../backend/config/paths.php';
+?>
 <html lang="en">
 
 <head>
@@ -484,9 +491,9 @@
                                     }
                                 });
                                 const mappedData = data.map(p => {
-                                    const nombreCompleto = `${p.nombre} ${p.apellido_pat} ${p.apellido_mat}`;
-                                    const horario = `${p.horario_inicio} - ${p.horario_fin}`;
-                                    const estado = p.estado.toLowerCase();
+                                    const nombreCompleto = `${p.nombre || ''} ${p.apellido_pat || ''} ${p.apellido_mat || ''}`.trim();
+                                    const horario = `${p.horario_inicio || ''} - ${p.horario_fin || ''}`;
+                                    const estado = (p.estado || 'Desconocido').toLowerCase();
 
                                     return [
                                         p.id_profesional,
