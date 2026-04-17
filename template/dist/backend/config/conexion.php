@@ -25,7 +25,7 @@ if ($conn->connect_error) {
 // Configurar charset a utf8
 $conn->set_charset("utf8");
 
-// Restaurar reporte de errores
+// Restaurar reporte de errores (Solo para desarrollo, en API mantenemos apagado para no romper JSON)
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 ?>

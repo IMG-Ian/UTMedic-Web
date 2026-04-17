@@ -3,7 +3,8 @@
 // Iniciar la sesión para poder guardar los datos del usuario logueado
 session_start();
 
-// Incluir el archivo de conexión a la base de datos
+// Incluir el archivo de conexión y rutas
+require_once 'config/paths.php';
 require_once 'config/conexion.php';
 
 // Establecer cabeceras para permitir respuestas JSON, en caso de peticiones AJAX
@@ -97,16 +98,16 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isse
             $_SESSION['user_avatar'] = !empty($user['foto_perfil']) ? $user['foto_perfil'] : 'assets/compiled/jpg/1.jpg';
             
             // Redirección basada en el rol del usuario
-            $redirectUrl = '../user/index.php'; // Por defecto (Paciente / Estudiante / rol no reconocido)
+            $redirectUrl = FRONTEND_URL . '/user/index.php'; // Por defecto (Paciente / Estudiante / rol no reconocido)
             switch (strtolower($user['rol'])) {
                 case 'administrador':
                 case 'admin':
-                    $redirectUrl = '../frontend/admin/dashboard-administrador.php';
+                    $redirectUrl = FRONTEND_URL . '/admin/dashboard-administrador.php';
                     break;
                 case 'medico':
                 case 'doctor':
                 case 'profesional':
-                    $redirectUrl = '../frontend/dashboard-medico.php';
+                    $redirectUrl = FRONTEND_URL . '/medico/dashboard-medico.php';
                     // Fetch specialty to dynamic route correctly
                     if (isset($conn)) {
                         $stmtProf = $conn->prepare("SELECT especialidad FROM profesional WHERE id_usuario = ?");
@@ -116,9 +117,9 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isse
                         if ($resProf->num_rows > 0) {
                             $sp = strtolower($resProf->fetch_assoc()['especialidad']);
                             if (strpos($sp, 'nutricion') !== false || strpos($sp, 'nutriolog') !== false) {
-                                $redirectUrl = '../frontend/dashboard-nutricionista.php';
+                                $redirectUrl = FRONTEND_URL . '/nutricionista/dashboard-nutricionista.php';
                             } else if (strpos($sp, 'psicolog') !== false) {
-                                $redirectUrl = '../frontend/dashboard-psicologo.php';
+                                $redirectUrl = FRONTEND_URL . '/psicologo/dashboard-psicologo.php';
                             }
                         }
                     }

@@ -13,7 +13,7 @@ if (!defined('BASE_URL')) {
     $distDir = dirname(dirname($scriptPath)); // → .../template/dist
     $baseUrl = str_replace($docRoot, '', $distDir);
 
-    define('BASE_URL', $baseUrl);
+    define('BASE_URL', '/' . ltrim($baseUrl, '/'));
 }
 
 // Rutas derivadas

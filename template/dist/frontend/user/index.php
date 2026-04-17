@@ -4,7 +4,7 @@ session_start();
 require_once '../../backend/config/paths.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: auth-login.php");
+    header('Location: ' . FRONTEND_URL . '/auth/auth-login.php');
     exit();
 }
 

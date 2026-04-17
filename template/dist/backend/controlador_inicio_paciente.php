@@ -6,7 +6,10 @@ require_once __DIR__ . '/config/conexion.php';
 
 // Validar que exista la sesión en el archivo que importa este controlador
 if (!isset($_SESSION['user_id'])) {
-    header("Location: auth-login.php");
+    if (!defined('FRONTEND_URL')) {
+        require_once __DIR__ . '/config/paths.php';
+    }
+    header('Location: ' . FRONTEND_URL . '/auth/auth-login.php');
     exit();
 }
 

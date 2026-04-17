@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <?php
 session_start();
+require_once __DIR__ . '/../../backend/config/paths.php';
+
 if (!isset($_SESSION['user_id']) || !in_array(strtolower($_SESSION['role'] ?? ''), ['administrador', 'admin'])) {
-    header('Location: ../auth-login.php');
+    header('Location: ' . FRONTEND_URL . '/auth/auth-login.php');
     exit();
 }
-require_once __DIR__ . '/../../backend/config/paths.php';
 ?>
 <html lang="en">
 

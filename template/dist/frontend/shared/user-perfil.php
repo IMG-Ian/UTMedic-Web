@@ -6,11 +6,11 @@ require_once '../../backend/config/paths.php';
 
 // Validar si el usuario está autenticado
 if (!isset($_SESSION['user_id'])) {
-    header("Location: auth-login.php");
+    header('Location: ' . FRONTEND_URL . '/auth/auth-login.php');
     exit();
 }
 
-require_once '../../backend/api/conexion.php';
+require_once '../../backend/config/conexion.php';
 
 $userId = $_SESSION['user_id'];
 $userData = [];
