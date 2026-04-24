@@ -1,9 +1,8 @@
 <?php
 session_start();
-header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['status' => 'error', 'message' => 'No autorizado. Por favor, inicie sesión.']);
+    header("Location: ../../frontend/user-perfil.php?error=" . urlencode('No autorizado. Por favor, inicie sesión.'));
     exit();
 }
 
@@ -13,7 +12,7 @@ $userId = $_SESSION['user_id'];
 
 // Revisar si se recibió el archivo
 if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
-    echo json_encode(['status' => 'error', 'message' => 'No se recibió ningún archivo o hubo un error en la subida.']);
+    header("Location: ../../frontend/user-perfil.php?error=" . urlencode('No se recibió ningún archivo o hubo un error en la subida.'));
     exit();
 }
 
@@ -28,13 +27,13 @@ $fileExt = explode('.', $fileName);
 $fileActualExt = strtolower(end($fileExt));
 
 if (!in_array($fileActualExt, $allowedExtensions)) {
-    echo json_encode(['status' => 'error', 'message' => 'Formato no soportado. Solo JPG, JPEG y PNG.']);
+    header("Location: ../../frontend/user-perfil.php?error=" . urlencode('Formato no soportado. Solo JPG, JPEG y PNG.'));
     exit();
 }
 
 // Validar tamaño máximo 5MB
 if ($fileSize > 5 * 1024 * 1024) {
-    echo json_encode(['status' => 'error', 'message' => 'La imagen pesa más de 5MB.']);
+    header("Location: ../../frontend/user-perfil.php?error=" . urlencode('La imagen pesa más de 5MB.'));
     exit();
 }
 
@@ -51,23 +50,24 @@ $fileDestination = $uploadDir . $newFileName;
 if (move_uploaded_file($fileTmpName, $fileDestination)) {
     // La ruta relativa que usa el frontend para pintar la imagen a partir de index.php / user-perfil.php
     $dbPath = 'assets/compiled/jpg/avatars/' . $newFileName;
-    
+
     // El nuevo modelo reestructurado guarda la fotografía del perfil ahora en tabla `usuario` en el campo `foto_perfil`
     $stmt = $conn->prepare("UPDATE usuario SET foto_perfil = ? WHERE id_usuario = ?");
     $stmt->bind_param("si", $dbPath, $userId);
-    
+
     if ($stmt->execute()) {
         if ($stmt->affected_rows >= 0) { // Mayor o igual por si suben la misma y no hay un affected real diferente de 0.
             // Actualizar la variable de sesión para que el cambio persista en las siguientes cargas
             $_SESSION['user_avatar'] = $dbPath;
-            echo json_encode(['status' => 'success', 'message' => 'Avatar subido correctamente.', 'avatar_url' => $dbPath]);
+            header("Location: ../../frontend/user-perfil.php?success=avatar");
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'No se pudo enlazar la imagen en la base de datos. Verifica si tu perfil existe.']);
+            header("Location: ../../frontend/user-perfil.php?error=" . urlencode('No se pudo enlazar la imagen en la base de datos. Verifica si tu perfil existe.'));
         }
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Error de consulta en la base de datos.']);
+        header("Location: ../../frontend/user-perfil.php?error=" . urlencode('Error de consulta en la base de datos.'));
     }
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'Error al guardar la imagen físicamente en el servidor.']);
+    header("Location: ../../frontend/user-perfil.php?error=" . urlencode('Error al guardar la imagen físicamente en el servidor.'));
 }
 ?>

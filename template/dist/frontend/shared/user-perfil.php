@@ -2,20 +2,47 @@
 header('Content-Type: text/html; charset=utf-8');
 // Iniciar sesión para recuperar datos del usuario
 session_start();
-require_once '../../backend/config/paths.php';
 
 // Validar si el usuario está autenticado
 if (!isset($_SESSION['user_id'])) {
-    // Si no está autenticado, redirigir al login
     header("Location: auth-login.php");
-    exit(); // Terminar ejecución para evitar cargar la página
+    exit();
 }
 
-// Variables opcionales por si se quiere pintar algún dato que aún no esté en sesión
-// y evitar Note/Warning si $_SESSION está vacío.
-$nombreEstudiante = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Usuario';
+require_once __DIR__ . '/../../backend/config/conexion.php';
+require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
+
+
+$userId = $_SESSION['user_id'];
+$userData = [];
+
+// Obtener datos frescos del usuario y paciente/profesional
+$stmt = $conn->prepare("SELECT u.*, p.matricula, p.telefono, p.carrera, p.contacto_emergencia, p.alergias, p.padecimientos 
+                        FROM usuario u 
+                        LEFT JOIN paciente p ON u.id_usuario = p.id_usuario 
+                        WHERE u.id_usuario = ?");
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$res = $stmt->get_result();
+if ($res->num_rows > 0) {
+    $userData = $res->fetch_assoc();
+}
+
+// Variables base
+$nombreEstudiante = $userData['nombre'] ?? (isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Usuario');
 $rolUsuario = isset($_SESSION['role']) ? ucfirst(strtolower($_SESSION['role'])) : 'Usuario Regular';
-$avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'assets/compiled/jpg/1.jpg';
+$avatarUsuario = !empty($userData['foto_perfil']) ? $userData['foto_perfil'] : (isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'assets/compiled/jpg/1.jpg');
+$apellidos = trim(($userData['apellido_pat'] ?? '') . ' ' . ($userData['apellido_mat'] ?? ''));
+$correoUser = $userData['correo'] ?? '';
+$telefonoUser = $userData['telefono'] ?? '';
+$padecimientos = $userData['padecimientos'] ?? '';
+$alergias = $userData['alergias'] ?? '';
+$contacto_emerg = $userData['contacto_emergencia'] ?? '';
+// Separar contacto_emergencia si viene en formato "Nombre, Telefono"
+$arrContacto = explode(',', $contacto_emerg);
+$nombreContacto = trim($arrContacto[0] ?? '');
+$telefonoContacto = trim($arrContacto[1] ?? '');
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -49,7 +76,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 <div class="sidebar-header position-relative px-4 py-3">
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
-                            <a href="user/index.php" class="text-decoration-none">
+                            <a href="index.php" class="text-decoration-none">
                                 <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
@@ -93,8 +120,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                         <li class="sidebar-title">Menú Principal</li>
 
                         <?php if (isset($_SESSION['role']) && strtolower($_SESSION['role']) === 'profesional'): ?>
-                            <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-medico.php' ? 'active' : '' ?>">
-                                <a href="medico/dashboard-medico.php" class="sidebar-link">
+                            <li class="sidebar-item <?= strpos(basename($_SERVER['PHP_SELF']), 'dashboard-') !== false ? 'active' : '' ?>">
+                                <a href="dashboard-<?= isset($_SESSION['especialidad']) ? (strpos(strtolower($_SESSION['especialidad']), 'nutri') !== false ? 'nutricionista' : (strpos(strtolower($_SESSION['especialidad']), 'psicolo') !== false ? 'psicologo' : 'medico')) : 'medico' ?>.php" class="sidebar-link">
                                     <i class="bi bi-house-door-fill"></i>
                                     <span>Inicio</span>
                                 </a>
@@ -105,18 +132,15 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                     <span>Agenda de Citas</span>
                                 </a>
                             </li>
-                            <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-historial.php' ? 'active' : '' ?>">
-                                <a href="medico/medico-historial.php" class="sidebar-link">
-                                    <i class="bi bi-clock-history"></i>
-                                    <span>Historial Citas</span>
-                                </a>
-                            </li>
-                            <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-emergencia.php' ? 'active' : '' ?>">
-                                <a href="medico/medico-emergencia.php" class="sidebar-link">
-                                    <i class="bi bi-exclamation-triangle-fill text-danger"></i>
-                                    <span>Emergencia</span>
-                                </a>
-                            </li>
+
+                            <?php if (!isset($_SESSION["especialidad"]) || strpos(strtolower($_SESSION["especialidad"]), "medico") !== false): ?>
+                                <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-emergencia.php' ? 'active' : '' ?>">
+                                    <a href="medico/medico-emergencia.php" class="sidebar-link">
+                                        <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                                        <span>Emergencia</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
                             <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
                                 <a href="shared/user-perfil.php" class="sidebar-link">
                                     <i class="bi bi-person-circle"></i>
@@ -155,7 +179,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
+                            <a href="../backend/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -167,7 +191,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
         </div>
         <div id="main">
             <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none" onclick="event.preventDefault();"> <i class="bi bi-justify fs-3"></i>
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
 
@@ -177,46 +202,56 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                     <h3>Mi Perfil</h3>
                     <div class="d-flex align-items-center gap-3">
                         <div class="dropdown">
-                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">2</span>
+                                <?php if (isset($unreadCount) && $unreadCount > 0): ?>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;"><?= $unreadCount ?></span>
+                                <?php endif; ?>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px; max-height: 400px; overflow-y: auto; overflow-x: hidden;">
                                 <li>
-                                    <h6 class="dropdown-header font-bold text-dark">Notificaciones</h6>
+                                    <h6 class="dropdown-header font-bold text-dark d-flex justify-content-between align-items-center pb-2">
+                                        Notificaciones
+                                    </h6>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
-                                        <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 text-sm font-bold text-dark">Cita Aceptada</h6>
-                                            <p class="mb-0 text-xs text-muted" style="font-size: 0.8rem;">Tu cita del 15 de Nov. ha sido confirmada.</p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center py-2 rounded mt-1" href="#" style="white-space: normal;">
-                                        <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                                                <line x1="16" y1="2" x2="16" y2="6"></line>
-                                                <line x1="8" y1="2" x2="8" y2="6"></line>
-                                                <line x1="3" y1="10" x2="21" y2="10"></line>
-                                                <line x1="10" y1="14" x2="14" y2="18"></line>
-                                                <line x1="14" y1="14" x2="10" y2="18"></line>
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 text-sm font-bold text-dark">Cita Reagendada</h6>
-                                            <p class="mb-0 text-xs text-muted" style="font-size: 0.8rem;">El cardiólogo solicitó cambio de horario.</p>
-                                        </div>
-                                    </a>
-                                </li>
+                                <?php if (empty($notificacionesList)): ?>
+                                    <li>
+                                        <div class="dropdown-item text-muted text-center py-4" style="font-size: 0.9rem; white-space: normal;">No tienes notificaciones recientes.</div>
+                                    </li>
+                                <?php else: ?>
+                                    <?php foreach ($notificacionesList as $notif):
+                                        $icon = 'bi-info-circle';
+                                        $bgClass = 'bg-secondary';
+                                        if ($notif['tipo'] === 'nueva_cita') {
+                                            $icon = 'bi-calendar-plus';
+                                            $bgClass = 'bg-primary';
+                                        }
+                                        if ($notif['tipo'] === 'cancelacion') {
+                                            $icon = 'bi-calendar-x';
+                                            $bgClass = 'bg-danger';
+                                        }
+                                        if ($notif['tipo'] === 'completada') {
+                                            $icon = 'bi-check-circle';
+                                            $bgClass = 'bg-success';
+                                        }
+
+                                        $opacity = $notif['leida'] == 0 ? '1' : '0.7';
+                                        $fontWeight = $notif['leida'] == 0 ? 'font-bold text-dark' : 'text-muted fw-semibold';
+                                    ?>
+                                        <li>
+                                            <div class="dropdown-item d-flex align-items-start py-3 rounded mt-1 border-bottom" style="white-space: normal; opacity: <?= $opacity ?>; min-width: 280px; text-decoration: none;">
+                                                <div class="<?= $bgClass ?> text-white rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px; font-size: 1.25rem;">
+                                                    <i class="bi <?= $icon ?>" style="line-height: 0;"></i>
+                                                </div>
+                                                <div style="min-width: 0; flex: 1;">
+                                                    <h6 class="mb-1 text-sm <?= $fontWeight ?>" style="white-space: normal; word-wrap: break-word; line-height: 1.3;"><?= htmlspecialchars($notif['titulo']) ?></h6>
+                                                    <p class="mb-1 text-xs text-muted" style="font-size: 0.8rem; white-space: normal; word-wrap: break-word; line-height: 1.4;"><?= htmlspecialchars($notif['mensaje']) ?></p>
+                                                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem; font-weight: 500;"><?= date('d M Y H:i', strtotime($notif['fecha_creacion'])) ?></small>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </ul>
                         </div>
                         <a href="shared/user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
@@ -236,102 +271,128 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
             <div class="page-content">
                 <section class="section">
                     <div class="row justify-content-center">
-                        <div class="col-12 col-md-10 col-lg-8">
+                        <div class="col-12 col-xl-10">
                             <div class="card shadow-sm border-0 mb-4" style="border-radius: 1rem;">
                                 <div class="card-body p-4 p-md-5">
-
-                                    <!-- Avatar Upload Section -->
-                                    <div class="d-flex justify-content-center mb-3">
-                                        <div class="position-relative" style="width: 130px; height: 130px;">
-                                            <div class="rounded-circle overflow-hidden shadow-sm d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; border: 4px solid #fff; background-color: var(--bs-body-bg);">
-                                                <img src="<?= htmlspecialchars($avatarUsuario) ?>" id="main-profile-avatar" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; color: transparent; text-indent: -9999px;">
+                                    <div class="row">
+                                        <!-- Left Column: Avatar & Role -->
+                                        <div class="col-md-4 d-flex flex-column align-items-center text-center border-end mb-4 mb-md-0 pe-md-4">
+                                            <div class="position-relative mb-3" style="width: 140px; height: 140px;">
+                                                <div class="rounded-circle overflow-hidden shadow-sm d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; border: 4px solid #fff; background-color: var(--bs-body-bg);">
+                                                    <img src="<?= htmlspecialchars($avatarUsuario) ?>" id="main-profile-avatar" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; color: transparent; text-indent: -9999px;">
+                                                </div>
+                                                <button
+                                                    onclick="document.getElementById('avatarInput').click()"
+                                                    class="btn btn-primary position-absolute rounded-circle shadow-sm"
+                                                    style="background-color: var(--utm-accent); border-color: var(--utm-accent); width: 40px; height: 40px; bottom: 0; right: 5px; padding: 0; align-items: center; justify-content: center; line-height: 0;"
+                                                    title="Cambiar foto de perfil">
+                                                    <i class="bi bi-camera-fill" style="font-size: 1.2rem; margin: 0; padding: 0; transform: translateY(-1px);"></i>
+                                                </button>
+                                                <input type="file" id="avatarInput" accept="image/png, image/jpeg, image/jpg" style="display: none;">
                                             </div>
-                                            <button
-                                                onclick="document.getElementById('avatarInput').click()"
-                                                class="btn btn-primary position-absolute rounded-circle shadow-sm"
-                                                style="background-color: #018790; border-color: #018790; width: 38px; height: 38px; bottom: 0; right: 8px; padding: 0; align-items: center; justify-content: center; line-height: 0;"
-                                                title="Cambiar foto de perfil">
-                                                <i class="bi bi-camera-fill" style="font-size: 1.1rem; margin: 0; padding: 0; transform: translateY(-1px);"></i>
-                                            </button>
-                                            <input type="file" id="avatarInput" accept="image/png, image/jpeg, image/jpg" style="display: none;">
+                                            <h4 class="font-bold mb-1 text-dark"><?= htmlspecialchars($nombreEstudiante) ?></h4>
+                                            <span class="badge text-secondary border px-3 py-2 rounded-pill mt-2 fw-bold" style="background-color: var(--bs-light); letter-spacing: 1px;"><?= strtoupper(htmlspecialchars($rolUsuario)) ?></span>
+
+                                            <?php if (isset($_SESSION['role']) && strtolower($_SESSION['role']) === 'profesional'): ?>
+                                                <div class="mt-4 text-start w-100 px-2 pt-3 border-top">
+                                                    <p class="text-muted small mb-1 fw-bold"><i class="bi bi-briefcase me-2"></i> Especialidad</p>
+                                                    <p class="text-dark mb-0 fw-semibold"><?= isset($_SESSION['especialidad']) ? ucfirst(strtolower($_SESSION['especialidad'])) : 'Profesional' ?></p>
+                                                </div>
+                                            <?php endif; ?>
+                                        </div>
+
+                                        <!-- Right Column: Forms -->
+                                        <div class="col-md-8 ps-md-4">
+                                            <form id="profileForm">
+                                                <div id="profileAlert" class="alert d-none"></div>
+                                                <h5 class="text-primary mb-4 border-bottom pb-2 fw-bold">Información Personal</h5>
+                                                <div class="row g-4 mb-4">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-bold text-dark small mb-1">Nombre(s)</label>
+                                                        <input type="text" class="form-control" id="perfilNombre" disabled title="El nombre no se puede cambiar desde aquí."
+                                                            style="border-radius: 8px; padding: 0.6rem 1rem; border: 2px solid #dee2e6;" value="<?= htmlspecialchars($nombreEstudiante) ?>">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-bold text-dark small mb-1">Apellidos</label>
+                                                        <input type="text" class="form-control" id="perfilApellidos" disabled title="Los apellidos no se pueden cambiar desde aquí."
+                                                            style="border-radius: 8px; padding: 0.6rem 1rem; border: 2px solid #dee2e6;"
+                                                            value="<?= htmlspecialchars($apellidos) ?>">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-bold text-dark small mb-1">Correo Electrónico</label>
+                                                        <input type="email" class="form-control" id="perfilCorreo"
+                                                            style="border-radius: 8px; padding: 0.6rem 1rem; border: 2px solid #dee2e6;"
+                                                            value="<?= htmlspecialchars($correoUser) ?>">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label fw-bold text-dark small mb-1">Teléfono Móvil</label>
+                                                        <input type="tel" class="form-control" id="perfilTelefono"
+                                                            style="border-radius: 8px; padding: 0.6rem 1rem; border: 2px solid #dee2e6;"
+                                                            value="<?= htmlspecialchars($telefonoUser) ?>">
+                                                    </div>
+                                                </div>
+
+                                                <?php if (isset($_SESSION['role']) && strtolower($_SESSION['role']) !== 'profesional'): ?>
+                                                    <!-- Vista Paciente -->
+                                                    <h5 class="text-primary mb-4 mt-5 border-bottom pb-2 fw-bold">Información Médica Básica</h5>
+                                                    <div class="row g-4 mb-4">
+                                                        <div class="col-12">
+                                                            <label class="form-label fw-bold text-dark small mb-1">Padecimientos Crónicos</label>
+                                                            <textarea class="form-control" id="perfilPadecimientos" rows="2"
+                                                                style="border-radius: 8px; padding: 0.8rem 1rem; border: 2px solid #dee2e6; resize: none;"
+                                                                placeholder="Ej. Asma, Diabetes..."><?= htmlspecialchars($padecimientos) ?></textarea>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label class="form-label fw-bold text-dark small mb-1">Alergias Conocidas</label>
+                                                            <textarea class="form-control" id="perfilAlergias" rows="2"
+                                                                style="border-radius: 8px; padding: 0.8rem 1rem; border: 2px solid #dee2e6; resize: none;"
+                                                                placeholder="Ej. Penicilina, Nueces..."><?= htmlspecialchars($alergias) ?></textarea>
+                                                        </div>
+                                                    </div>
+
+                                                    <h5 class="text-primary mb-4 mt-5 border-bottom pb-2 fw-bold">Contacto de Emergencia</h5>
+                                                    <div class="row g-4 mb-4">
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-bold text-dark small mb-1">Nombre del Contacto</label>
+                                                            <input type="text" class="form-control" id="perfilContactoNombre"
+                                                                style="border-radius: 8px; padding: 0.6rem 1rem; border: 2px solid #dee2e6;"
+                                                                placeholder="Ej. Ana Pérez" value="<?= htmlspecialchars($nombreContacto) ?>">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-bold text-dark small mb-1">Teléfono de Emergencia</label>
+                                                            <input type="tel" class="form-control" id="perfilContactoTel"
+                                                                style="border-radius: 8px; padding: 0.6rem 1rem; border: 2px solid #dee2e6;"
+                                                                placeholder="Ej. 999-000-0000" value="<?= htmlspecialchars($telefonoContacto) ?>">
+                                                        </div>
+                                                    </div>
+                                                <?php else: ?>
+                                                    <!-- Vista Médico -->
+                                                    <h5 class="text-primary mb-4 mt-5 border-bottom pb-2 fw-bold">Información Profesional</h5>
+                                                    <div class="row g-4 mb-4">
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-bold text-dark small mb-1">Cédula Profesional</label>
+                                                            <input type="text" class="form-control"
+                                                                style="border-radius: 8px; padding: 0.6rem 1rem; border: 2px solid #dee2e6; background-color: var(--bs-secondary-bg);"
+                                                                value="12345678" readonly>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-bold text-dark small mb-1">Horario Laboral</label>
+                                                            <input type="text" class="form-control"
+                                                                style="border-radius: 8px; padding: 0.6rem 1rem; border: 2px solid #dee2e6; background-color: var(--bs-secondary-bg);"
+                                                                value="Lunes a Viernes 08:00 AM - 14:00 PM" readonly>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
+
+                                                <div class="d-flex justify-content-end mt-5 pt-3 gap-3">
+                                                    <button type="button" class="btn btn-light border px-4 fw-bold text-secondary shadow-sm"
+                                                        style="border-radius: 8px;">Cancelar</button>
+                                                    <button type="submit" id="btnGuardarPerfil" class="btn btn-primary text-white px-5 fw-bold shadow-sm"
+                                                        style="border-radius: 8px; background-color: var(--utm-accent); border-color: var(--utm-accent);">Guardar Cambios</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
-                                    <div class="text-center mb-5">
-                                        <h3 class="font-bold mb-1 text-primary" style="color: #018790 !important;"><?= htmlspecialchars($nombreEstudiante) ?></h3>
-                                        <p class="text-muted">Mi Perfil</p>
-                                    </div>
-
-                                    <!-- Form -->
-                                    <form>
-                                        <h6 class="text-muted mb-4 border-bottom pb-2">Información Personal</h6>
-                                        <div class="row g-4 mb-4">
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-bold">Nombre</label>
-                                                <input type="text" class="form-control"
-                                                    style="border-radius: 50px; padding: 0.6rem 1.2rem;" value="<?= htmlspecialchars($nombreEstudiante) ?>">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-bold">Apellidos</label>
-                                                <input type="text" class="form-control"
-                                                    style="border-radius: 50px; padding: 0.6rem 1.2rem;"
-                                                    value="">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-bold">Correo Electrónico</label>
-                                                <input type="email" class="form-control"
-                                                    style="border-radius: 50px; padding: 0.6rem 1.2rem;"
-                                                    value="">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-bold">Teléfono</label>
-                                                <input type="tel" class="form-control"
-                                                    style="border-radius: 50px; padding: 0.6rem 1.2rem;"
-                                                    value="">
-                                            </div>
-                                        </div>
-
-                                        <h6 class="text-muted mb-4 mt-5 border-bottom pb-2">Contacto de Emergencia</h6>
-                                        <div class="row g-4 mb-4">
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-bold">Nombre del Contacto</label>
-                                                <input type="text" class="form-control"
-                                                    style="border-radius: 50px; padding: 0.6rem 1.2rem;"
-                                                    placeholder="Ej. Ana Pérez">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label fw-bold">Teléfono de Emergencia</label>
-                                                <input type="tel" class="form-control"
-                                                    style="border-radius: 50px; padding: 0.6rem 1.2rem;"
-                                                    placeholder="Ej. 999-000-0000">
-                                            </div>
-                                        </div>
-
-                                        <h6 class="text-muted mb-4 mt-5 border-bottom pb-2">Información Médica Básica
-                                        </h6>
-                                        <div class="row g-4 mb-4">
-                                            <div class="col-12">
-                                                <label class="form-label fw-bold">Padecimientos Crónicos</label>
-                                                <textarea class="form-control" rows="2"
-                                                    style="border-radius: 1rem; padding: 1rem;"
-                                                    placeholder="Ej. Asma, Diabetes..."></textarea>
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="form-label fw-bold">Alergias Conocidas</label>
-                                                <textarea class="form-control" rows="2"
-                                                    style="border-radius: 1rem; padding: 1rem;"
-                                                    placeholder="Ej. Penicilina, Nueces..."></textarea>
-                                            </div>
-                                        </div>
-
-                                        <div class="d-flex justify-content-end mt-5 gap-3">
-                                            <button type="button" class="btn btn-light px-4"
-                                                style="border-radius: 50px;">Cancelar</button>
-                                            <button type="submit" class="btn btn-primary px-5"
-                                                style="border-radius: 50px; background-color: #018790; border-color: #018790;">Guardar
-                                                Cambios</button>
-                                        </div>
-                                    </form>
-
                                 </div>
                             </div>
                         </div>
@@ -355,10 +416,6 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <script src="assets/compiled/js/app.js"></script>
 
     <script>
-        // Constantes de rutas desde PHP
-        const BACKEND_URL = '<?= BACKEND_URL ?>';
-        const API_URL = '<?= API_URL ?>';
-
         document.getElementById('avatarInput').addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 const file = this.files[0];
@@ -375,7 +432,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
                 // Podemos cambiar el icono de la camara temporalmente por un spinner si quisieramos
                 // Aquí se envía
-                fetch(`${API_URL}/subir_avatar.php`, {
+                fetch('../backend/api/subir_avatar.php', {
                         method: 'POST',
                         body: formData
                     })
@@ -399,6 +456,77 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                         alert('Falló la conexión al servidor. Intenta de nuevo.');
                     });
             }
+        });
+    </script>
+    <script src="assets/js/notificaciones.js?v=<?= time() ?>"></script>
+    <script>
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('btnGuardarPerfil');
+            const alertDiv = document.getElementById('profileAlert');
+            alertDiv.className = 'alert d-none';
+            if (btn) btn.disabled = true;
+            if (btn) btn.innerText = 'Guardando...';
+
+            const payload = {
+                nombre: document.getElementById('perfilNombre').value,
+                correo: document.getElementById('perfilCorreo').value,
+                telefono: document.getElementById('perfilTelefono').value,
+                padecimientos: document.getElementById('perfilPadecimientos') ? document.getElementById('perfilPadecimientos').value : '',
+                alergias: document.getElementById('perfilAlergias') ? document.getElementById('perfilAlergias').value : '',
+                contacto_nombre: document.getElementById('perfilContactoNombre') ? document.getElementById('perfilContactoNombre').value : '',
+                contacto_tel: document.getElementById('perfilContactoTel') ? document.getElementById('perfilContactoTel').value : ''
+            };
+
+            fetch('../backend/api/actualizar_perfil.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    alertDiv.classList.remove('d-none');
+                    if (data.status === 'success') {
+                        alertDiv.classList.add('alert-success');
+                        alertDiv.innerText = 'Perfil actualizado correctamente.';
+                    } else {
+                        alertDiv.classList.add('alert-danger');
+                        alertDiv.innerText = data.message || 'Error al actualizar el perfil.';
+                    }
+                })
+                .catch(err => {
+                    alertDiv.classList.remove('d-none');
+                    alertDiv.classList.add('alert-danger');
+                    alertDiv.innerText = 'Error de red o servidor.';
+                })
+                .finally(() => {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.innerText = 'Guardar Cambios';
+                    }
+                });
+        });
+    </script>
+
+    <!-- Notificaciones Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let bellNodes = document.querySelectorAll('a[data-bs-toggle="dropdown"] i.bi-bell-fill');
+            bellNodes.forEach(icon => {
+                let toggle = icon.closest('a');
+                if (toggle) {
+                    toggle.addEventListener('click', function() {
+                        let badge = toggle.querySelector('.bg-danger');
+                        if (badge) badge.remove();
+                        fetch('../backend/api/accion_leer_notificaciones.php', {
+                            method: 'POST'
+                        }).catch(e => console.error(e));
+                    });
+                }
+            });
         });
     </script>
 </body>

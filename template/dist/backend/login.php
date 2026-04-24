@@ -22,30 +22,29 @@ function sendResponse($status, $message, $redirectUrl = null) {
  * Se verifica si se recibió 'credential' que es el JWT token provisto por Google.
  */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['credential'])) {
-    
+
     // El 'credential' es un JWT compuesto por header.payload.signature
     $id_token = $_POST['credential'];
-    
+
     // Dividimos el JWT para obtener el Payload (la parte central)
     $jwt_parts = explode('.', $id_token);
-    
+
     if (count($jwt_parts) === 3) {
         $payload = $jwt_parts[1];
-        
+
         // El payload está codificado en Base64Url
         $decoded_payload = json_decode(base64_decode(str_replace(['-', '_'], ['+', '/'], $payload)), true);
-        
+
         // Verificamos si la decodificación fue exitosa y tenemos un email
         if ($decoded_payload && isset($decoded_payload['email'])) {
             $email = $decoded_payload['email'];
             $name = $decoded_payload['name'] ?? 'Usuario Google';
             $google_id = $decoded_payload['sub']; // El ID único del usuario en Google
-            
+
             // Temporalmente, como la BD no tiene columnas 'email' ni 'id_google' en la tabla 'usuario',
             // devolvemos un mensaje de error claro en vez de romper la ejecución de PHP.
             // Para activarlo 100%, se requiere agregar la columna 'email' y 'id_google' a la BD.
             sendResponse('error', 'El inicio de sesión mediante Google requiere que la Base de Datos tenga configurado el campo Correo Electrónico. Contacte al administrador.');
-            
         } else {
             sendResponse('error', 'Token de Google inválido (Payload corrupto).');
         }
@@ -58,14 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['credential'])) {
  * Flujo 2: Login manual con Email/Matrícula y Contraseña
  */
 else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isset($_POST['password'])) {
-    
+
     $email_or_matricula = trim($_POST['email']);
     $password = trim($_POST['password']);
-    
+
     if (empty($email_or_matricula) || empty($password)) {
         sendResponse('error', 'Por favor, rellena todos los campos.');
     }
-    
+
     // Hacemos LEFT JOIN con paciente únicamente para permitir el logueo usando la matrícula de paciente
     $sql = "
         SELECT u.id_usuario as id, u.nombre, u.apellido_pat, u.password, u.rol, u.estado, u.foto_perfil
@@ -77,25 +76,25 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isse
     $stmt->bind_param("ss", $email_or_matricula, $email_or_matricula);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
-        
+
         // Verificamos si la cuenta está inactiva (estado = 0)
         if ($user['estado'] != 1) {
             sendResponse('error', 'Tu cuenta se encuentra desactivada. Contacta al administrador.');
         }
-        
+
         // La contraseña en BD se encuentra en texto plano según el análisis anterior
         if ($password === $user['password'] || password_verify($password, $user['password'])) {
             // Contraseña correcta, creamos la sesión
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['nombre'] . ' ' . $user['apellido_pat'];
             $_SESSION['role'] = $user['rol'];
-            
+
             // Asignamos la foto encontrada en la base de datos o le damos una por defecto si está vacío
             $_SESSION['user_avatar'] = !empty($user['foto_perfil']) ? $user['foto_perfil'] : 'assets/compiled/jpg/1.jpg';
-            
+
             // Redirección basada en el rol del usuario
             $redirectUrl = '../user/index.php'; // Por defecto (Paciente / Estudiante / rol no reconocido)
             switch (strtolower($user['rol'])) {
@@ -107,15 +106,24 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['email']) && isse
                 case 'doctor':
                 case 'profesional':
                     $redirectUrl = '../medico/dashboard-medico.php';
-                    break;
-                case 'nutricionista':
-                    $redirectUrl = '../nutricionista/dashboard-nutricionista.php';
-                    break;
-                case 'psicólogo':
-                    $redirectUrl = '../psicologo/dashboard-psicologo.php';
+                    // Fetch specialty to dynamic route correctly
+                    if (isset($conn)) {
+                        $stmtProf = $conn->prepare("SELECT especialidad FROM profesional WHERE id_usuario = ?");
+                        $stmtProf->bind_param("i", $user['id']);
+                        $stmtProf->execute();
+                        $resProf = $stmtProf->get_result();
+                        if ($resProf->num_rows > 0) {
+                            $sp = strtolower($resProf->fetch_assoc()['especialidad']);
+                            if (strpos($sp, 'nutricion') !== false || strpos($sp, 'nutriolog') !== false) {
+                                $redirectUrl = '../nutricionista/dashboard-nutricionista.php';
+                            } else if (strpos($sp, 'psicolog') !== false) {
+                                $redirectUrl = '../psicologo/dashboard-psicologo.php';
+                            }
+                        }
+                    }
                     break;
             }
-            
+
             sendResponse('success', 'Login exitoso', $redirectUrl);
         } else {
             // Contraseña incorrecta

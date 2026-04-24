@@ -5,7 +5,7 @@
 $host = "localhost";
 $user = "root";
 $password = "";
-$database = "utmedic";
+$database = "utmedical";
 
 // Ocultar temporalmente los errores para garantizar que no impriman HTML y rompan el JSON
 error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);

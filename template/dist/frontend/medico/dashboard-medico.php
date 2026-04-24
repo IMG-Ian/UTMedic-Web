@@ -3,7 +3,7 @@ header('Content-Type: text/html; charset=utf-8');
 // Importar el escudo protector de rutas validando que sea Médico (Profesional en BD)
 require_once __DIR__ . '/../../backend/auth_medico.php';
 require_once __DIR__ . '/../../backend/config/paths.php';
-?>
+require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -90,13 +90,6 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                             <a href="medico/medico-agenda.php" class="sidebar-link">
                                 <i class="bi bi-calendar-check-fill"></i>
                                 <span>Agenda de Citas</span>
-                            </a>
-                        </li>
-
-                        <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-historial.php' ? 'active' : '' ?>">
-                            <a href="medico/medico-historial.php" class="sidebar-link">
-                                <i class="bi bi-clock-history"></i>
-                                <span>Historial Citas</span>
                             </a>
                         </li>
 
@@ -259,7 +252,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                         <div class="card mb-4 shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
                             <div class="card-body py-5 px-4 text-center">
                                 <p class="text-secondary fw-bold mb-4" style="letter-spacing: 2px;">EMERGENCIA</p>
-                                <a href="medico-emergencia.php" class="btn btn-danger w-100 py-3 rounded-pill fw-bold" style="background-color: #bd1a1a; border-color: #bd1a1a; font-size: 1.1rem; box-shadow: 0 6px 15px rgba(189,26,26,0.4); text-transform: uppercase;">Emergencia</a>
+                                <a href="medico/medico-emergencia.php" class="btn btn-danger w-100 py-3 rounded-pill fw-bold" style="background-color: #bd1a1a; border-color: #bd1a1a; font-size: 1.1rem; box-shadow: 0 6px 15px rgba(189,26,26,0.4); text-transform: uppercase;">Emergencia</a>
                             </div>
                         </div>
 

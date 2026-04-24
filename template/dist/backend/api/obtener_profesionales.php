@@ -1,33 +1,46 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once '../config/conexion.php';
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['status' => 'error', 'message' => 'No autorizado']);
+if (!isset($_GET['especialidad'])) {
+    echo json_encode(['status' => 'error', 'message' => 'Falta parámetro especialidad']);
     exit();
 }
 
-require_once '../config/conexion.php';
+$espInt = (int)$_GET['especialidad'];
+$map = [
+    1 => 'medico',
+    2 => 'nutriologo',
+    3 => 'psicologo'
+];
 
-$sql = "SELECT p.id_profesional as idPersonal, 
-               CONCAT(u.nombre, ' ', u.apellido_pat) as nombre, 
-               p.especialidad as profesion 
-        FROM profesional p
-        INNER JOIN usuario u ON p.id_usuario = u.id_usuario
-        WHERE u.estado = 1
-        ORDER BY u.nombre ASC";
-$result = $conn->query($sql);
+if (!isset($map[$espInt])) {
+    echo json_encode(['status' => 'error', 'message' => 'Especialidad inválida']);
+    exit();
+}
+$espStr = $map[$espInt];
 
-$professionals = [];
-if ($result && $result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        $professionals[] = [
-            'id' => $row['idPersonal'],
-            'nombre' => $row['nombre'],
-            'profesion' => ucfirst($row['profesion'])
-        ];
-    }
+$sql = "SELECT p.id_profesional, u.nombre, u.apellido_pat, u.apellido_mat 
+        FROM profesional p 
+        JOIN usuario u ON p.id_usuario = u.id_usuario 
+        WHERE p.especialidad = ? AND u.estado = 1";
+
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $espStr);
+$stmt->execute();
+$res = $stmt->get_result();
+
+
+$profesionales = [];
+while ($row = $res->fetch_assoc()) {
+    $nombreCompleto = trim($row['nombre'] . ' ' . $row['apellido_pat'] . ' ' . $row['apellido_mat']);
+    $profesionales[] = [
+        'id' => $row['id_profesional'],
+        'nombre' => $nombreCompleto
+    ];
 }
 
-echo json_encode(['status' => 'success', 'data' => $professionals]);
-?>
+echo json_encode(['status' => 'success', 'data' => $profesionales]);

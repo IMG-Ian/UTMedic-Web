@@ -10,6 +10,7 @@ $nombreEstudiante = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Us
 $rolUsuario = isset($_SESSION['role']) ? ucfirst(strtolower($_SESSION['role'])) : 'Usuario Regular';
 $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'assets/compiled/jpg/1.jpg';
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,7 +45,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 <div class="sidebar-header position-relative px-4 py-3">
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
-                            <a href="user/index.php" class="text-decoration-none">
+                            <a href="index.php" class="text-decoration-none">
                                 <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
@@ -88,28 +89,28 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                         <li class="sidebar-title">Menú Principal</li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">
-                            <a href="user/index.php" class="sidebar-link">
+                            <a href="index.php" class="sidebar-link">
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Inicio</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-agendar-cita.php' ? 'active' : '' ?>">
-                            <a href="user/user-agendar-cita.php" class="sidebar-link">
+                            <a href="user-agendar-cita.php" class="sidebar-link">
                                 <i class="bi bi-calendar-plus-fill"></i>
                                 <span>Nueva Cita</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-historial.php' ? 'active' : '' ?>">
-                            <a href="user/user-historial.php" class="sidebar-link">
+                            <a href="user-historial.php" class="sidebar-link">
                                 <i class="bi bi-clock-history"></i>
                                 <span>Historial Citas</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
-                            <a href="shared/user-perfil.php" class="sidebar-link">
+                            <a href="user-perfil.php" class="sidebar-link">
                                 <i class="bi bi-person-fill"></i>
                                 <span>Perfil</span>
                             </a>
@@ -117,7 +118,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
 
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
+                            <a href="../backend/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -129,7 +130,8 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
         </div>
         <div id="main">
             <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none" onclick="event.preventDefault();"> <i class="bi bi-justify fs-3"></i>
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
 
@@ -138,40 +140,65 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3>Agendar Cita</h3>
                     <div class="d-flex align-items-center gap-3">
+
+
+
+
+                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
-                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">2</span>
+                                <?php if (isset($unreadCount) && $unreadCount > 0): ?>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;"><?= $unreadCount ?></span>
+                                <?php endif; ?>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px; max-height: 400px; overflow-y: auto; overflow-x: hidden;">
                                 <li>
-                                    <h6 class="dropdown-header font-bold text-dark">Notificaciones</h6>
+                                    <h6 class="dropdown-header font-bold text-dark d-flex justify-content-between align-items-center pb-2">
+                                        Notificaciones
+                                    </h6>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
-                                        <div class="bg-primary text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <i class="bi bi-check-circle"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 text-sm font-bold text-dark">Cita Aceptada</h6>
-                                            <p class="mb-0 text-xs text-muted" style="font-size: 0.8rem;">Tu cita del 15 de Nov. ha sido confirmada.</p>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center py-2 rounded mt-1" href="#" style="white-space: normal;">
-                                        <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <i class="bi bi-calendar-x"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 text-sm font-bold text-dark">Cita Reagendada</h6>
-                                            <p class="mb-0 text-xs text-muted" style="font-size: 0.8rem;">El cardiólogo solicitó cambio de horario.</p>
-                                        </div>
-                                    </a>
-                                </li>
+                                <?php if (empty($notificacionesList)): ?>
+                                    <li>
+                                        <div class="dropdown-item text-muted text-center py-4" style="font-size: 0.9rem; white-space: normal;">No tienes notificaciones recientes.</div>
+                                    </li>
+                                <?php else: ?>
+                                    <?php foreach ($notificacionesList as $notif):
+                                        $icon = 'bi-info-circle';
+                                        $bgClass = 'bg-secondary';
+                                        if ($notif['tipo'] === 'nueva_cita') {
+                                            $icon = 'bi-calendar-plus';
+                                            $bgClass = 'bg-primary';
+                                        }
+                                        if ($notif['tipo'] === 'cancelacion') {
+                                            $icon = 'bi-calendar-x';
+                                            $bgClass = 'bg-danger';
+                                        }
+                                        if ($notif['tipo'] === 'completada') {
+                                            $icon = 'bi-check-circle';
+                                            $bgClass = 'bg-success';
+                                        }
+
+                                        $opacity = $notif['leida'] == 0 ? '1' : '0.7';
+                                        $fontWeight = $notif['leida'] == 0 ? 'font-bold text-dark' : 'text-muted fw-semibold';
+                                    ?>
+                                        <li>
+                                            <div class="dropdown-item d-flex align-items-start py-3 rounded mt-1 border-bottom" style="white-space: normal; opacity: <?= $opacity ?>; min-width: 280px; text-decoration: none;">
+                                                <div class="<?= $bgClass ?> text-white rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px; font-size: 1.25rem;">
+                                                    <i class="bi <?= $icon ?>" style="line-height: 0;"></i>
+                                                </div>
+                                                <div style="min-width: 0; flex: 1;">
+                                                    <h6 class="mb-1 text-sm <?= $fontWeight ?>" style="white-space: normal; word-wrap: break-word; line-height: 1.3;"><?= htmlspecialchars($notif['titulo']) ?></h6>
+                                                    <p class="mb-1 text-xs text-muted" style="font-size: 0.8rem; white-space: normal; word-wrap: break-word; line-height: 1.4;"><?= htmlspecialchars($notif['mensaje']) ?></p>
+                                                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem; font-weight: 500;"><?= date('d M Y H:i', strtotime($notif['fecha_creacion'])) ?></small>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </ul>
                         </div>
-                        <a href="shared/user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
+                        <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
                             <div class="avatar avatar-sm border border-2 border-primary d-flex align-items-center justify-content-center overflow-hidden" style="background: white; border-radius: 50%; min-width: 32px; min-height: 32px;">
                                 <img src="<?= htmlspecialchars($avatarUsuario) ?>" id="top-nav-avatar" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover; color: transparent; text-indent: -9999px;">
                             </div>
@@ -186,7 +213,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
             </div>
 
             <div class="page-content">
-                <section class="row">
+                <form method="POST" action="../backend/api/crear_cita.php" class="row" id="formCrearCita" onsubmit="return validarCita(event);">
                     <!-- Left Column: Form Details -->
                     <div class="col-12 col-lg-8">
 
@@ -209,12 +236,9 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                     </div>
                                     <div class="col-md-6">
                                         <label for="doctorSelect" class="form-label fw-bold">Profesional</label>
-                                        <select class="form-select" id="doctorSelect"
+                                        <select class="form-select" id="doctorSelect" name="id_profesional" disabled
                                             style="border-radius: 50px; padding: 0.6rem 1.2rem; background-color: var(--bs-body-bg);">
-                                            <option selected>Cualquier Profesional Disponible</option>
-                                            <option value="1">Dr. Juan Pérez</option>
-                                            <option value="2">Dra. María González</option>
-                                            <option value="3">Lic. Andrea Martínez</option>
+                                            <option selected value="">Selecciona primero la especialidad</option>
                                         </select>
                                     </div>
                                     <div class="col-12">
@@ -238,8 +262,9 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                     <!-- Date Picker -->
                                     <div class="col-md-6">
                                         <label for="dateSelect" class="form-label fw-bold">Selecciona el Día</label>
-                                        <input type="date" class="form-control" id="dateSelect"
+                                        <input type="date" class="form-control" name="fecha" id="dateSelect"
                                             style="border-radius: 50px; padding: 0.6rem 1.2rem; background-color: var(--bs-body-bg);">
+                                        <input type="hidden" name="hora" id="selectedTimeInput" value="">
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Horarios Disponibles</label>
@@ -260,20 +285,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                             }
                                         </style>
                                         <div class="d-flex flex-wrap gap-2" id="timeSlotsContainer">
-                                            <button type="button" class="btn btn-outline-utm-green time-slot-btn" data-time="09:00:00"
-                                                style="border-radius: 50px;">09:00 AM</button>
-                                            <button type="button" class="btn btn-outline-utm-green time-slot-btn" data-time="09:30:00"
-                                                style="border-radius: 50px;">09:30 AM</button>
-                                            <button type="button" class="btn btn-outline-utm-green time-slot-btn" data-time="10:00:00"
-                                                style="border-radius: 50px;">10:00 AM</button>
-                                            <button type="button" class="btn btn-outline-secondary disabled"
-                                                style="border-radius: 50px;">10:30 AM</button>
-                                            <button type="button" class="btn btn-outline-utm-green time-slot-btn" data-time="11:00:00"
-                                                style="border-radius: 50px;">11:00 AM</button>
-                                            <button type="button" class="btn btn-outline-utm-green time-slot-btn" data-time="11:30:00"
-                                                style="border-radius: 50px;">11:30 AM</button>
-                                            <button type="button" class="btn btn-outline-secondary disabled"
-                                                style="border-radius: 50px;">12:00 PM</button>
+                                            <p class="text-muted w-100 mb-0" style="font-size: 0.9rem;">Debe seleccionar un profesional y una fecha para ver disponibilidad.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -314,13 +326,13 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                     Confirmar Cita
                                 </button>
                                 <div class="text-center mt-3">
-                                    <a href="user/index.php" class="text-muted text-decoration-none small">Cancelar</a>
+                                    <a href="index.php" class="text-muted text-decoration-none small">Cancelar</a>
                                 </div>
                             </div>
                         </div>
 
                     </div>
-                </section>
+                </form>
             </div>
 
             <footer>
@@ -339,61 +351,105 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <script src="assets/compiled/js/app.js"></script>
 
     <script>
-        // Constantes de rutas desde PHP
-        const BACKEND_URL = '<?= BACKEND_URL ?>';
-        const API_URL = '<?= API_URL ?>';
-
         document.addEventListener('DOMContentLoaded', () => {
             const specialtySelect = document.getElementById('specialtySelect');
             const doctorSelect = document.getElementById('doctorSelect');
             const dateSelect = document.getElementById('dateSelect');
             const timeButtons = document.querySelectorAll('.time-slot-btn:not(.disabled)');
+            const selectedTimeInput = document.getElementById('selectedTimeInput');
 
             const summarySpecialty = document.getElementById('summary-specialty');
             const summaryDoctor = document.getElementById('summary-doctor');
             const summaryDate = document.getElementById('summary-date');
             const summaryTime = document.getElementById('summary-time');
-            const btnConfirmarCita = document.getElementById('btnConfirmarCita');
 
-            let selectedTime = null;
-            let professionalsData = [];
-
-            // Restringir Fecha Minima a HOY en el calendario
             const today = new Date();
-            // Restamos Timezone offset para evitar fallos por GMT 
             const localeDate = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().split('T')[0];
             dateSelect.setAttribute('min', localeDate);
 
-            // Cargar Doctores Dinámicamente desde el backend
-            fetch(`${API_URL}/obtener_profesionales.php`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        professionalsData = data.data;
-                        updateDoctorSelect();
-                    }
-                })
-                .catch(err => console.error('Error fetching professionals:', err));
+            function cargarHorarios() {
+                const docId = doctorSelect.value;
+                const dateVal = dateSelect.value;
+                const container = document.getElementById('timeSlotsContainer');
+                selectedTimeInput.value = '';
+                summaryTime.innerText = '--:--';
 
-            // Actualizar Opciones de los Doctores (Select)
-            function updateDoctorSelect() {
-                doctorSelect.innerHTML = '<option value="">Selecciona un Profesional...</option>';
-                professionalsData.forEach(doc => {
-                    doctorSelect.innerHTML += `<option value="${doc.id}">${doc.nombre} (${doc.profesion})</option>`;
-                });
+                if (!docId || !dateVal) {
+                    container.innerHTML = '<p class="text-muted w-100 mb-0" style="font-size: 0.9rem;">Debe seleccionar un profesional y una fecha para ver disponibilidad.</p>';
+                    return;
+                }
+
+                container.innerHTML = '<p class="text-muted w-100 mb-0"><span class="spinner-border spinner-border-sm me-2"></span>Cargando horarios...</p>';
+
+                fetch(`../backend/api/obtener_horarios_disponibles.php?id_profesional=${docId}&fecha=${dateVal}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        container.innerHTML = '';
+                        if (data.status === 'success') {
+                            if (data.data.length === 0) {
+                                container.innerHTML = '<p class="text-danger w-100 mb-0" style="font-size: 0.9rem;">No hay horarios configurados en este profesional.</p>';
+                            } else {
+                                data.data.forEach(slot => {
+                                    const btn = document.createElement('button');
+                                    btn.type = 'button';
+                                    if (slot.disponible) {
+                                        btn.className = 'btn btn-outline-utm-green time-slot-btn';
+                                        btn.onclick = () => {
+                                            document.querySelectorAll('.time-slot-btn').forEach(b => b.classList.remove('active'));
+                                            btn.classList.add('active');
+                                            selectedTimeInput.value = slot.hora_24;
+                                            summaryTime.innerText = slot.hora_12;
+                                        };
+                                    } else {
+                                        btn.className = 'btn btn-outline-secondary disabled';
+                                    }
+                                    btn.style.borderRadius = '50px';
+                                    btn.dataset.time = slot.hora_24;
+                                    btn.innerText = slot.hora_12;
+                                    container.appendChild(btn);
+                                });
+                            }
+                        } else {
+                            container.innerHTML = `<p class="text-danger w-100 mb-0" style="font-size: 0.9rem;">${data.message}</p>`;
+                        }
+                    })
+                    .catch(e => {
+                        container.innerHTML = '<p class="text-danger w-100 mb-0" style="font-size: 0.9rem;">Error de conexión.</p>';
+                    });
             }
 
-            // --- Listeners de Actualización al Resumen de la Derecha ---
             specialtySelect.addEventListener('change', () => {
-                summarySpecialty.innerText = specialtySelect.value !== "Selecciona una opción..." ?
-                    specialtySelect.options[specialtySelect.selectedIndex].text :
-                    'Seleccione esp...';
+                const val = specialtySelect.value;
+                if (val !== "Selecciona una opción...") {
+                    summarySpecialty.innerText = specialtySelect.options[specialtySelect.selectedIndex].text;
+                    fetch(`../backend/api/obtener_profesionales.php?especialidad=${val}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                doctorSelect.innerHTML = '<option selected value="">Selecciona un Profesional</option>';
+                                data.data.forEach(p => {
+                                    doctorSelect.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
+                                });
+                                doctorSelect.disabled = false;
+                            } else {
+                                doctorSelect.innerHTML = '<option selected value="">Error al cargar</option>';
+                                doctorSelect.disabled = true;
+                            }
+                            cargarHorarios();
+                        });
+                } else {
+                    summarySpecialty.innerText = 'Seleccione esp...';
+                    doctorSelect.innerHTML = '<option selected value="">Selecciona primero la especialidad</option>';
+                    doctorSelect.disabled = true;
+                    cargarHorarios();
+                }
             });
 
             doctorSelect.addEventListener('change', () => {
                 summaryDoctor.innerText = doctorSelect.value === '' ?
                     '---' :
                     doctorSelect.options[doctorSelect.selectedIndex].text;
+                cargarHorarios();
             });
 
             dateSelect.addEventListener('change', () => {
@@ -403,101 +459,101 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 } else {
                     summaryDate.innerText = '--/--/----';
                 }
+                cargarHorarios();
             });
+        });
 
-            // --- Listener al Clickeo de los Horarios Verdes ---
-            timeButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // Remover estado 'activo' de todos los botones para que quede apagado
-                    timeButtons.forEach(b => {
-                        b.classList.remove('active');
-                        // Asegurarnos de que todos vuelven al "outline" base
-                    });
+        function validarCita(event) {
+            event.preventDefault();
+            const doctorSelect = document.getElementById('doctorSelect');
+            const dateSelect = document.getElementById('dateSelect');
+            const selectedTimeInput = document.getElementById('selectedTimeInput');
+            const reasonInput = document.getElementById('reasonInput');
 
-                    // Poner estado activo SOLO a este botón.
-                    // El CSS que agregamos arriba (.btn-outline-utm-green.active) se encargará
-                    // orgánicamente de ponerle el fondo verde clarito.
-                    btn.classList.add('active');
-
-                    // Actualizar variable global y el resumen gráfico
-                    selectedTime = btn.getAttribute('data-time');
-                    summaryTime.innerText = btn.innerText;
+            if (!dateSelect.value || !selectedTimeInput.value) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Horario Requerido',
+                    text: 'Por favor selecciona una fecha y un horario disponible.'
                 });
-            });
+                return false;
+            }
+            if (!doctorSelect.value) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Profesional Requerido',
+                    text: 'Por favor selecciona obligatoriamente a un Profesional.'
+                });
+                return false;
+            }
 
-            // --- Disparador para Guardar la Cita Final ---
-            btnConfirmarCita.addEventListener('click', () => {
-                const doctorId = doctorSelect.value;
-                const fecha = dateSelect.value;
-                const observaciones = document.getElementById('reasonInput').value;
+            const btnConfirmar = document.getElementById('btnConfirmarCita');
+            btnConfirmar.innerText = 'Agendando...';
+            btnConfirmar.disabled = true;
 
-                // Validar que no le falten datos al paciente
-                if (!fecha || !selectedTime) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Horario Requerido',
-                        text: 'Por favor selecciona una fecha y un horario disponible.'
-                    });
-                    return;
-                }
-                if (!doctorId) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Profesional Requerido',
-                        text: 'Por favor selecciona obligatoriamente a un Profesional.'
-                    });
-                    return;
-                }
+            const payload = {
+                idPersonal: doctorSelect.value,
+                fecha: dateSelect.value,
+                hora: selectedTimeInput.value,
+                observaciones: reasonInput ? reasonInput.value : ''
+            };
 
-                // Deshabilitar botón temporalmente para que no haga "doble click" o inyecte dos citas
-                btnConfirmarCita.disabled = true;
-                btnConfirmarCita.innerText = 'Guardando...';
-
-                // Enviar la estructura en JSON crudo a nuestro endpoint PHP
-                fetch(`${API_URL}/crear_cita.php`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            idPersonal: doctorId,
-                            fecha: fecha,
-                            hora: selectedTime,
-                            observaciones: observaciones
-                        })
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        btnConfirmarCita.disabled = false;
-                        btnConfirmarCita.innerText = 'Confirmar Cita';
-
-                        if (data.status === 'success') {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'íƒâ€ší‚¡Cita Agendada!',
-                                text: 'Tu cita se ha guardado exitosamente en el sistema.',
-                                confirmButtonColor: '#018790'
-                            }).then(() => {
-                                window.location.href = 'user/index.php'; // Redirigirlo a inicio
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Algo salió mal',
-                                text: data.message
-                            });
-                        }
-                    })
-                    .catch(err => {
-                        console.error('Error:', err);
+            fetch('../backend/api/crear_cita.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: data.message
+                        }).then(() => {
+                            window.location.href = 'user-historial.php';
+                        });
+                    } else {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Error de conexión',
-                            text: 'Falló la conexión al servidor. Revisa tu internet.'
+                            title: 'Oops',
+                            text: data.message
                         });
-                        btnConfirmarCita.disabled = false;
-                        btnConfirmarCita.innerText = 'Confirmar Cita';
+                        btnConfirmar.innerText = 'Confirmar Cita';
+                        btnConfirmar.disabled = false;
+                    }
+                })
+                .catch(err => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema de conexión al agendar.'
                     });
+                    btnConfirmar.innerText = 'Confirmar Cita';
+                    btnConfirmar.disabled = false;
+                });
+            return false;
+        }
+    </script>
+
+
+    <!-- Notificaciones Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let bellNodes = document.querySelectorAll('a[data-bs-toggle="dropdown"] i.bi-bell-fill');
+            bellNodes.forEach(icon => {
+                let toggle = icon.closest('a');
+                if (toggle) {
+                    toggle.addEventListener('hidden.bs.dropdown', function() {
+                        let badge = toggle.querySelector('.bg-danger');
+                        if (badge) badge.remove();
+                        fetch('../backend/api/accion_leer_notificaciones.php', {
+                            method: 'POST'
+                        }).catch(e => console.error(e));
+                    });
+                }
             });
         });
     </script>
