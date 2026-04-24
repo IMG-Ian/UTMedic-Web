@@ -1,18 +1,25 @@
 <?php
 session_start();
-
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../../frontend/user-perfil.php?error=" . urlencode('No autorizado. Por favor, inicie sesión.'));
-    exit();
-}
+header('Content-Type: application/json');
 
 require_once '../config/conexion.php';
 
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "No autorizado"
+    ]);
+    exit();
+}
+
 $userId = $_SESSION['user_id'];
 
-// Revisar si se recibió el archivo
+// Validar archivo
 if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
-    header("Location: ../../frontend/user-perfil.php?error=" . urlencode('No se recibió ningún archivo o hubo un error en la subida.'));
+    echo json_encode([
+        "status" => "error",
+        "message" => "Error al subir archivo"
+    ]);
     exit();
 }
 
@@ -21,53 +28,82 @@ $fileName = $file['name'];
 $fileTmpName = $file['tmp_name'];
 $fileSize = $file['size'];
 
-// Validar extensiones de imagen
+// Extensión
 $allowedExtensions = ['jpg', 'jpeg', 'png'];
-$fileExt = explode('.', $fileName);
-$fileActualExt = strtolower(end($fileExt));
+$fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
-if (!in_array($fileActualExt, $allowedExtensions)) {
-    header("Location: ../../frontend/user-perfil.php?error=" . urlencode('Formato no soportado. Solo JPG, JPEG y PNG.'));
+if (!in_array($fileExt, $allowedExtensions)) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "Formato no permitido"
+    ]);
     exit();
 }
 
-// Validar tamaño máximo 5MB
+// Tamaño
 if ($fileSize > 5 * 1024 * 1024) {
-    header("Location: ../../frontend/user-perfil.php?error=" . urlencode('La imagen pesa más de 5MB.'));
+    echo json_encode([
+        "status" => "error",
+        "message" => "Archivo demasiado grande"
+    ]);
     exit();
 }
 
-// Asegurar que exista la carpeta de destino
+// Carpeta
 $uploadDir = '../../frontend/assets/compiled/jpg/avatars/';
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);
 }
 
-// Construir nombre único para no pisar fotos en caso de cache fuerte, usando timestamp
-$newFileName = 'user_' . $userId . '_' . time() . '.' . $fileActualExt;
+// 🧠 1. OBTENER Y BORRAR IMAGEN ANTERIOR
+$stmtOld = $conn->prepare("SELECT foto_perfil FROM usuario WHERE id_usuario = ?");
+$stmtOld->bind_param("i", $userId);
+$stmtOld->execute();
+$result = $stmtOld->get_result();
+$row = $result->fetch_assoc();
+
+if ($row && !empty($row['foto_perfil'])) {
+    $oldPath = '../../frontend/' . $row['foto_perfil'];
+
+    // Evitar borrar imagen por defecto
+    if (file_exists($oldPath) && strpos($oldPath, 'default') === false) {
+        unlink($oldPath);
+    }
+}
+
+// 🧠 2. GUARDAR NUEVA IMAGEN
+$newFileName = 'user_' . $userId . '_' . time() . '.' . $fileExt;
 $fileDestination = $uploadDir . $newFileName;
 
-if (move_uploaded_file($fileTmpName, $fileDestination)) {
-    // La ruta relativa que usa el frontend para pintar la imagen a partir de index.php / user-perfil.php
-    $dbPath = 'assets/compiled/jpg/avatars/' . $newFileName;
-
-    // El nuevo modelo reestructurado guarda la fotografía del perfil ahora en tabla `usuario` en el campo `foto_perfil`
-    $stmt = $conn->prepare("UPDATE usuario SET foto_perfil = ? WHERE id_usuario = ?");
-    $stmt->bind_param("si", $dbPath, $userId);
-
-    if ($stmt->execute()) {
-        if ($stmt->affected_rows >= 0) { // Mayor o igual por si suben la misma y no hay un affected real diferente de 0.
-            // Actualizar la variable de sesión para que el cambio persista en las siguientes cargas
-            $_SESSION['user_avatar'] = $dbPath;
-            header("Location: ../../frontend/user-perfil.php?success=avatar");
-        } else {
-            header("Location: ../../frontend/user-perfil.php?error=" . urlencode('No se pudo enlazar la imagen en la base de datos. Verifica si tu perfil existe.'));
-        }
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Error de consulta en la base de datos.']);
-        header("Location: ../../frontend/user-perfil.php?error=" . urlencode('Error de consulta en la base de datos.'));
-    }
-} else {
-    header("Location: ../../frontend/user-perfil.php?error=" . urlencode('Error al guardar la imagen físicamente en el servidor.'));
+if (!move_uploaded_file($fileTmpName, $fileDestination)) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "Error al guardar imagen"
+    ]);
+    exit();
 }
-?>
+
+// Ruta para frontend
+$dbPath = 'assets/compiled/jpg/avatars/' . $newFileName;
+
+// 🧠 3. ACTUALIZAR BD
+$stmt = $conn->prepare("UPDATE usuario SET foto_perfil = ? WHERE id_usuario = ?");
+$stmt->bind_param("si", $dbPath, $userId);
+
+if (!$stmt->execute()) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "Error en BD"
+    ]);
+    exit();
+}
+
+// Guardar en sesión
+$_SESSION['user_avatar'] = $dbPath;
+
+// RESPUESTA FINAL
+echo json_encode([
+    "status" => "success",
+    "avatar_url" => $dbPath
+]);
+exit();

@@ -91,28 +91,28 @@ require_once '../../backend/componentes/notificaciones_logic.php';
                         <li class="sidebar-title">Menú Principal</li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">
-                            <a href="index.php" class="sidebar-link">
+                            <a href="user/index.php" class="sidebar-link">
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Inicio</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-agendar-cita.php' ? 'active' : '' ?>">
-                            <a href="user-agendar-cita.php" class="sidebar-link">
+                            <a href="user/user-agendar-cita.php" class="sidebar-link">
                                 <i class="bi bi-calendar-plus-fill"></i>
                                 <span>Nueva Cita</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-historial.php' ? 'active' : '' ?>">
-                            <a href="user-historial.php" class="sidebar-link">
+                            <a href="user/user-historial.php" class="sidebar-link">
                                 <i class="bi bi-clock-history"></i>
                                 <span>Historial Citas</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
-                            <a href="user-perfil.php" class="sidebar-link">
+                            <a href="shared/user-perfil.php" class="sidebar-link">
                                 <i class="bi bi-person-fill"></i>
                                 <span>Perfil</span>
                             </a>
@@ -195,7 +195,7 @@ require_once '../../backend/componentes/notificaciones_logic.php';
                                 <?php endif; ?>
                             </ul>
                         </div>
-                        <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
+                        <a href="shared/user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
                             <div class="avatar avatar-sm border border-2 border-primary d-flex align-items-center justify-content-center overflow-hidden" style="background: white; border-radius: 50%; min-width: 32px; min-height: 32px;">
                                 <img src="<?= htmlspecialchars($avatarUsuario) ?>" id="top-nav-avatar" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover;">
                             </div>
@@ -220,7 +220,7 @@ require_once '../../backend/componentes/notificaciones_logic.php';
                             <div class="card-body p-4 p-md-5">
                                 <h2 class="font-bold mb-2" style="color: white !important;">¡Buen día, <span style="color: var(--utm-accent) !important;"><?= htmlspecialchars($nombreEstudiante) ?></span>!</h2>
                                 <p class="fs-5 mb-4 fw-medium" style="color: rgba(255,255,255,0.85);">Ten un excelente día usando UTMedic para tus citas médicas.</p>
-                                <a href="user-agendar-cita.php" class="btn px-4 py-2 fw-bold"
+                                <a href="user/user-agendar-cita.php" class="btn px-4 py-2 fw-bold"
                                     style="border-radius: 50px; background-color: transparent; border: 1px solid var(--utm-accent); color: var(--utm-accent) !important; transition: all 0.3s;"
                                     onmouseover="this.style.backgroundColor='var(--utm-accent)'; this.style.color='#005461';"
                                     onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--utm-accent)';">
@@ -268,7 +268,12 @@ require_once '../../backend/componentes/notificaciones_logic.php';
                                                                         <i class="bi bi-person me-2"></i>
                                                                         <span><?= htmlspecialchars($citasFront[$i]['profesional']) ?> (<?= htmlspecialchars($citasFront[$i]['especialidad']) ?>)</span>
                                                                     </div>
-                                                                    <button class="btn btn-primary btn-sm w-100 fw-bold text-white px-4" style="border-radius: 50px; background-color: var(--utm-accent); border-color: var(--utm-accent);">Ver Detalles</button>
+                                                                    <a href="user/user-historial.php"
+                                                                        class="btn btn-primary btn-sm w-100 fw-bold text-white px-4"
+                                                                        style="border-radius: 50px;">
+
+                                                                        Ver Detalles
+                                                                    </a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -289,7 +294,11 @@ require_once '../../backend/componentes/notificaciones_logic.php';
                                                                             <i class="bi bi-person me-2"></i>
                                                                             <span><?= htmlspecialchars($citasFront[$i + 1]['profesional']) ?> (<?= htmlspecialchars($citasFront[$i + 1]['especialidad']) ?>)</span>
                                                                         </div>
-                                                                        <button class="btn btn-primary btn-sm w-100 fw-bold text-white px-4" style="border-radius: 50px; background-color: var(--utm-accent); border-color: var(--utm-accent);">Ver Detalles</button>
+                                                                        <a href="user/user-historial.php"
+                                                                            class="btn btn-primary btn-sm w-100 fw-bold text-white px-4"
+                                                                            style="border-radius: 50px;">
+                                                                            Ver Detalles
+                                                                        </a>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -364,54 +373,80 @@ require_once '../../backend/componentes/notificaciones_logic.php';
                             </div>
                         </div>
 
-                        <!-- Rotating Announcements -->
+                        <!-- Tips / Avisos -->
                         <div class="card shadow-sm border-0" style="border-radius: 1rem;">
                             <div class="card-header bg-transparent border-0 pt-4 pb-2 text-center">
-                                <h6 class="font-bold mb-0">Jornadas de Vacunación / Avisos</h6>
+                                <h6 class="font-bold mb-0">Consejos y Avisos UTMedic</h6>
                             </div>
                             <div class="card-body p-4">
-                                <div id="announcementsCarousel" class="carousel slide" data-bs-ride="carousel"
-                                    data-bs-interval="3000">
+                                <div id="announcementsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+
                                     <div class="carousel-inner text-center">
-                                        <!-- Announcement 1 -->
+
+                                        <!-- Tip 1 -->
                                         <div class="carousel-item active">
                                             <div class="bg-light p-3 rounded-3 mb-3">
-                                                <i class="bi bi-qr-code fs-1 text-dark"></i>
+                                                <i class="bi bi-person-check-fill fs-1 text-primary"></i>
                                             </div>
-                                            <p class="small text-muted mb-0">Campaña de vacunación contra la Influenza
-                                                este 15 de Noviembre en el edificio D. í‚¡Escanea para registrarte!</p>
+                                            <p class="small text-muted mb-0">
+                                                Completa tu perfil médico para recibir una atención más precisa en tus citas.
+                                            </p>
                                         </div>
-                                        <!-- Announcement 2 -->
+
+                                        <!-- Tip 2 -->
                                         <div class="carousel-item">
                                             <div class="bg-light p-3 rounded-3 mb-3">
-                                                <i class="bi bi-megaphone-fill fs-1 text-info"></i>
+                                                <i class="bi bi-calendar-event-fill fs-1 text-success"></i>
                                             </div>
-                                            <p class="small text-muted mb-0">Semana de la Salud Mental: Asiste a las
-                                                pláticas gratuitas en el auditorio a partir del lunes.</p>
+                                            <p class="small text-muted mb-0">
+                                                Agenda tus citas con anticipación para asegurar disponibilidad con el profesional de salud.
+                                            </p>
                                         </div>
-                                        <!-- Announcement 3 -->
+
+                                        <!-- Tip 3 -->
                                         <div class="carousel-item">
                                             <div class="bg-light p-3 rounded-3 mb-3">
-                                                <i class="bi bi-heart-pulse-fill fs-1 text-danger"></i>
+                                                <i class="bi bi-bell-fill fs-1 text-warning"></i>
                                             </div>
-                                            <p class="small text-muted mb-0">Donación de sangre: íƒÅ¡nete a la campaña
-                                                altruista y salva vidas este próximo viernes.</p>
+                                            <p class="small text-muted mb-0">
+                                                Revisa tus notificaciones para no perder cambios o recordatorios importantes.
+                                            </p>
                                         </div>
+
+                                        <!-- Tip 4 -->
+                                        <div class="carousel-item">
+                                            <div class="bg-light p-3 rounded-3 mb-3">
+                                                <i class="bi bi-clock-history fs-1 text-info"></i>
+                                            </div>
+                                            <p class="small text-muted mb-0">
+                                                Consulta tu historial de citas para llevar seguimiento de tu atención médica.
+                                            </p>
+                                        </div>
+
+                                        <!-- Tip 5 -->
+                                        <div class="carousel-item">
+                                            <div class="bg-light p-3 rounded-3 mb-3">
+                                                <i class="bi bi-exclamation-circle-fill fs-1 text-danger"></i>
+                                            </div>
+                                            <p class="small text-muted mb-0">
+                                                Cancela con anticipación si no puedes asistir a una cita y evita afectar a otros usuarios.
+                                            </p>
+                                        </div>
+
                                     </div>
-                                    <!-- Indicators/Dots mapping -->
-                                    <div class="carousel-indicators position-relative mt-3 mb-0" style="bottom: 0;">
-                                        <button type="button" data-bs-target="#announcementsCarousel"
-                                            data-bs-slide-to="0" class="active bg-secondary"></button>
-                                        <button type="button" data-bs-target="#announcementsCarousel"
-                                            data-bs-slide-to="1" class="bg-secondary"></button>
-                                        <button type="button" data-bs-target="#announcementsCarousel"
-                                            data-bs-slide-to="2" class="bg-secondary"></button>
+
+                                    <!-- Indicadores -->
+                                    <div class="carousel-indicators position-relative mt-3 mb-0">
+                                        <button type="button" data-bs-target="#announcementsCarousel" data-bs-slide-to="0" class="active bg-secondary"></button>
+                                        <button type="button" data-bs-target="#announcementsCarousel" data-bs-slide-to="1" class="bg-secondary"></button>
+                                        <button type="button" data-bs-target="#announcementsCarousel" data-bs-slide-to="2" class="bg-secondary"></button>
+                                        <button type="button" data-bs-target="#announcementsCarousel" data-bs-slide-to="3" class="bg-secondary"></button>
+                                        <button type="button" data-bs-target="#announcementsCarousel" data-bs-slide-to="4" class="bg-secondary"></button>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
-
-                    </div>
                 </section>
             </div>
 

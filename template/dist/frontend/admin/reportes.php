@@ -91,14 +91,14 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'gestionPSalud.php' ? 'active' : '' ?>">
                             <a href="admin/gestionPSalud.php" class='sidebar-link'>
                                 <i class="bi bi-people-fill"></i>
-                                <span>Gestion de Personal de Salud</span>
+                                <span>Gestión de Personal de Salud</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'gestionPacientes.php' ? 'active' : '' ?>">
                             <a href="admin/gestionPacientes.php" class='sidebar-link'>
                                 <i class="bi bi-person-lines-fill"></i>
-                                <span>Gestion de Pacientes</span>
+                                <span>Gestión de Pacientes</span>
                             </a>
                         </li>
 
@@ -156,10 +156,6 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                 </div>
                             </div>
                         </div>
-
-
-
-
 
                         <!-- Tarjeta 3: Canceladas -->
                         <div class="col-6 col-lg-3 col-md-6">
@@ -221,7 +217,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
 
                 <!-- Aqui iran las graficas mas adelante -->
                 <section class="section">
-                    <div class="row g-4"> <!-- 🔥 gap automático -->
+                    <div class="row g-4"> <!--  gap automático -->
 
                         <div class="col-12 col-lg-6">
                             <div class="card p-3">
@@ -329,10 +325,18 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                     data.emergencias || 0
                 ],
                 labels: ['Atendidas', 'Agendadas', 'Canceladas', 'Emergencias'],
+                yaxis: {
+                    stepSize: 1,    
+                    labels: {
+                        formatter: function(val) {
+                            return Math.floor(val); // O simplemente return val.toFixed(0);
+                        }
+                    }
+                },
                 dataLabels: {
                     enabled: true,
-                    formatter: function(val) {
-                        return val.toFixed(1) + "%";
+                    formatter: function(val, opts) {
+                        return opts.w.globals.series[opts.seriesIndex];
                     }
                 },
                 title: {
@@ -468,7 +472,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                     };
 
                     var chart = new ApexCharts(
-                        document.querySelector("#chartCarreras"), // 🔥 FIX REAL
+                        document.querySelector("#chartCarreras"),
                         options
                     );
 

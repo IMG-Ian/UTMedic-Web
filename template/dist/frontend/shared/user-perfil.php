@@ -1,47 +1,7 @@
 <?php
-header('Content-Type: text/html; charset=utf-8');
-// Iniciar sesión para recuperar datos del usuario
-session_start();
-
-// Validar si el usuario está autenticado
-if (!isset($_SESSION['user_id'])) {
-    header("Location: auth-login.php");
-    exit();
-}
-
 require_once __DIR__ . '/../../backend/config/conexion.php';
 require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
-
-
-$userId = $_SESSION['user_id'];
-$userData = [];
-
-// Obtener datos frescos del usuario y paciente/profesional
-$stmt = $conn->prepare("SELECT u.*, p.matricula, p.telefono, p.carrera, p.contacto_emergencia, p.alergias, p.padecimientos 
-                        FROM usuario u 
-                        LEFT JOIN paciente p ON u.id_usuario = p.id_usuario 
-                        WHERE u.id_usuario = ?");
-$stmt->bind_param("i", $userId);
-$stmt->execute();
-$res = $stmt->get_result();
-if ($res->num_rows > 0) {
-    $userData = $res->fetch_assoc();
-}
-
-// Variables base
-$nombreEstudiante = $userData['nombre'] ?? (isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Usuario');
-$rolUsuario = isset($_SESSION['role']) ? ucfirst(strtolower($_SESSION['role'])) : 'Usuario Regular';
-$avatarUsuario = !empty($userData['foto_perfil']) ? $userData['foto_perfil'] : (isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'assets/compiled/jpg/1.jpg');
-$apellidos = trim(($userData['apellido_pat'] ?? '') . ' ' . ($userData['apellido_mat'] ?? ''));
-$correoUser = $userData['correo'] ?? '';
-$telefonoUser = $userData['telefono'] ?? '';
-$padecimientos = $userData['padecimientos'] ?? '';
-$alergias = $userData['alergias'] ?? '';
-$contacto_emerg = $userData['contacto_emergencia'] ?? '';
-// Separar contacto_emergencia si viene en formato "Nombre, Telefono"
-$arrContacto = explode(',', $contacto_emerg);
-$nombreContacto = trim($arrContacto[0] ?? '');
-$telefonoContacto = trim($arrContacto[1] ?? '');
+require_once __DIR__ . '/../../backend/controlador_perfil.php';
 
 ?>
 <!DOCTYPE html>
@@ -120,8 +80,24 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
                         <li class="sidebar-title">Menú Principal</li>
 
                         <?php if (isset($_SESSION['role']) && strtolower($_SESSION['role']) === 'profesional'): ?>
+                            <?php
+                            // 1. Determinamos la carpeta y el archivo según la especialidad
+                            $especialidad = isset($_SESSION['especialidad']) ? strtolower($_SESSION['especialidad']) : '';
+                            $folder = 'medico'; // Carpeta por defecto
+                            $file = 'dashboard-medico.php'; // Archivo por defecto
+
+                            if (strpos($especialidad, 'psicolo') !== false) {
+                                $folder = 'psicologo';
+                                $file = 'dashboard-psicologo.php';
+                            } elseif (strpos($especialidad, 'nutri') !== false) {
+                                $folder = 'nutricionista';
+                                $file = 'dashboard-nutricionista.php';
+                            }
+                            // Si es médico, ya están los valores por defecto arriba
+                            ?>
+
                             <li class="sidebar-item <?= strpos(basename($_SERVER['PHP_SELF']), 'dashboard-') !== false ? 'active' : '' ?>">
-                                <a href="dashboard-<?= isset($_SESSION['especialidad']) ? (strpos(strtolower($_SESSION['especialidad']), 'nutri') !== false ? 'nutricionista' : (strpos(strtolower($_SESSION['especialidad']), 'psicolo') !== false ? 'psicologo' : 'medico')) : 'medico' ?>.php" class="sidebar-link">
+                                <a href="<?= $folder ?>/<?= $file ?>" class="sidebar-link">
                                     <i class="bi bi-house-door-fill"></i>
                                     <span>Inicio</span>
                                 </a>
@@ -324,12 +300,13 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
                                                             style="border-radius: 8px; padding: 0.6rem 1rem; border: 2px solid #dee2e6;"
                                                             value="<?= htmlspecialchars($correoUser) ?>">
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <label class="form-label fw-bold text-dark small mb-1">Teléfono Móvil</label>
-                                                        <input type="tel" class="form-control" id="perfilTelefono"
-                                                            style="border-radius: 8px; padding: 0.6rem 1rem; border: 2px solid #dee2e6;"
-                                                            value="<?= htmlspecialchars($telefonoUser) ?>">
-                                                    </div>
+                                                    <?php if (!isset($_SESSION['role']) || strtolower($_SESSION['role']) !== 'profesional'): ?>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label fw-bold text-dark small mb-1">Teléfono Móvil</label>
+                                                            <input type="tel" class="form-control" id="perfilTelefono"
+                                                                value="<?= htmlspecialchars($telefonoUser) ?>">
+                                                        </div>
+                                                    <?php endif; ?>
                                                 </div>
 
                                                 <?php if (isset($_SESSION['role']) && strtolower($_SESSION['role']) !== 'profesional'): ?>
@@ -468,11 +445,11 @@ $telefonoContacto = trim($arrContacto[1] ?? '');
             alertDiv.className = 'alert d-none';
             if (btn) btn.disabled = true;
             if (btn) btn.innerText = 'Guardando...';
-
+            const telefonoInput = document.getElementById('perfilTelefono');                                        
             const payload = {
                 nombre: document.getElementById('perfilNombre').value,
                 correo: document.getElementById('perfilCorreo').value,
-                telefono: document.getElementById('perfilTelefono').value,
+                telefono: telefonoInput ? telefonoInput.value : null,
                 padecimientos: document.getElementById('perfilPadecimientos') ? document.getElementById('perfilPadecimientos').value : '',
                 alergias: document.getElementById('perfilAlergias') ? document.getElementById('perfilAlergias').value : '',
                 contacto_nombre: document.getElementById('perfilContactoNombre') ? document.getElementById('perfilContactoNombre').value : '',

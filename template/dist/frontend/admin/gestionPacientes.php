@@ -1,11 +1,12 @@
+<!DOCTYPE html>
 <?php
-header('Content-Type: text/html; charset=utf-8');
-// Importar el escudo protector de rutas validando que sea Administrador (Profesional en BD)
-require_once __DIR__ . '/../../backend/auth_admin.php';
+session_start();
+if (!isset($_SESSION['user_id']) || !in_array(strtolower($_SESSION['role'] ?? ''), ['administrador', 'admin'])) {
+    header('Location: ../auth-login.php');
+    exit();
+}
 require_once __DIR__ . '/../../backend/config/paths.php';
 ?>
-<!DOCTYPE html>
-<?php require_once '../../backend/config/paths.php'; ?>
 <html lang="en">
 
 <head>
@@ -33,6 +34,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
 
 <body>
     <script src="assets/static/js/initTheme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <div id="app">
         <div id="sidebar">
             <div class="sidebar-wrapper active">
@@ -123,7 +125,8 @@ require_once __DIR__ . '/../../backend/config/paths.php';
         </div>
         <div id="main">
             <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none" onclick="event.preventDefault();"> <i class="bi bi-justify fs-3"></i>
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
 
@@ -165,7 +168,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                             <div
                                                 class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
                                                 <div class="stats-icon icon-card mb-2">
-                                                    <i class="bi bi-person-fill"></i>
+                                                    <i class="bi bi-person-check-fill"></i>
                                                 </div>
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
@@ -183,7 +186,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                             <div
                                                 class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
                                                 <div class="stats-icon icon-card mb-2">
-                                                    <i class="bi bi-calendar2-event"></i>
+                                                    <i class="bi bi-person-fill-exclamation"></i>
                                                 </div>
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
@@ -472,7 +475,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
 
                                 if (carrera) {
                                     filtrados = filtrados.filter(p =>
-                                        p.carrera.toLowerCase() === carrera
+                                        (p.carrera || '').toLowerCase() === carrera
                                     );
                                 }
 
@@ -487,6 +490,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                 dataTable = new simpleDatatables.DataTable(table, {
                                     labels: {
                                         placeholder: "Busca nombre, matrícula, correo...",
+                                        perPage: "Registros por página",
                                         noRows: "No hay datos disponibles",
                                         noResults: "No se encontraron resultados",
                                         info: "Mostrando {start} a {end} de {rows} registros"
@@ -494,16 +498,16 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                 });
 
                                 const mappedData = data.map(p => {
-                                    const nombre = `${p.nombre} ${p.apellido_pat} ${p.apellido_mat}`;
-                                    const estado = p.estado.toLowerCase();
+                                    const nombre = `${p.nombre || ''} ${p.apellido_pat || ''} ${p.apellido_mat || ''}`.trim();
+                                    const estado = (p.estado || 'Desconocido').toLowerCase();
                                     const estadoTexto = (estado === 'activo') ? 'act' : 'inact';
 
                                     return [
                                         p.id_paciente,
                                         nombre,
-                                        p.correo,
-                                        p.matricula,
-                                        p.carrera.toUpperCase(),
+                                        p.correo || '',
+                                        p.matricula || '',
+                                        (p.carrera || 'N/A').toUpperCase(),
                                         p.telefono || 'N/A',
                                         p.contacto_emergencia || 'N/A',
                                         p.alergias || 'N/A',

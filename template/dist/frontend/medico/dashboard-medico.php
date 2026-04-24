@@ -3,7 +3,10 @@ header('Content-Type: text/html; charset=utf-8');
 // Importar el escudo protector de rutas validando que sea Médico (Profesional en BD)
 require_once __DIR__ . '/../../backend/auth_medico.php';
 require_once __DIR__ . '/../../backend/config/paths.php';
-require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';?>
+require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
+require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -130,29 +133,56 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';?>
                     <h3>Panel del Médico</h3>
                     <div class="d-flex align-items-center gap-3">
                         <div class="dropdown">
-                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">1</span>
+                                <?php if (isset($unreadCount) && $unreadCount > 0): ?>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;"><?= $unreadCount ?></span>
+                                <?php endif; ?>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px;">
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px; max-height: 400px; overflow-y: auto; overflow-x: hidden;">
                                 <li>
-                                    <h6 class="dropdown-header font-bold text-dark">Notificaciones</h6>
+                                    <h6 class="dropdown-header font-bold text-dark d-flex justify-content-between align-items-center pb-2">
+                                        Notificaciones
+                                    </h6>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item d-flex align-items-center py-2 rounded" href="#" style="white-space: normal;">
-                                        <div class="bg-info text-white rounded-circle p-2 me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 35px; height: 35px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-                                                <line x1="12" y1="9" x2="12" y2="13"></line>
-                                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 text-sm font-bold text-dark">Llamado de Emergencia</h6>
-                                            <p class="mb-0 text-xs text-muted" style="font-size: 0.8rem;">Paciente registrado hace 5 mins.</p>
-                                        </div>
-                                    </a>
-                                </li>
+                                <?php if (empty($notificacionesList)): ?>
+                                    <li>
+                                        <div class="dropdown-item text-muted text-center py-4" style="font-size: 0.9rem; white-space: normal;">No tienes notificaciones recientes.</div>
+                                    </li>
+                                <?php else: ?>
+                                    <?php foreach ($notificacionesList as $notif):
+                                        $icon = 'bi-info-circle';
+                                        $bgClass = 'bg-secondary';
+                                        if ($notif['tipo'] === 'nueva_cita') {
+                                            $icon = 'bi-calendar-plus';
+                                            $bgClass = 'bg-primary';
+                                        }
+                                        if ($notif['tipo'] === 'cancelacion') {
+                                            $icon = 'bi-calendar-x';
+                                            $bgClass = 'bg-danger';
+                                        }
+                                        if ($notif['tipo'] === 'completada') {
+                                            $icon = 'bi-check-circle';
+                                            $bgClass = 'bg-success';
+                                        }
+
+                                        $opacity = $notif['leida'] == 0 ? '1' : '0.7';
+                                        $fontWeight = $notif['leida'] == 0 ? 'font-bold text-dark' : 'text-muted fw-semibold';
+                                    ?>
+                                        <li>
+                                            <div class="dropdown-item d-flex align-items-start py-3 rounded mt-1 border-bottom" style="white-space: normal; opacity: <?= $opacity ?>; min-width: 280px; text-decoration: none;">
+                                                <div class="<?= $bgClass ?> text-white rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px; font-size: 1.25rem;">
+                                                    <i class="bi <?= $icon ?>" style="line-height: 0;"></i>
+                                                </div>
+                                                <div style="min-width: 0; flex: 1;">
+                                                    <h6 class="mb-1 text-sm <?= $fontWeight ?>" style="white-space: normal; word-wrap: break-word; line-height: 1.3;"><?= htmlspecialchars($notif['titulo']) ?></h6>
+                                                    <p class="mb-1 text-xs text-muted" style="font-size: 0.8rem; white-space: normal; word-wrap: break-word; line-height: 1.4;"><?= htmlspecialchars($notif['mensaje']) ?></p>
+                                                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem; font-weight: 500;"><?= date('d M Y H:i', strtotime($notif['fecha_creacion'])) ?></small>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </ul>
                         </div>
                         <a href="shared/user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
@@ -503,5 +533,23 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';?>
 
 
 </body>
+<!-- Notificaciones Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let bellNodes = document.querySelectorAll('a[data-bs-toggle="dropdown"] i.bi-bell-fill');
+        bellNodes.forEach(icon => {
+            let toggle = icon.closest('a');
+            if (toggle) {
+                toggle.addEventListener('hidden.bs.dropdown', function() {
+                    let badge = toggle.querySelector('.bg-danger');
+                    if (badge) badge.remove();
+                    fetch('../../backend/api/accion_leer_notificaciones.php', {
+                        method: 'POST'
+                    }).catch(e => console.error(e));
+                });
+            }
+        });
+    });
+</script>
 
 </html>

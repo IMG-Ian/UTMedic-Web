@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once 'conexion.php';
+require_once '../config/conexion.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 if (!$data) {

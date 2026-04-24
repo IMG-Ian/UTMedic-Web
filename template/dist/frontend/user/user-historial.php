@@ -2,6 +2,8 @@
 header('Content-Type: text/html; charset=utf-8');
 session_start();
 require_once __DIR__ . '/../../backend/api/obtener_historial_citas.php';
+require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth-login.php");
     exit();
@@ -30,7 +32,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/app-dark.css">
     <link rel="stylesheet" crossorigin href="./assets/compiled/css/iconly.css">
-        <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="assets/css/utmedic-global.css?v=<?= time() ?>">
     <link rel="stylesheet" href="assets/css/utmedic-dashboard.css?v=<?= time() ?>">
 </head>
 
@@ -42,7 +44,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 <div class="sidebar-header position-relative px-4 py-3">
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
-                            <a href="index.php" class="text-decoration-none">
+                            <a href="user/index.php" class="text-decoration-none">
                                 <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
@@ -86,28 +88,28 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                         <li class="sidebar-title">Menú Principal</li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">
-                            <a href="index.php" class="sidebar-link">
+                            <a href="user/index.php" class="sidebar-link">
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Inicio</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-agendar-cita.php' ? 'active' : '' ?>">
-                            <a href="user-agendar-cita.php" class="sidebar-link">
+                            <a href="user/user-agendar-cita.php" class="sidebar-link">
                                 <i class="bi bi-calendar-plus-fill"></i>
                                 <span>Nueva Cita</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-historial.php' ? 'active' : '' ?>">
-                            <a href="user-historial.php" class="sidebar-link">
+                            <a href="user/user-historial.php" class="sidebar-link">
                                 <i class="bi bi-clock-history"></i>
                                 <span>Historial Citas</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
-                            <a href="user-perfil.php" class="sidebar-link">
+                            <a href="shared/user-perfil.php" class="sidebar-link">
                                 <i class="bi bi-person-fill"></i>
                                 <span>Perfil</span>
                             </a>
@@ -137,16 +139,11 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3>Historial de Citas</h3>
                     <div class="d-flex align-items-center gap-3">
-                                                
-                                                
-                                                
-                                                
-                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
                             <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
-                                <?php if(isset($unreadCount) && $unreadCount > 0): ?>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;"><?= $unreadCount ?></span>
+                                <?php if (isset($unreadCount) && $unreadCount > 0): ?>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;"><?= $unreadCount ?></span>
                                 <?php endif; ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" aria-labelledby="dropdownMenuButton" style="width: 300px; padding: 10px; max-height: 400px; overflow-y: auto; overflow-x: hidden;">
@@ -155,36 +152,47 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                         Notificaciones
                                     </h6>
                                 </li>
-                                <?php if(empty($notificacionesList)): ?>
-                                    <li><div class="dropdown-item text-muted text-center py-4" style="font-size: 0.9rem; white-space: normal;">No tienes notificaciones recientes.</div></li>
+                                <?php if (empty($notificacionesList)): ?>
+                                    <li>
+                                        <div class="dropdown-item text-muted text-center py-4" style="font-size: 0.9rem; white-space: normal;">No tienes notificaciones recientes.</div>
+                                    </li>
                                 <?php else: ?>
-                                    <?php foreach($notificacionesList as $notif): 
+                                    <?php foreach ($notificacionesList as $notif):
                                         $icon = 'bi-info-circle';
                                         $bgClass = 'bg-secondary';
-                                        if($notif['tipo'] === 'nueva_cita') { $icon = 'bi-calendar-plus'; $bgClass = 'bg-primary'; }
-                                        if($notif['tipo'] === 'cancelacion') { $icon = 'bi-calendar-x'; $bgClass = 'bg-danger'; }
-                                        if($notif['tipo'] === 'completada') { $icon = 'bi-check-circle'; $bgClass = 'bg-success'; }
-                                        
+                                        if ($notif['tipo'] === 'nueva_cita') {
+                                            $icon = 'bi-calendar-plus';
+                                            $bgClass = 'bg-primary';
+                                        }
+                                        if ($notif['tipo'] === 'cancelacion') {
+                                            $icon = 'bi-calendar-x';
+                                            $bgClass = 'bg-danger';
+                                        }
+                                        if ($notif['tipo'] === 'completada') {
+                                            $icon = 'bi-check-circle';
+                                            $bgClass = 'bg-success';
+                                        }
+
                                         $opacity = $notif['leida'] == 0 ? '1' : '0.7';
                                         $fontWeight = $notif['leida'] == 0 ? 'font-bold text-dark' : 'text-muted fw-semibold';
                                     ?>
-                                    <li>
-                                        <div class="dropdown-item d-flex align-items-start py-3 rounded mt-1 border-bottom" style="white-space: normal; opacity: <?= $opacity ?>; min-width: 280px; text-decoration: none;">
-                                            <div class="<?= $bgClass ?> text-white rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px; font-size: 1.25rem;">
-                                                <i class="bi <?= $icon ?>" style="line-height: 0;"></i>
+                                        <li>
+                                            <div class="dropdown-item d-flex align-items-start py-3 rounded mt-1 border-bottom" style="white-space: normal; opacity: <?= $opacity ?>; min-width: 280px; text-decoration: none;">
+                                                <div class="<?= $bgClass ?> text-white rounded-circle me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px; font-size: 1.25rem;">
+                                                    <i class="bi <?= $icon ?>" style="line-height: 0;"></i>
+                                                </div>
+                                                <div style="min-width: 0; flex: 1;">
+                                                    <h6 class="mb-1 text-sm <?= $fontWeight ?>" style="white-space: normal; word-wrap: break-word; line-height: 1.3;"><?= htmlspecialchars($notif['titulo']) ?></h6>
+                                                    <p class="mb-1 text-xs text-muted" style="font-size: 0.8rem; white-space: normal; word-wrap: break-word; line-height: 1.4;"><?= htmlspecialchars($notif['mensaje']) ?></p>
+                                                    <small class="text-muted d-block mt-1" style="font-size: 0.7rem; font-weight: 500;"><?= date('d M Y H:i', strtotime($notif['fecha_creacion'])) ?></small>
+                                                </div>
                                             </div>
-                                            <div style="min-width: 0; flex: 1;">
-                                                <h6 class="mb-1 text-sm <?= $fontWeight ?>" style="white-space: normal; word-wrap: break-word; line-height: 1.3;"><?= htmlspecialchars($notif['titulo']) ?></h6>
-                                                <p class="mb-1 text-xs text-muted" style="font-size: 0.8rem; white-space: normal; word-wrap: break-word; line-height: 1.4;"><?= htmlspecialchars($notif['mensaje']) ?></p>
-                                                <small class="text-muted d-block mt-1" style="font-size: 0.7rem; font-weight: 500;"><?= date('d M Y H:i', strtotime($notif['fecha_creacion'])) ?></small>
-                                            </div>
-                                        </div>
-                                    </li>
+                                        </li>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </ul>
                         </div>
-                        <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
+                        <a href="shared/user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
                             <div class="avatar avatar-sm border border-2 border-primary d-flex align-items-center justify-content-center overflow-hidden" style="background: white; border-radius: 50%; min-width: 32px; min-height: 32px;">
                                 <img src="<?= htmlspecialchars($avatarUsuario) ?>" id="top-nav-avatar" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover; color: transparent; text-indent: -9999px;">
                             </div>
@@ -205,6 +213,13 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                             <h5 class="font-bold mb-0">Mis Consultas Anteriores</h5>
                         </div>
                         <div class="card-body p-4">
+                            <!-- Filtros de citas -->
+                            <div class="d-flex flex-wrap gap-2 mb-4" id="tableFilters">
+                                <button class="btn btn-outline-secondary rounded-pill px-4 fw-bold filter-btn active" data-filter="">Todas</button>
+                                <button class="btn btn-outline-info text-dark rounded-pill px-4 fw-bold filter-btn" data-filter="Agendada">Agendadas</button>
+                                <button class="btn btn-outline-success rounded-pill px-4 fw-bold filter-btn" data-filter="Atendida">Atendidas</button>
+                                <button class="btn btn-outline-danger rounded-pill px-4 fw-bold filter-btn" data-filter="Cancelada">Canceladas</button>
+                            </div>
                             <div class="table-responsive">
                                 <table class="table table-hover mb-0" id="historialTable">
                                     <thead class="text-muted" style="background-color: rgba(1, 135, 144, 0.05);">
@@ -218,46 +233,48 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if(empty($citas)): ?>
-                                            <tr><td colspan="6" class="text-center py-4 text-muted">Aún no tienes consultas registradas.</td></tr>
+                                        <?php if (empty($citas)): ?>
+                                            <tr>
+                                                <td colspan="6" class="text-center py-4 text-muted">Aún no tienes consultas registradas.</td>
+                                            </tr>
                                         <?php else: ?>
-                                            <?php foreach ($citas as $cita): 
+                                            <?php foreach ($citas as $cita):
                                                 $fechaArr = explode("-", $cita["fecha"]);
-                                                $formattedDate = isset($fechaArr[2]) ? $fechaArr[2]."/".$fechaArr[1]."/".$fechaArr[0] : $cita["fecha"];
-                                                
+                                                $formattedDate = isset($fechaArr[2]) ? $fechaArr[2] . "/" . $fechaArr[1] . "/" . $fechaArr[0] : $cita["fecha"];
+
                                                 $horaParts = explode(":", $cita["hora"]);
                                                 $hour = (int)$horaParts[0];
                                                 $minute = $horaParts[1] ?? "00";
                                                 $suffix = $hour >= 12 ? "PM" : "AM";
                                                 $formattedHour = str_pad((($hour % 12) ?: 12), 2, "0", STR_PAD_LEFT);
                                                 $formattedTime = "$formattedHour:$minute $suffix";
-                                                
+
                                                 $badgeClass = "bg-primary";
-                                                if($cita["estado"] === "cancelada") $badgeClass = "bg-danger";
-                                                if($cita["estado"] === "atendida" || $cita["estado"] === "completada") $badgeClass = "bg-success";
-                                                if($cita["estado"] === "agendada") $badgeClass = "bg-info text-dark";
-                                                
+                                                if ($cita["estado"] === "cancelada") $badgeClass = "bg-danger";
+                                                if ($cita["estado"] === "atendida" || $cita["estado"] === "completada") $badgeClass = "bg-success";
+                                                if ($cita["estado"] === "agendada") $badgeClass = "bg-info text-dark";
+
                                                 $docName = $cita["doctor_nombre"] ? ($cita["doctor_nombre"] . " (" . $cita["doctor_especialidad"] . ")") : "Sin asignar";
-                                                $obs = current(explode("\n", trim($cita["observaciones"])));
+                                                $obs = current(explode("\n", trim($cita["observaciones"] ?? '')));
                                                 $obs = $obs ? htmlspecialchars($obs) : "Ningún motivo registrado.";
                                             ?>
-                                            <tr>
-                                                <td class="align-middle fw-semibold"><?= $formattedDate ?></td>
-                                                <td class="align-middle text-muted"><?= $formattedTime ?></td>
-                                                <td class="align-middle"><?= htmlspecialchars($docName) ?></td>
-                                                <td class="align-middle"><span class="d-inline-block text-truncate" style="max-width: 150px;"><?= $obs ?></span></td>
-                                                <td class="align-middle"><span class="badge <?= $badgeClass ?> px-3 py-2 rounded-pill"><?= htmlspecialchars(ucfirst($cita["estado"])) ?></span></td>
-                                                <td class="align-middle">
-                                                    <button class="btn btn-sm btn-outline-info rounded-pill px-3 ver-detalles-btn"
+                                                <tr>
+                                                    <td class="align-middle fw-semibold"><?= $formattedDate ?></td>
+                                                    <td class="align-middle text-muted"><?= $formattedTime ?></td>
+                                                    <td class="align-middle"><?= htmlspecialchars($docName) ?></td>
+                                                    <td class="align-middle"><span class="d-inline-block text-truncate" style="max-width: 150px;"><?= $obs ?></span></td>
+                                                    <td class="align-middle"><span class="badge <?= $badgeClass ?> px-3 py-2 rounded-pill"><?= htmlspecialchars(ucfirst($cita["estado"])) ?></span></td>
+                                                    <td class="align-middle">
+                                                        <button class="btn btn-sm btn-outline-info rounded-pill px-3 ver-detalles-btn"
                                                             data-fecha-hora="<?= $formattedDate ?> a las <?= $formattedTime ?>"
                                                             data-doctor="<?= htmlspecialchars($docName) ?>"
                                                             data-estado="<?= htmlspecialchars(ucfirst($cita["estado"])) ?>"
                                                             data-motivo="<?= htmlspecialchars($cita["observaciones"] ?: "Ningún motivo registrado.") ?>"
                                                             data-notas="<?= htmlspecialchars($cita["notas_medicas"] ?: "No hay notas médicas disponibles para esta cita.") ?>">
-                                                        Ver Detalles
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                                            Ver Detalles
+                                                        </button>
+                                                    </td>
+                                                </tr>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </tbody>
@@ -276,7 +293,7 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                 </div>
             </footer>
         </div>
-        
+
         <!-- Modal para ver Observaciones Completas -->
         <div class="modal fade" id="citaDetallesModal" tabindex="-1" aria-labelledby="citaDetallesModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -331,9 +348,10 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
             // Inicializar DataTable síncrono
             const table = document.querySelector('#historialTable');
             if (table) {
-                new simpleDatatables.DataTable(table, {
+                const dataTable = new simpleDatatables.DataTable(table, {
                     searchable: true,
                     fixedHeight: true,
+                    sortable: false,
                     labels: {
                         placeholder: "Buscar cita...",
                         searchTitle: "Buscar dentro de la tabla",
@@ -344,11 +362,36 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
                         noResults: "No hay resultados que coincidan",
                     }
                 });
+                // Lógica de Filtros por Píldoras
+                const filterBtns = document.querySelectorAll('.filter-btn');
+                filterBtns.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        // Remover clase active de todos
+                        filterBtns.forEach(b => {
+                            b.classList.remove('active');
+                            // Quitar text-white de info si estaba activa
+                            if (b.classList.contains('btn-outline-info')) {
+                                b.classList.add('text-dark');
+                            }
+                        });
+
+                        // Añadir active al presionado
+                        const target = e.currentTarget;
+                        target.classList.add('active');
+                        if (target.classList.contains('btn-outline-info')) {
+                            target.classList.remove('text-dark');
+                        }
+
+                        // Aplicar filtro en DataTable
+                        const filterVal = target.getAttribute('data-filter');
+                        dataTable.search(filterVal);
+                    });
+                })
             }
 
             // Bind de los botones de Detalles
             const modalDetalles = new bootstrap.Modal(document.getElementById('citaDetallesModal'));
-            
+
             // Usamos delegación de eventos en caso de que DataTable redibuje el DOM
             document.body.addEventListener('click', function(e) {
                 if (e.target.closest('.ver-detalles-btn')) {
@@ -364,23 +407,24 @@ $avatarUsuario = isset($_SESSION['user_avatar']) ? $_SESSION['user_avatar'] : 'a
         });
     </script>
 
-<!-- Notificaciones Script -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    let bellNodes = document.querySelectorAll('a[data-bs-toggle="dropdown"] i.bi-bell-fill');
-    bellNodes.forEach(icon => {
-        let toggle = icon.closest('a');
-        if (toggle) {
-            toggle.addEventListener('click', function() {
-                let badge = toggle.querySelector('.bg-danger');
-                if (badge) badge.remove();
-                fetch('../backend/api/accion_leer_notificaciones.php', { method: 'POST' }).catch(e => console.error(e));
+    <!-- Notificaciones Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let bellNodes = document.querySelectorAll('a[data-bs-toggle="dropdown"] i.bi-bell-fill');
+            bellNodes.forEach(icon => {
+                let toggle = icon.closest('a');
+                if (toggle) {
+                    toggle.addEventListener('click', function() {
+                        let badge = toggle.querySelector('.bg-danger');
+                        if (badge) badge.remove();
+                        fetch('../backend/api/accion_leer_notificaciones.php', {
+                            method: 'POST'
+                        }).catch(e => console.error(e));
+                    });
+                }
             });
-        }
-    });
-});
-</script>
+        });
+    </script>
 </body>
 
 </html>
-

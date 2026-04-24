@@ -166,7 +166,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                             <div
                                                 class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
                                                 <div class="stats-icon icon-card mb-2">
-                                                    <i class="bi bi-person-fill"></i>
+                                                    <i class="bi bi-person-check-fill"></i>
                                                 </div>
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
@@ -184,7 +184,7 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                             <div
                                                 class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start">
                                                 <div class="stats-icon icon-card mb-2">
-                                                    <i class="bi bi-calendar2-event"></i>
+                                                    <i class="bi bi-person-fill-exclamation"></i>
                                                 </div>
                                             </div>
                                             <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">

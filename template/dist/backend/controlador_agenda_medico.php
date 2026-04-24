@@ -48,14 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['
                 }
             }
 
-            header("Location: ../frontend/medico-agenda.php?success=consulta_guardada");
+            header("Location: ../frontend/medico/medico-agenda.php?success=consulta_guardada");
             exit();
         } catch (Exception $e) {
-            header("Location: ../frontend/medico-agenda.php?error=guardar_consulta");
+            header("Location: ../frontend/medico/medico-agenda.php?error=guardar_consulta");
             exit();
         }
     } else {
-        header("Location: ../frontend/medico-agenda.php?error=datos_incompletos");
+        header("Location: ../frontend/medico/medico-agenda.php?error=datos_incompletos");
         exit();
     }
 }
@@ -146,4 +146,17 @@ try {
 } catch (Exception $e) {
     // Fallo silencioso: $citasDelMedico quedará vacío y se pintará el empty state en la vista.
 }
-?>
+
+// ---------------------------------------------------------
+// Obtener Pacientes para la modal de Walk-in
+// ---------------------------------------------------------
+$pacientesWalkin = [];
+try {
+    $stmtPacs = $conn->query("SELECT p.matricula, u.nombre, u.apellido_pat FROM paciente p INNER JOIN usuario u ON p.id_usuario = u.id_usuario");
+    if ($stmtPacs && $stmtPacs->num_rows > 0) {
+        while ($rPac = $stmtPacs->fetch_assoc()) {
+            $pacientesWalkin[] = $rPac;
+        }
+    }
+} catch (Exception $e) {
+}

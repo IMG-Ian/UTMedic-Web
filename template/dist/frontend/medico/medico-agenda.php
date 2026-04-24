@@ -87,14 +87,21 @@ require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
                         <li class="sidebar-title">Menú Principal</li>
 
                         <li class="sidebar-item <?= strpos(basename($_SERVER['PHP_SELF']), 'dashboard-') !== false ? 'active' : '' ?>">
-                            <a href="dashboard-<?= isset($_SESSION['especialidad']) ? (strpos(strtolower($_SESSION['especialidad']), 'nutri') !== false ? 'nutricionista' : (strpos(strtolower($_SESSION['especialidad']), 'psicolo') !== false ? 'psicologo' : 'medico')) : 'medico' ?>.php" class="sidebar-link">
-                                <i class="bi bi-house-door-fill"></i>
+                            <a href="<?= FRONTEND_URL . '/' . (
+                                            isset($_SESSION['especialidad'])
+                                            ? (strpos(strtolower($_SESSION['especialidad']), 'nutri') !== false
+                                                ? 'nutricionista/dashboard-nutricionista.php'
+                                                : (strpos(strtolower($_SESSION['especialidad']), 'psicolo') !== false
+                                                    ? 'psicologo/dashboard-psicologo.php'
+                                                    : 'medico/dashboard-medico.php'))
+                                            : 'medico/dashboard-medico.php'
+                                        ) ?>" class="sidebar-link"> <i class="bi bi-house-door-fill"></i>
                                 <span>Inicio</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-agenda.php' ? 'active' : '' ?>">
-                            <a href="medico/medico-agenda.php" class="sidebar-link">
+                            <a href="<?= url('frontend/medico/medico-agenda.php') ?>" class="sidebar-link">
                                 <i class="bi bi-calendar-check-fill"></i>
                                 <span>Agenda de Citas</span>
                             </a>
@@ -104,7 +111,7 @@ require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
 
                         <?php if (!isset($_SESSION["especialidad"]) || strpos(strtolower($_SESSION["especialidad"]), "medico") !== false): ?>
                             <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-emergencia.php' ? 'active' : '' ?>">
-                                <a href="medico/medico-emergencia.php" class="sidebar-link">
+                                <a href="<?= url('frontend/medico/medico-emergencia.php') ?>" class="sidebar-link">
                                     <i class="bi bi-exclamation-triangle-fill text-danger"></i>
                                     <span>Emergencia</span>
                                 </a>
@@ -112,7 +119,7 @@ require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
                         <?php endif; ?>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
-                            <a href="shared/user-perfil.php" class="sidebar-link">
+                            <a href="<?= url('frontend/shared/user-perfil.php') ?>" class="sidebar-link">
                                 <i class="bi bi-person-circle"></i>
                                 <span>Perfil</span>
                             </a>
@@ -120,7 +127,7 @@ require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
 
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                            <a href="<?= url('backend/logout.php') ?>" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -363,7 +370,7 @@ require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
                                                                 data-matricula="<?= htmlspecialchars($cita['matricula']) ?>"
                                                                 data-alergias="<?= htmlspecialchars($cita['alergias'] ?? 'Ninguna') ?>"
                                                                 data-padecimientos="<?= htmlspecialchars($cita['padecimientos'] ?? 'Ninguno') ?>"
-                                                                data-motivo="<?= htmlspecialchars($cita['motivo']) ?>"
+                                                                data-motivo="<?= htmlspecialchars($cita['motivo'] ?? 'Sin motivo') ?>"
                                                                 class="btn btn-sm text-white rounded-pill px-4 shadow-sm fw-bold ms-1" style="background-color: #018790; height: 38px;" title="Comenzar Consulta">
                                                                 Atender
                                                             </button>
@@ -392,7 +399,7 @@ require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
                                                                         <div class="d-flex w-100 justify-content-between mb-1">
                                                                             <small class="fw-bold text-dark"><i class="bi bi-calendar2-check text-primary me-2"></i>Consulta del <?= $fechaPasada ?></small>
                                                                         </div>
-                                                                        <p class="mb-0 text-secondary" style="font-size: 0.8rem; line-height: 1.4; border-left: 3px solid #ced4da; padding-left: 10px;"><?= nl2br(htmlspecialchars($pc['observaciones'])) ?></p>
+                                                                        <p class="mb-0 text-secondary" style="font-size: 0.8rem; line-height: 1.4; border-left: 3px solid #ced4da; padding-left: 10px;"><?= nl2br(htmlspecialchars($pc['observaciones'] ?? 'Sin observaciones')) ?></p>
                                                                     </div>
                                                                 <?php
                                                                 endforeach; ?>
@@ -794,7 +801,7 @@ require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
 
                             <div class="col-12" id="divNombreInvitado">
                                 <label class="form-label fw-bold">Nombre del Paciente <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="nombre_invitado" id="nombre_invitado" placeholder="Juan Pérez" style="border-radius: 8px;" required>
+                                <input type="text" class="form-control" name="nombre_invitado" id="nombre_invitado" placeholder="Nombre del Paciente" style="border-radius: 8px;" required>
                             </div>
 
                             <div class="col-12 d-none" id="divPacienteExistente">
@@ -802,14 +809,11 @@ require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
                                 <input type="text" class="form-control" name="matricula_paciente" id="matricula_paciente" list="pacientesWalkinList" placeholder="Escribe el nombre o matrícula..." style="border-radius: 8px;" autocomplete="off">
                                 <datalist id="pacientesWalkinList">
                                     <?php
-                                    if (isset($conn)) {
-                                        $stmtPacs = $conn->query("SELECT p.matricula, u.nombre, u.apellido_pat FROM paciente p INNER JOIN usuario u ON p.id_usuario = u.id_usuario");
-                                        if ($stmtPacs && $stmtPacs->num_rows > 0) {
-                                            while ($rPac = $stmtPacs->fetch_assoc()) {
-                                                $n = htmlspecialchars(trim($rPac['nombre'] . ' ' . $rPac['apellido_pat']));
-                                                $m = htmlspecialchars($rPac['matricula']);
-                                                echo "<option value=\"$m\">$n - Matrícula: $m</option>";
-                                            }
+                                    if (!empty($pacientesWalkin)) {
+                                        foreach ($pacientesWalkin as $rPac) {
+                                            $n = htmlspecialchars(trim($rPac['nombre'] . ' ' . $rPac['apellido_pat']));
+                                            $m = htmlspecialchars($rPac['matricula']);
+                                            echo "<option value=\"$m\">$n - Matrícula: $m</option>";
                                         }
                                     }
                                     ?>
@@ -830,8 +834,7 @@ require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
                                 <label class="form-label fw-bold">Motivo</label>
                                 <select class="form-select" name="id_motivo" id="motivoWalkin" style="border-radius: 8px;" required>
                                     <option value="1">Consulta General</option>
-                                    <option value="2">Revisión Result.</option>
-                                    <option value="3">Urgencia Ligera</option>
+                                    <option value="2">Revisión Resultados</option>
                                 </select>
                             </div>
 
@@ -871,8 +874,15 @@ require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
 
             document.getElementById('formWalkIn').addEventListener('submit', function(e) {
                 e.preventDefault();
+
                 const formData = new FormData(this);
                 formData.append('tipo_paciente', document.getElementById('tipoPaciente').value);
+
+                // LOG: Ver qué datos se están enviando
+                console.log('Datos enviados:');
+                for (let pair of formData.entries()) {
+                    console.log(pair[0] + ': ' + pair[1]);
+                }
 
                 fetch('../backend/api/registrar_walkin.php', {
                         method: 'POST',
@@ -880,6 +890,7 @@ require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
                     })
                     .then(res => res.json())
                     .then(data => {
+                        console.log('Respuesta:', data); // LOG: Ver respuesta del servidor
                         if (data.status === 'success') {
                             Swal.fire('Éxito', 'Cita presencial registrada.', 'success').then(() => location.reload());
                         } else {
@@ -887,8 +898,8 @@ require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
                         }
                     })
                     .catch(err => {
-                        console.error(err);
-                        Swal.fire('Error', 'Ocurrió un error en la conexión.', 'error');
+                        console.error('Error detallado:', err);
+                        Swal.fire('Error', 'Ocurrió un error en la conexión: ' + err.message, 'error');
                     });
             });
         });

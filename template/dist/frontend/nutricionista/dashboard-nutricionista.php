@@ -2,7 +2,9 @@
 header('Content-Type: text/html; charset=utf-8');
 // Importar el escudo protector de rutas validando que sea Médico (Profesional en BD)
 require_once __DIR__ . '/../../backend/auth_medico.php';
+require_once __DIR__ . '/../../backend/config/paths.php';
 require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
+require_once __DIR__ . '/../../backend/componentes/notificaciones_logic.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +13,7 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
     <base href="../">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Mazer Admin Dashboard</title>
+    <title>Dashboard - Nutricionista</title>
 
     <link rel="shortcut icon"
         href="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2033%2034'%20fill-rule='evenodd'%20stroke-linejoin='round'%20stroke-miterlimit='2'%20xmlns:v='https://vecta.io/nano'%3e%3cpath%20d='M3%2027.472c0%204.409%206.18%205.552%2013.5%205.552%207.281%200%2013.5-1.103%2013.5-5.513s-6.179-5.552-13.5-5.552c-7.281%200-13.5%201.103-13.5%205.513z'%20fill='%23435ebe'%20fill-rule='nonzero'/%3e%3ccircle%20cx='16.5'%20cy='8.8'%20r='8.8'%20fill='%2341bbdd'/%3e%3c/svg%3e"
@@ -36,7 +38,7 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
                 <div class="sidebar-header position-relative px-4 py-3">
                     <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="logo align-items-center d-flex mb-0">
-                            <a href="index.php" class="text-decoration-none">
+                            <a href="nutricionista/dashboard-nutricionista.php" class="text-decoration-none">
                                 <h3 class="mb-0 fw-bold" style="color: var(--utm-accent) !important; letter-spacing: 1px;">UTMedic</h3>
                             </a>
                         </div>
@@ -80,25 +82,21 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
                         <li class="sidebar-title">Menú Principal</li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard-nutricionista.php' ? 'active' : '' ?>">
-                            <a href="dashboard-nutricionista.php" class="sidebar-link">
+                            <a href="nutricionista/dashboard-nutricionista.php" class="sidebar-link">
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Inicio</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'medico-agenda.php' ? 'active' : '' ?>">
-                            <a href="medico-agenda.php" class="sidebar-link">
+                            <a href="medico/medico-agenda.php" class="sidebar-link">
                                 <i class="bi bi-calendar-check-fill"></i>
                                 <span>Agenda de Citas</span>
                             </a>
                         </li>
 
-
-
-
-
                         <li class="sidebar-item <?= basename($_SERVER['PHP_SELF']) == 'user-perfil.php' ? 'active' : '' ?>">
-                            <a href="user-perfil.php" class="sidebar-link">
+                            <a href="shared/user-perfil.php" class="sidebar-link">
                                 <i class="bi bi-person-circle"></i>
                                 <span>Perfil</span>
                             </a>
@@ -106,7 +104,7 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
 
                         <!-- Cierre de sesión -->
                         <li class="sidebar-item mt-5 pt-3 border-top">
-                            <a href="../backend/logout.php" class="sidebar-link text-danger">
+                            <a href="<?= BACKEND_URL ?>/logout.php" class="sidebar-link text-danger">
                                 <i class="bi bi-box-arrow-left text-danger"></i>
                                 <span>Cerrar Sesión</span>
                             </a>
@@ -118,20 +116,14 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
         </div>
         <div id="main">
             <header class="mb-3">
-                <a href="#" class="burger-btn d-block d-xl-none">
-                    <i class="bi bi-justify fs-3"></i>
+                <a href="#" class="burger-btn d-block d-xl-none" onclick="event.preventDefault();"> <i class="bi bi-justify fs-3"></i>
                 </a>
             </header>
 
             <div class="page-heading">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3>Panel de Nutricionista</h3>
+                    <h3>Panel del Nutricionista</h3>
                     <div class="d-flex align-items-center gap-3">
-
-
-
-
-                        <?php require_once '../backend/componentes/notificaciones_logic.php'; ?>
                         <div class="dropdown">
                             <a href="#" class="position-relative text-decoration-none" data-bs-toggle="dropdown" id="notifDropdownToggle" aria-expanded="false">
                                 <i class="bi bi-bell-fill fs-4 text-muted"></i>
@@ -185,13 +177,13 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
                                 <?php endif; ?>
                             </ul>
                         </div>
-                        <a href="user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
+                        <a href="shared/user-perfil.php" class="text-decoration-none d-flex align-items-center top-nav-profile-container" style="background: rgba(0,0,0,0.03); padding: 5px 15px; border-radius: 50px; border: 1px solid rgba(0,0,0,0.05); cursor: pointer;">
                             <div class="avatar avatar-sm border border-2 border-primary d-flex align-items-center justify-content-center overflow-hidden" style="background: white; border-radius: 50%; min-width: 32px; min-height: 32px;">
                                 <img src="<?= htmlspecialchars($_SESSION['user_avatar'] ?? 'assets/compiled/jpg/1.jpg') ?>" id="top-nav-avatar" alt="Avatar" style="width: 32px; height: 32px; object-fit: cover;">
                             </div>
                             <div class="ms-2">
-                                <h6 class="mb-0 fs-6 user-name-display text-dark opacity-100"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Nutricionista') ?></h6>
-                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">Nutricionista</p>
+                                <h6 class="mb-0 fs-6 user-name-display text-dark opacity-100"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Médico') ?></h6>
+                                <p class="mb-0 text-muted" style="font-size: 0.75rem;">Profesional</p>
                             </div>
                         </a>
                     </div>
@@ -205,9 +197,9 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
                         <!-- Tarjeta de Bienvenida -->
                         <div class="card mb-4 shadow-sm border-0" style="background: linear-gradient(135deg, #005461 0%, #018790 100%); border-radius: 1rem;">
                             <div class="card-body py-4 px-5">
-                                <h2 class="fw-bold mb-3" style="color: white !important;">¡Buen día, <span style="color: var(--utm-accent) !important;"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Nutricionista') ?></span>!</h2>
-                                <p class="mb-4 fs-5" style="color: rgba(255,255,255,0.85);">Ten un excelente día usando<br>utmedic para tus citas de nutricionista.</p>
-                                <a href="medico-agenda.php" class="btn rounded-pill px-4 py-2 shadow-sm fw-bold text-dark" style="background-color: var(--utm-accent); border: 1px solid var(--utm-accent); transition: all 0.3s ease;">Atender las Citas</a>
+                                <h2 class="fw-bold mb-3" style="color: white !important;">¡Buen día, <span style="color: var(--utm-accent) !important;"><?= htmlspecialchars($_SESSION['user_name'] ?? 'Médico') ?></span>!</h2>
+                                <p class="mb-4 fs-5" style="color: rgba(255,255,255,0.85);">Ten un excelente día usando<br>utmedic para tus citas médicas.</p>
+                                <a href="medico/medico-agenda.php" class="btn rounded-pill px-4 py-2 shadow-sm fw-bold text-dark" style="background-color: var(--utm-accent); border: 1px solid var(--utm-accent); transition: all 0.3s ease;">Atender las Citas</a>
                             </div>
                         </div>
 
@@ -215,7 +207,7 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
                         <div class="card shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-center mb-4">
-                                    <span class="badge rounded-pill bg-light text-dark px-4 py-2 fs-6 shadow-sm border" style="font-weight: 600;">Citas a atender</span>
+                                    <span class="badge rounded-pill bg-light text-dark px-4 py-2 fs-6 shadow-sm border" style="font-weight: 600;">Citas del día</span>
                                 </div>
 
                                 <div class="row px-2" id="citas-dia-container">
@@ -231,7 +223,7 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
                         <div class="card shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
                             <div class="card-body p-4 text-center">
                                 <h4 class="fw-bold text-dark mb-3">Citas Atendidas</h4>
-                                <div class="rounded p-2 shadow-sm border" style="border-radius: 12px !important; background: var(--bs-body-bg);">
+                                <div class="bg-white rounded p-2 shadow-sm border" style="border-radius: 12px !important;">
                                     <div id="chart-citas-pendientes"></div>
                                 </div>
                             </div>
@@ -278,22 +270,28 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
                             </div>
                         </div>
 
+                        <!-- Tarjeta Citas Pendientes -->
+                        <div class="card mb-4 shadow-sm border-0" style="background: var(--bs-card-bg); border-radius: 1rem; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);">
+                            <div class="card-body py-4 text-center">
+                                <h4 class="fw-bold text-dark mb-4 lh-base">Citas<br>Pendientes</h4>
+                                <div id="citas-atendidas-count" class="d-inline-flex align-items-center justify-content-center bg-dark text-white rounded-circle shadow-lg" style="width: 85px; height: 85px; font-size: 2.5rem; font-weight: 800; border: 4px solid #fff;">
+                                    0
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- Div movido a izquierda -->
+                </section>
+            </div>
+
+            <footer>
+                <div class="footer clearfix mb-0 text-muted pb-4">
+                    <div class="float-start">
+                        <p>2024 &copy; UTMedic</p>
                     </div>
-            </div>
-
-            <!-- Div movido a izquierda -->
-            </section>
-        </div>
-
-        <footer>
-            <div class="footer clearfix mb-0 text-muted pb-4">
-                <div class="float-start">
-                    <p>2024 &copy; UTMedic</p>
                 </div>
-            </div>
-        </footer>
-    </div>
+            </footer>
+        </div>
     </div>
     <script src="assets/static/js/components/dark.js"></script>
     <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
@@ -308,126 +306,148 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
 
     <!-- Custom ApexCharts Initialization for Doctor Dashboard -->
     <script>
-        // --- LÓGICA DEL CALENDARIO DINÁMICO ---
-        let patientAppointmentsDates = <?= json_encode($dashboardData["calendarioFechas"] ?? []) ?>;
+        // Constantes de rutas desde PHP
+        const BACKEND_URL = '<?= BACKEND_URL ?>';
+        const API_URL = '<?= API_URL ?>';
+        // --- Líƒâ€œGICA DEL CALENDARIO DINíMICO ---
+        let patientAppointmentsDates = []; // Aquí se inyectarán después desde la base de datos
         let currentDate = new Date();
 
         document.addEventListener('DOMContentLoaded', function() {
-            // 3. Renderizar ApexCharts Gráfico de Barras Citas Pendientes
-            var pendienteOptions = {
-                series: [{
-                    name: "Citas",
-                    data: <?= json_encode($dashboardData["chart"]["series"] ?? []) ?>
-                }],
-                chart: {
-                    type: "bar",
-                    height: 260,
-                    toolbar: {
-                        show: false
-                    },
-                    dropShadow: {
-                        enabled: true,
-                        top: 2,
-                        left: 0,
-                        blur: 4,
-                        opacity: 0.1
-                    }
-                },
-                colors: ["var(--utm-primary)"],
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        columnWidth: "40%",
-                        borderRadius: 5
-                    }
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                stroke: {
-                    show: true,
-                    width: 2,
-                    colors: ["transparent"]
-                },
-                xaxis: {
-                    categories: <?= json_encode($dashboardData["chart"]["labels"] ?? []) ?>,
-                    axisBorder: {
-                        show: false
-                    },
-                    axisTicks: {
-                        show: false
-                    }
-                },
-                yaxis: {
-                    title: {
-                        text: "N° Citas",
-                        style: {
-                            color: "#6c757d",
-                            fontWeight: 600
-                        }
-                    },
-                    labels: {
-                        style: {
-                            colors: "#6c757d"
-                        }
-                    },
-                    tickAmount: <?= max(($dashboardData["chart"]["series"] ?? [0])) > 5 ? 5 : max(($dashboardData["chart"]["series"] ?? [0])) ?>
-                },
-                fill: {
-                    opacity: 1
-                },
-                tooltip: {
-                    theme: "light",
-                    y: {
-                        formatter: function(val) {
-                            return val + " citas"
-                        }
-                    }
-                }
-            };
-            var chart = new ApexCharts(document.querySelector("#chart-citas-pendientes"), pendienteOptions);
-            chart.render();
 
-            renderCalendar();
+            // Cargar datos dinámicos desde API
+            fetch(`${API_URL}/obtener_dashboard_medico.php?t=${new Date().getTime()}`, {
+                    cache: 'no-store'
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.status === 'success') {
+                        const data = result.data;
 
-            // Rellenar dinámicamente Citas del Día y Pendientes
-            const dashboardDataObj = <?= json_encode($dashboardData ?? []) ?>;
-            const citasContainer = document.getElementById('citas-dia-container');
-            const countContainer = document.getElementById('citas-atendidas-count');
+                        // 1. Llenar Citas Pendientes (numérico)
+                        document.getElementById('citas-atendidas-count').innerText = data.totalPendientes;
 
-            if (countContainer) {
-                countContainer.innerText = dashboardDataObj.totalPendientes ?? 0;
-            }
-
-            if (citasContainer) {
-                if (!dashboardDataObj.citasDia || dashboardDataObj.citasDia.length === 0) {
-                    citasContainer.innerHTML = '<div class="col-12 text-center text-muted py-4"><i class="bi bi-calendar-x opacity-50 mb-3" style="font-size: 2rem;"></i><p class="mb-0">No hay citas para hoy.</p></div>';
-                } else {
-                    let html = '';
-                    dashboardDataObj.citasDia.forEach(cita => {
-                        html += `
-                        <div class="col-12 col-md-6 col-lg-5 mb-4">
-                            <div class="card h-100 border-0 shadow-sm" style="background: var(--utm-accent); color: white; border-radius: 0.8rem;">
-                                <div class="card-body p-4">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h5 class="text-white font-bold mb-0">Cita Médica</h5>
+                        // 2. Pintar Citas del Día
+                        const citasContainer = document.getElementById('citas-dia-container');
+                        if (data.citasDia.length > 0) {
+                            let html = '';
+                            data.citasDia.forEach(cita => {
+                                html += `
+                                    <div class="col-md-8 mx-auto mb-3">
+                                        <div class="card border-0 mb-0 shadow-sm" style="background: var(--utm-accent); color: white; border-radius: 0.8rem;">
+                                            <div class="card-body p-4">
+                                                <h5 class="text-white font-bold mb-3">Cita Médica</h5>
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <i class="bi bi-clock me-2"></i>
+                                                    <span>${cita.horario}</span>
+                                                </div>
+                                                <div class="d-flex align-items-center mb-4">
+                                                    <i class="bi bi-person me-2"></i>
+                                                    <span>${cita.paciente}</span>
+                                                </div>
+                                                <a href="medico/medico-agenda.php" class="btn btn-light btn-sm w-100 fw-bold text-dark" style="border-radius: 50px;">Ver Detalles</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="d-flex align-items-center mb-2" style="color: rgba(255, 255, 255, 0.9);">
-                                        <i class="bi bi-clock me-2"></i>
-                                        <span>${cita.horario}</span>
-                                    </div>
-                                    <div class="d-flex align-items-center mb-4" style="color: rgba(255, 255, 255, 0.9);">
-                                        <i class="bi bi-person me-2"></i>
-                                        <span>${cita.paciente}</span>
-                                    </div>
-                                    <a href="medico-agenda.php" class="btn btn-sm w-100 fw-bold text-white px-4" style="border-radius: 50px; background-color: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5); transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.3)'" onmouseout="this.style.backgroundColor='rgba(255,255,255,0.2)'">Atender Cita</a>
+                                `;
+                            });
+                            citasContainer.innerHTML = html;
+                        } else {
+                            citasContainer.innerHTML = `
+                                <div class="col-12 py-4 text-center text-muted">
+                                    <h6 class="mt-2 text-dark">Día Libre</h6>
+                                    <p class="small mb-0">No hay citas programadas para hoy.</p>
                                 </div>
-                            </div>
-                        </div>`;
-                    });
-                    citasContainer.innerHTML = html;
-                }
-            }
+                            `;
+                        }
+
+                        // 3. Renderizar ApexCharts Gráfico de Barras Citas Pendientes
+                        var pendienteOptions = {
+                            series: [{
+                                name: "Citas",
+                                data: data.chart.series
+                            }],
+                            chart: {
+                                type: "bar",
+                                height: 260,
+                                toolbar: {
+                                    show: false
+                                },
+                                dropShadow: {
+                                    enabled: true,
+                                    top: 2,
+                                    left: 0,
+                                    blur: 4,
+                                    opacity: 0.1
+                                }
+                            },
+                            colors: ["var(--utm-primary)"],
+                            plotOptions: {
+                                bar: {
+                                    horizontal: false,
+                                    columnWidth: "40%",
+                                    borderRadius: 5
+                                }
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            stroke: {
+                                show: true,
+                                width: 2,
+                                colors: ["transparent"]
+                            },
+                            xaxis: {
+                                categories: data.chart.labels,
+                                axisBorder: {
+                                    show: false
+                                },
+                                axisTicks: {
+                                    show: false
+                                }
+                            },
+                            yaxis: {
+                                title: {
+                                    text: "Ní‚Â° Citas",
+                                    style: {
+                                        color: "#6c757d",
+                                        fontWeight: 600
+                                    }
+                                },
+                                labels: {
+                                    style: {
+                                        colors: "#6c757d"
+                                    }
+                                },
+                                tickAmount: Math.max(...data.chart.series) > 5 ? 5 : Math.max(...data.chart.series)
+                            },
+                            fill: {
+                                opacity: 1
+                            },
+                            tooltip: {
+                                theme: "light",
+                                y: {
+                                    formatter: function(val) {
+                                        return val + " citas"
+                                    }
+                                }
+                            }
+                        };
+                        var chart = new ApexCharts(document.querySelector("#chart-citas-pendientes"), pendienteOptions);
+                        chart.render();
+
+                        // 4. Inyectar fechas del calendario y renderizar
+                        patientAppointmentsDates = data.calendarioFechas;
+                        renderCalendar();
+
+                    } else {
+                        document.getElementById('citas-dia-container').innerHTML = `<div class="alert alert-danger mx-2 mt-2 w-100">Error: ${result.message}</div>`;
+                    }
+                })
+                .catch(err => {
+                    console.error('Error al obtener dashboard médico:', err);
+                    document.getElementById('citas-dia-container').innerHTML = `<div class="alert alert-warning mx-2 mt-2 w-100">Error de conexión base de datos.</div>`;
+                });
         });
 
         function renderCalendar() {
@@ -496,26 +516,24 @@ require_once __DIR__ . '/../../backend/api/obtener_dashboard_medico.php';
     </script>
 
 
-
-
-    <!-- Notificaciones Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let bellNodes = document.querySelectorAll('a[data-bs-toggle="dropdown"] i.bi-bell-fill');
-            bellNodes.forEach(icon => {
-                let toggle = icon.closest('a');
-                if (toggle) {
-                    toggle.addEventListener('hidden.bs.dropdown', function() {
-                        let badge = toggle.querySelector('.bg-danger');
-                        if (badge) badge.remove();
-                        fetch('../backend/api/accion_leer_notificaciones.php', {
-                            method: 'POST'
-                        }).catch(e => console.error(e));
-                    });
-                }
-            });
-        });
-    </script>
 </body>
+<!-- Notificaciones Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let bellNodes = document.querySelectorAll('a[data-bs-toggle="dropdown"] i.bi-bell-fill');
+        bellNodes.forEach(icon => {
+            let toggle = icon.closest('a');
+            if (toggle) {
+                toggle.addEventListener('hidden.bs.dropdown', function() {
+                    let badge = toggle.querySelector('.bg-danger');
+                    if (badge) badge.remove();
+                    fetch('../backend/api/accion_leer_notificaciones.php', {
+                        method: 'POST'
+                    }).catch(e => console.error(e));
+                });
+            }
+        });
+    });
+</script>>
 
 </html>

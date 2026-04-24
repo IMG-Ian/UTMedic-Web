@@ -1,5 +1,4 @@
 <?php
-session_start();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -9,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require_once '../config/conexion.php';
+require_once dirname(__DIR__) . '/config/conexion.php';
 if (!isset($conn)) return;
 
 $userId = $_SESSION['user_id'];
@@ -43,7 +42,12 @@ $sql = "
     LEFT JOIN profesional p ON c.id_profesional = p.id_profesional
     LEFT JOIN usuario u ON p.id_usuario = u.id_usuario
     WHERE c.id_paciente = ?
-    ORDER BY c.fecha DESC, c.hora DESC
+    ORDER BY 
+        FIELD(c.estado, 'agendada', 'atendida', 'cancelada'),
+        CASE WHEN c.estado = 'agendada' THEN c.fecha END ASC,
+        CASE WHEN c.estado = 'agendada' THEN c.hora END ASC,
+        CASE WHEN c.estado != 'agendada' THEN c.fecha END DESC,
+        CASE WHEN c.estado != 'agendada' THEN c.hora END DESC
 ";
 
 $stmtCitas = $conn->prepare($sql);
@@ -55,6 +59,3 @@ $citas = [];
 while ($row = $resCitas->fetch_assoc()) {
     $citas[] = $row;
 }
-
-echo json_encode(['status' => 'success', 'data' => $citas]);
-?>

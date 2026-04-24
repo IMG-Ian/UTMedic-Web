@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>UTMedic - Sistema de Gestión de Citas Médicas</title>
+    <meta
+      name="description"
+      content="Sistema de gestión de citas médicas para la Universidad Tecnológica de Morelia"
+    />
+
+    <!-- Favicons -->
+    <link href="assets/img/utmedic.ico" rel="icon" />
+    <link href="assets/img/utmedic.ico" rel="apple-touch-icon" />
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Vendor CSS Files -->
+    <link
+      href="assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet" />
+    <link
+      href="assets/vendor/glightbox/css/glightbox.min.css"
+      rel="stylesheet"
+    />
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
+
+    <!-- Main CSS File -->
+    <link href="assets/css/main.css" rel="stylesheet" />
+
+    <style>
+      /* Personalización UTMedic */
+      :root {
+        --utm-primary: #005461;
+        --utm-secondary: #018790;
+        --utm-accent: #00b7b5;
+      }
+
+      .btn-login {
+        background: var(--utm-secondary);
+        color: white;
+        border-radius: 50px;
+        padding: 10px 30px;
+        font-weight: 600;
+        transition: all 0.3s;
+        border: none;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-login:hover {
+        background: var(--utm-secondary);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .section-title h2 {
+        color: var(--utm-secondary);
+      }
+
+      /* Centrar la sección de contacto */
+      .contact .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .contact .info-item {
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+
+      .contact .info-item i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        background: var(--utm-secondary);
+        color: white;
+        padding: 15px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+      }
+
+      .contact .info-item h3 {
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+      }
+
+      .contact .info-item p {
+        margin-bottom: 0;
+        color: #6c757d;
+      }
+
+      .contact .row {
+        justify-content: center;
+      }
+    </style>
+  </head>
+
+  <body class="index-page">
+    <header id="header" class="header sticky-top">
+      <div class="branding d-flex align-items-center">
+        <div
+          class="container position-relative d-flex align-items-center justify-content-between"
+        >
+          <a href="index.html" class="logo d-flex align-items-center me-auto">
+            <h1 class="sitename">UTMedic</h1>
+          </a>
+
+          <nav id="navmenu" class="navmenu">
+            <ul>
+              <li><a href="#hero" class="active">Inicio</a></li>
+              <li><a href="#about">Acerca de</a></li>
+              <li><a href="#services">Servicios</a></li>
+              <li><a href="#contact">Contacto</a></li>
+            </ul>
+            <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+          </nav>
+
+          <a
+            class="btn-login"
+            href="/UTMedic-Web/template/dist/frontend/auth/auth-login.php"
+            >Acceder</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <!-- Hero Section -->
+      <section id="hero" class="hero section light-background">
+        <img src="assets/img/hero-bg.jpg" alt="" data-aos="fade-in" />
+        <div class="container position-relative">
+          <div
+            class="welcome position-relative"
+            data-aos="fade-down"
+            data-aos-delay="100"
+          >
+            <h2>BIENVENIDO A UTMEDIC</h2>
+            <p>
+              Sistema de Gestión de Citas Médicas de la Universidad Tecnológica
+              de Morelia
+            </p>
+          </div>
+
+          <div class="content row gy-4">
+            <div class="col-lg-4 d-flex align-items-stretch">
+              <div class="why-box" data-aos="zoom-out" data-aos-delay="200">
+                <h3>¿Por qué UTMedic?</h3>
+                <p>
+                  UTMedic es la plataforma oficial de gestión de citas médicas
+                  de la UTMorelia. Agenda, da seguimiento y recibe atención
+                  médica de manera rápida y sencilla.
+                </p>
+                <div class="text-center">
+                  <a href="#about" class="more-btn"
+                    ><span>Conocer más</span> <i class="bi bi-chevron-right"></i
+                  ></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-8 d-flex align-items-stretch">
+              <div class="d-flex flex-column justify-content-center">
+                <div class="row gy-4">
+                  <div class="col-xl-4 d-flex align-items-stretch">
+                    <div
+                      class="icon-box"
+                      data-aos="zoom-out"
+                      data-aos-delay="300"
+                    >
+                      <i class="bi bi-calendar-check"></i>
+                      <h4>Agenda Rápida</h4>
+                      <p>
+                        Agenda tus citas médicas en minutos con nuestra interfaz
+                        intuitiva
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="col-xl-4 d-flex align-items-stretch">
+                    <div
+                      class="icon-box"
+                      data-aos="zoom-out"
+                      data-aos-delay="400"
+                    >
+                      <i class="bi bi-shield-check"></i>
+                      <h4>Seguridad</h4>
+                      <p>
+                        Tus datos médicos están protegidos con los más altos
+                        estándares
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="col-xl-4 d-flex align-items-stretch">
+                    <div
+                      class="icon-box"
+                      data-aos="zoom-out"
+                      data-aos-delay="500"
+                    >
+                      <i class="bi bi-clock-history"></i>
+                      <h4>Seguimiento</h4>
+                      <p>
+                        Consulta tu historial médico y da seguimiento a tus
+                        tratamientos
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section id="about" class="about section">
+        <div class="container">
+          <div class="row gy-4 gx-5">
+            <div
+              class="col-lg-6 position-relative align-self-start"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <img src="assets/img/about.jpg" class="img-fluid" alt="" />
+            </div>
+
+            <div
+              class="col-lg-6 content"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <h3>Acerca de UTMedic</h3>
+              <p>
+                UTMedic nace como una iniciativa de la Universidad Tecnológica
+                de Morelia para digitalizar y optimizar el proceso de atención
+                médica de sus estudiantes.
+              </p>
+              <ul>
+                <li>
+                  <i class="fa-solid fa-graduation-cap"></i>
+                  <div>
+                    <h5>Beneficio Estudiantil</h5>
+                    <p>
+                      Atención médica oportuna y sin complicaciones para todos
+                      los estudiantes
+                    </p>
+                  </div>
+                </li>
+                <li>
+                  <i class="fa-solid fa-people-group"></i>
+                  <div>
+                    <h5>Personal Calificado</h5>
+                    <p>Médicos y especialistas comprometidos con tu salud</p>
+                  </div>
+                </li>
+                <li>
+                  <i class="fa-solid fa-mobile-alt"></i>
+                  <div>
+                    <h5>Acceso 24/7</h5>
+                    <p>
+                      Gestiona tus citas desde cualquier dispositivo, en
+                      cualquier momento
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Services Section -->
+      <!-- Services Section -->
+      <section id="services" class="services section">
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Nuestros Servicios</h2>
+          <p>Servicios médicos disponibles a través de UTMedic</p>
+        </div>
+
+        <div class="container">
+          <div class="row gy-4">
+            <div
+              class="col-lg-4 col-md-6"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <div class="service-item position-relative">
+                <div class="icon">
+                  <i class="bi bi-heart-pulse"></i>
+                </div>
+                <h3>Consulta General</h3>
+                <p>
+                  Atención médica primaria para diagnóstico y tratamiento de
+                  enfermedades comunes.
+                </p>
+              </div>
+            </div>
+
+            <div
+              class="col-lg-4 col-md-6"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <div class="service-item position-relative">
+                <div class="icon">
+                  <i class="bi bi-emoji-smile"></i>
+                </div>
+                <h3>Psicología</h3>
+                <p>Apoyo psicológico y bienestar emocional para estudiantes.</p>
+              </div>
+            </div>
+
+            <div
+              class="col-lg-4 col-md-6"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
+              <div class="service-item position-relative">
+                <div class="icon">
+                  <i class="bi bi-apple"></i>
+                </div>
+                <h3>Nutrición</h3>
+                <p>Asesoría nutricional para una vida saludable.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section - Centrada -->
+      <section id="contact" class="contact section">
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Contacto</h2>
+          <p>¿Tienes dudas? Contáctanos</p>
+        </div>
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row gy-4">
+            <div class="col-lg-12">
+              <div class="row">
+                <div
+                  class="col-lg-4 col-md-6"
+                  data-aos="fade-up"
+                  data-aos-delay="300"
+                >
+                  <div
+                    class="info-item d-flex flex-column align-items-center text-center"
+                  >
+                    <i class="bi bi-geo-alt flex-shrink-0"></i>
+                    <div>
+                      <h3>Ubicación</h3>
+                      <p>
+                        Av. Vicepresidente Pino Suarez No. 750, Col. Ciudad
+                        Industrial, C.P. 58200<br />Morelia, Michoacán
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="col-lg-4 col-md-6"
+                  data-aos="fade-up"
+                  data-aos-delay="400"
+                >
+                  <div
+                    class="info-item d-flex flex-column align-items-center text-center"
+                  >
+                    <i class="bi bi-telephone flex-shrink-0"></i>
+                    <div>
+                      <h3>Teléfono</h3>
+                      <p>4431135900</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="col-lg-4 col-md-12"
+                  data-aos="fade-up"
+                  data-aos-delay="500"
+                >
+                  <div
+                    class="info-item d-flex flex-column align-items-center text-center"
+                  >
+                    <i class="bi bi-envelope flex-shrink-0"></i>
+                    <div>
+                      <h3>Email</h3>
+                      <p>informacion@ut-morelia.edu.mx</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer id="footer" class="footer light-background">
+      <div class="container footer-top">
+        <div class="row gy-4">
+          <div class="col-lg-6 col-md-6 footer-about">
+            <a href="index.html" class="logo d-flex align-items-center">
+              <span class="sitename"
+                >UTMedic<span style="color: var(--utm-accent)"></span
+              ></span>
+            </a>
+            <div class="footer-contact pt-3">
+              <p>Universidad Tecnológica de Morelia</p>
+              <p>Morelia, Michoacán, México</p>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-3 footer-links">
+            <h4>Enlaces</h4>
+            <ul>
+              <li><a href="#hero">Inicio</a></li>
+              <li><a href="#about">Acerca de</a></li>
+              <li><a href="#services">Servicios</a></li>
+              <li><a href="#contact">Contacto</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-3 col-md-3 footer-links">
+            <h4>Síguenos</h4>
+            <div class="social-links d-flex mt-2">
+              <a href="https://www.facebook.com/UTMMORELIA?mibextid=vk8aRt"
+                ><i class="bi bi-facebook"></i
+              ></a>
+              <a href="https://www.instagram.com/utmmorelia/"
+                ><i class="bi bi-instagram"></i
+              ></a>
+              <a href="https://twitter.com/UTMMORELIA"
+                ><i class="bi bi-twitter-x"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container copyright text-center mt-4">
+        <p>
+          © <span>Copyright</span>
+          <strong class="px-1 sitename">UTMedic</strong>
+          <span>Todos los derechos reservados</span>
+        </p>
+        <p>Universidad Tecnológica de Morelia</p>
+      </div>
+    </footer>
+
+    <a
+      href="#"
+      id="scroll-top"
+      class="scroll-top d-flex align-items-center justify-content-center"
+      ><i class="bi bi-arrow-up-short"></i
+    ></a>
+    <div id="preloader"></div>
+
+    <!-- Vendor JS Files -->
+    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/vendor/aos/aos.js"></script>
+    <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+    <!-- Main JS File -->
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>
