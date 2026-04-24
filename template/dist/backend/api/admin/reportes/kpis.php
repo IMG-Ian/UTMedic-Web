@@ -24,7 +24,7 @@ try {
     $sqlCanceladas = "SELECT COUNT(*) as total FROM cita WHERE estado = 'cancelada'";
     $canceladas = $conn->query($sqlCanceladas)->fetch_assoc()['total'];
 
-    $sqlEmergencias = "SELECT COUNT(*) as total FROM emergencias";
+    $sqlEmergencias = "SELECT COUNT(*) as total FROM registrar_emergencia";
     $emergencias = $conn->query($sqlEmergencias)->fetch_assoc()['total'];
 
     $tasa_asistencia = ($total > 0) ? round(($atendidas / $total) * 100, 2) : 0;

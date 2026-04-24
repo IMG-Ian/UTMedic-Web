@@ -7,7 +7,7 @@ try {
     $ps = $conn->query("SELECT COUNT(*) as total FROM profesional")->fetch_assoc();
     $pac = $conn->query("SELECT COUNT(*) as total FROM paciente")->fetch_assoc();
     $citas = $conn->query("SELECT COUNT(*) as total FROM cita")->fetch_assoc();
-    $emer = $conn->query("SELECT COUNT(*) as total FROM emergencias")->fetch_assoc();
+    $emer = $conn->query("SELECT COUNT(*) as total FROM registrar_emergencia")->fetch_assoc();
 
     $response = [
         "status" => "success",

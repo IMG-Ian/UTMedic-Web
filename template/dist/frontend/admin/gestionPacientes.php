@@ -490,7 +490,6 @@ require_once __DIR__ . '/../../backend/config/paths.php';
                                 dataTable = new simpleDatatables.DataTable(table, {
                                     labels: {
                                         placeholder: "Busca nombre, matrícula, correo...",
-                                        perPage: "Registros por página",
                                         noRows: "No hay datos disponibles",
                                         noResults: "No se encontraron resultados",
                                         info: "Mostrando {start} a {end} de {rows} registros"
